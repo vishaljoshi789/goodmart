@@ -33,7 +33,6 @@ export default function Register() {
   let router = useRouter();
   let [type, setType] = useState<string>("Customer");
   let [vendorType, setVendorType] = useState<string>("Product Vendor");
-  let [loading, setLoading] = useState<boolean>(false);
   let { baseURL } = useContext<GMContextType>(GMContext);
   const formSchema = z
     .object({
@@ -118,8 +117,8 @@ export default function Register() {
   };
   // 2. Define a submit handler.
   let onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setLoading(true);
     if (values.co_ordinates) {
+      toast.loading("Registering User...");
       values["user_type"] = type == "Customer" ? "Customer" : vendorType;
       const timestampPart = Date.now().toString().slice(-3);
       const randomPart = Math.floor(100 + Math.random() * 900).toString();
@@ -139,11 +138,18 @@ export default function Register() {
         body: JSON.stringify(values),
       });
       let data = await response.json();
-      console.log(data);
       if (response.status == 201) {
         toast.success("Registration Successful");
         router.push("/auth/login?source=register");
+      } else {
+        if (data.email) {
+          toast.error("Email already in use");
+        }
+        if (data.phone_no) {
+          toast.error("Phone Number already in use");
+        }
       }
+      toast.dismiss();
     } else {
       getLocation();
     }
@@ -151,11 +157,6 @@ export default function Register() {
 
   return (
     <div className="space-y-2 md:w-96 bg-white rounded-md shadow-md m-auto">
-      {loading && (
-        <div className="w-full h-full flex justify-center items-center flex-col backdrop-blur-md absolute z-10 top-0 left-0">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-900"></div>
-        </div>
-      )}
       <div className="typeButton flex justify-center gap-2">
         <span
           className={`

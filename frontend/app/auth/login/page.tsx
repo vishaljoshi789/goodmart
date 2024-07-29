@@ -60,11 +60,14 @@ export default function Register() {
       });
       data = await response.json();
       if (response.status === 200) {
-        console.log(data);
-        localStorage.setItem("userInfo", JSON.stringify(data));
-        setUserInfo(data);
-        toast.success("Login Success!");
-        router.push("/user-panel");
+        if (data.email_verified == true) {
+          localStorage.setItem("userInfo", JSON.stringify(data));
+          setUserInfo(data);
+          toast.success("Login Success!");
+          router.push("/user-panel");
+        } else {
+          toast.error("Please Verify your Email before Login");
+        }
       } else {
         toast.error("Error getting user info");
       }
@@ -76,11 +79,14 @@ export default function Register() {
   return (
     <div className="md:w-96 m-auto">
       <span className="font-bold text-red-500 text-xl">LOGIN</span>
-      {/* {source == "register" && (
+      {source == "register" && (
         <div className="flex gap-2 flex-col">
-          <span className="text-red-500">You have successfully registered</span>
+          <span className="text-red-500 underline">
+            A Verification Mail is been sent on your Email, Please Verify the
+            Mail before Login.
+          </span>
         </div>
-      )} */}
+      )}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

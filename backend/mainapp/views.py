@@ -49,7 +49,7 @@ def registerUser(request):
         except Exception as e:
             # Log the exception or handle it as needed
             return Response({'status': 'An unexpected error occurred. Please try again later.'}, status=500)
-    return Response(status=400)
+    return Response(serializer.errors, status=400)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

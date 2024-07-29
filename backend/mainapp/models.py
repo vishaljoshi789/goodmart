@@ -9,7 +9,7 @@ def user_directory_path(instance, filename):
 class User(AbstractUser):
     user_id = models.CharField(max_length=50, blank=True, null=True)
     email = models.EmailField(unique=True, blank=True, null=True)
-    phone_no = models.CharField(max_length=10, blank=True, null=True)
+    phone_no = models.CharField(unique=True, max_length=10, blank=True, null=True)
     name = models.CharField(max_length=50, blank=True, null=True)
     dob = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=6, choices=(("Male", "Male"), ("Female", "Female")), blank=True, null=True)

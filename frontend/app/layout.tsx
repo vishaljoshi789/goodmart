@@ -29,7 +29,7 @@ export default function RootLayout({
         )}
       >
         <GMProvider>{children}</GMProvider>
-        <Toaster richColors />
+        <Toaster richColors expand={true} />
       </body>
     </html>
   );
