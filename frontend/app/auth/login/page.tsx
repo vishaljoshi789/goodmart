@@ -1,0 +1,129 @@
+"use client";
+import { useContext } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { GMContext, GMContextType } from "@/app/(utils)/context/GMContext";
+import { Button } from "@/components/ui/button";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+
+export default function Register() {
+  let path = useSearchParams();
+  let router = useRouter();
+  let { baseURL, setAuthToken, setUserInfo } =
+    useContext<GMContextType>(GMContext);
+  const formSchema = z.object({
+    email: z.string(),
+    password: z.string(),
+  });
+
+  let source = path.get("source");
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  // 2. Define a submit handler.
+  let onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log(values);
+    let response = await fetch(`${baseURL}/auth/token/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    let data = await response.json();
+    if (response.status === 200) {
+      console.log(data);
+      localStorage.setItem("accessToken", JSON.stringify(data));
+      setAuthToken(data);
+      let response = await fetch(`${baseURL}/getUserInfo/`, {
+        headers: {
+          Authorization: `Bearer ${data?.access}`,
+        },
+      });
+      data = await response.json();
+      if (response.status === 200) {
+        console.log(data);
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        setUserInfo(data);
+        toast.success("Login Success!");
+        router.push("/user-panel");
+      } else {
+        toast.error("Error getting user info");
+      }
+    } else {
+      toast.error("Authentication Failed");
+    }
+  };
+
+  return (
+    <div className="md:w-96 m-auto">
+      <span className="font-bold text-red-500 text-xl">LOGIN</span>
+      {/* {source == "register" && (
+        <div className="flex gap-2 flex-col">
+          <span className="text-red-500">You have successfully registered</span>
+        </div>
+      )} */}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 bg-white rounded-md shadow-md m-auto p-5"
+        >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email, Phone or User ID</FormLabel>
+                <FormControl>
+                  <Input placeholder="shadcn" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="shadcn" {...field} type="password" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+          <hr />
+          <div className="flex justify-center items-center gap-2">
+            <span>Create a account. </span>
+            <Link href="/auth/register">
+              <Button className="bg-blue-500 hover:bg-blue-600">
+                Register
+              </Button>
+            </Link>
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
+}

@@ -3,5 +3,8 @@ from . import views
 
 urlpatterns = [
     path("", views.index),
-    path("getUser/", views.getUser),
+    path("registerUser/", views.registerUser),
+    path("getUserInfo/", views.getUserInfo),
+    path("sendVerificationEmail/", views.sendVerificationEmail),
+    path('verify-email/<uidb64>/<token>/', views.verify_email, name='verify-email'),
 ]

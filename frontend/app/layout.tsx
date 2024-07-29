@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
-
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
+import { GMProvider } from "./(utils)/context/GMContext";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -24,10 +25,11 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
+          fontSans.variable
         )}
       >
-        {children}
+        <GMProvider>{children}</GMProvider>
+        <Toaster richColors />
       </body>
     </html>
   );
