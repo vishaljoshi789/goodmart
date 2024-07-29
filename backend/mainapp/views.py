@@ -27,8 +27,28 @@ def registerUser(request):
     data['username'] = data['email']
     serializer = UserRegisterSerializer(data=data, partial=True)
     if serializer.is_valid():
-        serializer.save()
-        return Response({'status': 'User registered.'}, status=201)
+        user = serializer.save()
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = email_verification_token.make_token(user)
+        verification_link = f"{settings.FRONTEND_URL}/user-panel/verify-email/{uid}/{token}/"
+        try:
+            subject = 'Registered to GoodMart'
+            html_message = render_to_string('registerMail.html', {'url': verification_link, 'name': user.name, 'email': user.email, 'phone': user.phone_no, 'user_id': user.user_id})
+            email_from = settings.DEFAULT_FROM_EMAIL
+            recipient_list = [user.email]
+
+            email = EmailMessage(subject, html_message, email_from, recipient_list)
+            email.content_subtype = 'html'  # Set the email content type to HTML
+            email.send()
+            return Response({'status': 'Verification email sent.'}, status=201)
+        except BadHeaderError:
+            return Response({'status': 'Invalid header found.'}, status=400)
+        except SMTPException as e:
+            # Log the exception or handle it as needed
+            return Response({'status': 'Failed to send email. Please try again later.'}, status=500)
+        except Exception as e:
+            # Log the exception or handle it as needed
+            return Response({'status': 'An unexpected error occurred. Please try again later.'}, status=500)
     return Response(status=400)
 
 @api_view(['GET'])
