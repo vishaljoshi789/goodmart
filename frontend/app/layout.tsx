@@ -7,7 +7,6 @@ import { GMProvider } from "./(utils)/context/GMContext";
 
 const fontSans = FontSans({
   subsets: ["latin"],
-  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +24,7 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
+          fontSans.className
         )}
       >
         <GMProvider>{children}</GMProvider>

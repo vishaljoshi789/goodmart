@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { GMAdminContext } from "../../app/(utils)/context/GMAdminContext";
 import { ReactNode } from "react";
+import NotFoundPage from "../web/404";
 
 const AdminRoute = ({ children, ...rest }: { children: ReactNode }) => {
   const router = useRouter();
@@ -10,11 +11,11 @@ const AdminRoute = ({ children, ...rest }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!isAdmin && !loading) {
-      router.push("");
+      router.push("/");
     }
-  }, [isAdmin]);
+  }, [loading]);
 
-  return <div>{isAdmin ? children : null}</div>;
+  return <div>{isAdmin ? children : <NotFoundPage />}</div>;
 };
 
 export default AdminRoute;

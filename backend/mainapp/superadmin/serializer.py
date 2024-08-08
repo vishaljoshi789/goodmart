@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import User
+from ..models import User, Product_Category, Product_Brand
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,3 +21,19 @@ class UserSerializer(serializers.ModelSerializer):
                 setattr(instance, attr, value)
         instance.save()
         return instance
+
+class ProductCategoryUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product_Category
+        fields = '__all__'
+
+class ProductCategorySerializer(serializers.ModelSerializer):
+    parent = serializers.StringRelatedField()
+    class Meta:
+        model = Product_Category
+        fields = '__all__'
+
+class ProductBrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product_Brand
+        fields = '__all__'

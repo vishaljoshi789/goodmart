@@ -36,27 +36,34 @@ const GMAdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     access: string;
     refresh: string;
   } | null>(
-    JSON.parse(
-      (typeof window !== "undefined" && localStorage.getItem("accessToken")) ||
-        "{}"
-    )
+    typeof window !== "undefined" && localStorage.getItem("accessToken")
+      ? JSON.parse(
+          (typeof window !== "undefined" &&
+            localStorage.getItem("accessToken")) ||
+            "{}"
+        )
+      : null
   );
 
   let isAdminCheck = async () => {
-    let response = await api.get(`/admin/isAdmin/`);
-    if (response.status === 400) {
-      setIsAdmin(false);
-    } else {
-      setIsAdmin(response.data.is_admin);
-    }
+    try {
+      let response = await api.get(`/admin/isAdmin/`);
+      if (response.status === 200) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    } catch (e) {}
     setLoading(false);
   };
 
   useEffect(() => {
     if (authToken) {
       isAdminCheck();
+    } else {
+      setLoading(false);
     }
-  }, [authToken]);
+  }, []);
 
   let userLogout = () => {
     setAuthToken(null);

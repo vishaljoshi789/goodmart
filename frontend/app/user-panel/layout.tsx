@@ -3,6 +3,7 @@ import "../globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { GMProvider } from "../(utils)/context/GMContext";
 import HamburgerMenu from "@/components/user/MenuBar";
+import AuthRoute from "@/components/user/AuthRoute";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,12 +16,12 @@ export default function UserPanelLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <GMProvider>
+    <AuthRoute>
       <div className="flex">
         <HamburgerMenu />
         {children}
         <Toaster richColors />
       </div>
-    </GMProvider>
+    </AuthRoute>
   );
 }

@@ -16,10 +16,8 @@ import { Input } from "@/components/ui/input";
 import { GMContext, GMContextType } from "@/app/(utils)/context/GMContext";
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 
 export default function Register() {
-  let path = useSearchParams();
   let router = useRouter();
   let { baseURL, setAuthToken, authToken } =
     useContext<GMContextType>(GMContext);
@@ -27,8 +25,6 @@ export default function Register() {
     email: z.string(),
     password: z.string(),
   });
-
-  let source = path.get("source");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,11 +59,6 @@ export default function Register() {
   return (
     <div className="md:w-96 m-auto">
       <span className="font-bold text-red-500 text-xl">LOGIN</span>
-      {/* {source == "register" && (
-        <div className="flex gap-2 flex-col">
-          <span className="text-red-500">You have successfully registered</span>
-        </div>
-      )} */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -80,7 +71,7 @@ export default function Register() {
               <FormItem>
                 <FormLabel>ID</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -93,7 +84,7 @@ export default function Register() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} type="password" />
+                  <Input placeholder="" {...field} type="password" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

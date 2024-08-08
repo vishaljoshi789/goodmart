@@ -24,24 +24,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
-        <GMAdminProvider>
-          <div className="flex">
-            <Sidebar />
-            <div className="flex-1">
-              <Header />
-              <AdminRoute>{children}</AdminRoute>
-            </div>
+    <GMAdminProvider>
+      <AdminRoute>
+        <div className="flex">
+          <Sidebar />
+          <div className="flex-1">
+            <Header />
+            {children}
           </div>
-        </GMAdminProvider>
-        <Toaster richColors />
-      </body>
-    </html>
+          <Toaster richColors />
+        </div>
+      </AdminRoute>
+    </GMAdminProvider>
   );
 }

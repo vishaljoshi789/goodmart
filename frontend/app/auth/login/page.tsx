@@ -99,7 +99,7 @@ export default function Register() {
               <FormItem>
                 <FormLabel>Email, Phone or User ID</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -112,7 +112,7 @@ export default function Register() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} type="password" />
+                  <Input placeholder="" {...field} type="password" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

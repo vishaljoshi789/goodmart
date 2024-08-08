@@ -13,16 +13,17 @@ const HamburgerMenu = () => {
           { Profile: "/user-panel/", icon: <CgProfile /> },
           { Shop: "/", icon: <CiShop /> },
         ]
-      : [
+      : userInfo && userInfo.user_type == "Product Vendor"
+      ? [
           { Profile: "/user-panel/", icon: <CgProfile /> },
-          { Products: "/user-panel/products/", icon: <CiShop /> },
+          { Products: "/user-panel/vendor/products/", icon: <CiShop /> },
           { Shop: "/", icon: <CiShop /> },
-        ];
+        ]
+      : [];
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
-    console.log("mounted");
   }, []);
 
   if (!isMounted) {
@@ -58,11 +59,11 @@ const HamburgerMenu = () => {
       </button>
 
       <div
-        className={`absolute right-0 a-10 w-64 h-screen bg-white flex flex-col items-center justify-center transform ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+        className={`absolute right-0 a-10 w-64 min-h-screen bg-white flex flex-col items-center justify-center transform ${
+          isOpen ? "translate-x-0 block" : "translate-x-full hidden md:flex"
         } transition-transform duration-300 ease-in-out md:translate-x-0 md:relative`}
       >
-        <div className="w-64 h-screen bg-gray-800 text-white">
+        <div className="w-64 min-h-screen bg-gray-800 text-white">
           <div className="p-4 font-bold text-xl">
             <Link href="/user-panel">User Dashboard</Link>
           </div>

@@ -2,9 +2,10 @@
 import type { NextPage } from "next";
 import UserCard from "@/components/user/UserCard";
 import useAxios from "../(utils)/hooks/useAxios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { UserDashboardSkeleton } from "@/components/user/skeleton/UserDashboard";
+import { GMContext } from "../(utils)/context/GMContext";
 
 const Home: NextPage = () => {
   interface User {
@@ -19,6 +20,7 @@ const Home: NextPage = () => {
     phone_verified: boolean;
     user_type: string;
   }
+  let { setUserInfo } = useContext(GMContext);
   let api = useAxios();
   let [user, setUser] = useState<User | null>(null);
   let [loading, setLoading] = useState(true);
@@ -26,6 +28,8 @@ const Home: NextPage = () => {
     let response = await api.get("/getUserInfo/");
     if (response.status === 200) {
       setUser(response.data);
+      localStorage.setItem("userInfo", JSON.stringify(response.data));
+      setUserInfo(response.data);
       setLoading(false);
     } else {
       toast.error("Error getting user info");

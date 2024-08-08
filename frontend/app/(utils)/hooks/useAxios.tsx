@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import { GMContext } from "../context/GMContext";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 type AuthToken = {
   access: string;
@@ -68,11 +68,16 @@ const useAxios = (): AxiosInstance => {
   axiosInstance.interceptors.response.use(
     (response: AxiosResponse) => response,
     (error) => {
+      console.error("Axios Error:", error);
       if (error.response && error.response.status === 401) {
         router.push("/auth/login");
       }
-      toast.error(`An error (${error.response.status}) occurred`);
-      return Promise.reject();
+      // else if (error.response && error.response.status) {
+      //   toast.error(`An error (${error.response.status}) occurred`);
+      // } else {
+      //   toast.error("Something Went Wrong");
+      // }
+      return error;
     }
   );
 

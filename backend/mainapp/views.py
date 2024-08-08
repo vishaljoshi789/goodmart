@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User
-from .serializer import UserRegisterSerializer, UserInfoSerializer
+from .models import User, Product_Category, Product_Brand
+from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -102,5 +102,21 @@ def verify_email(request, uidb64, token):
     except:
         print("Error occurred")
         return Response({'status': 'Invalid token'}, status=400)
-
-
+    
+@api_view(['GET'])
+def getProductCategory(request):
+    if request.method == 'GET':
+        categories = Product_Category.objects.all()
+        serializer = ProductCategorySerializer(categories, many=True)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['GET'])
+def getProductBrand(request):
+    if request.method == 'GET':
+        brands = Product_Brand.objects.all()
+        serializer = ProductBrandSerializer(brands, many=True)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)

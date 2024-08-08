@@ -45,12 +45,30 @@ export default function Register() {
       phone_no: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
         message: "Expected number, received a string",
       }),
-      password: z.string().min(8, {
-        message: "Password must be at least 8 characters long.",
-      }),
-      confirmPassword: z.string().min(8, {
-        message: "Password must be at least 8 characters long.",
-      }),
+      password: z
+        .string()
+        .min(8, {
+          message: "Password must be mix 8 characters long.",
+        })
+        .max(20, {
+          message: "Password must be max 20 characters long.",
+        })
+        .regex(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[a-zA-Z\d\W_]{8,}$/,
+          "Password must include one small letter, one uppercase letter, one number and one special character"
+        ),
+      confirmPassword: z
+        .string()
+        .min(8, {
+          message: "Password must be mix 8 characters long.",
+        })
+        .max(20, {
+          message: "Password must be max 20 characters long.",
+        })
+        .regex(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[a-zA-Z\d\W_]{8,}$/,
+          "Password must include one small letter, one uppercase letter, one number and one special character"
+        ),
       aadhar: z
         .string()
         .max(16, { message: "Enter a valid Aadhar Number" })

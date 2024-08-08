@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications
+
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,4 +27,29 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'user_id', 'name', 'phone_no', 'p_address', 'date_joined', "last_login", 'email_verified', 'phone_verified', 'user_type', 'status']
+        fields = ['id', 'email', 'user_id', 'name', 'phone_no', 'date_joined', "last_login", 'email_verified', 'phone_verified', 'user_type', 'status', 'aadhar_verified', 'pan_verified', 'aadhar', 'pan']
+
+class ProductBrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product_Brand
+        fields = '__all__'
+
+class ProductCategorySerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = Product_Category
+        fields = '__all__'
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product_Image
+        fields = '__all__'
+
+class ProductSpecificationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product_Specifications
+        fields = '__all__'
