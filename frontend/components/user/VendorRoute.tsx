@@ -17,7 +17,7 @@ const VendorRoute = ({ children, ...rest }: { children: ReactNode }) => {
   }
 
   return (
-    <div>
+    <div className="w-full">
       {userInfo?.user_type == "Product Vendor" ? children : <NotFoundPage />}
     </div>
   );

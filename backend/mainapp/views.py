@@ -120,3 +120,4 @@ def getProductBrand(request):
         return Response(serializer.data, status=200)
     else:
         return Response(status=400)
+    

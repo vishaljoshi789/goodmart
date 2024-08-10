@@ -53,3 +53,4 @@ class ProductSpecificationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product_Specifications
         fields = '__all__'
+

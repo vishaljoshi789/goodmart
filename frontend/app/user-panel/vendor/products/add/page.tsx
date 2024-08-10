@@ -1,50 +1,18 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import React, { useState, useEffect, useContext } from "react";
-import { Input } from "@/components/ui/input";
 import { GMContext } from "@/app/(utils)/context/GMContext";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-
-const formSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  mrp: z.number(),
-  offer_price: z.number(),
-  stock_quantity: z.number(),
-  category: z.string(),
-  brand: z.string(),
-  specification: z.array(z.object({ key: z.string(), value: z.string() })),
-  image: z.any(),
-  images: z.array(z.any()),
-  video: z.any(),
-});
+import ProductAddBasicDetails from "@/components/user/vendor/product/ProductAddBasicDetails";
+import ProductAddImages from "@/components/user/vendor/product/ProductAddImages";
+import ProductAddSpecs from "@/components/user/vendor/product/ProductAddSpecs";
 
 export default function AddProduct() {
   let { baseURL } = useContext(GMContext);
   let [category, setCategory] = useState([]);
   let [brand, setBrand] = useState([]);
-  let [imageList, setImageList] = useState([{ file: null }]);
-  let [specsList, setSpecsList] = useState([{ key: "", value: "" }]);
+  let [activeTab, setActiveTab] = useState(2);
+  let [product, setProduct] = useState<any>(null);
 
   let getCategory = async () => {
     let response = await fetch(`${baseURL}/getProductCategory/`);
@@ -58,40 +26,7 @@ export default function AddProduct() {
     setBrand(data);
   };
 
-  // const handleAddSpec = () => {
-  //   // console.log(specsList)
-  //   const newSpec = { key: "", value: "" };
-  //   setSpecsList([...specsList, newSpec]);
-  // };
-
-  // const handleRemoveSpec = (index: number) => {
-  //   const updatedSpecs = specsList.filter((_, i) => i !== index);
-  //   setSpecsList(updatedSpecs);
-  // };
-
-  // const handleSpecChange = (index: number, field: string, newValue: string) => {
-  //   const updatedSpecs = specsList.map((spec, i) =>
-  //     i === index ? { ...spec, [field]: newValue } : spec
-  //   );
-  //   setSpecsList(updatedSpecs);
-  // };
-
-  // const handleAddImage = () => {
-  //   const newImage = { file: null };
-  //   setImageList([...imageList, newImage]);
-  // };
-
-  // const handleRemoveImage = (index: number) => {
-  //   const updatedImages = imageList.filter((_, i) => i !== index);
-  //   setImageList(updatedImages);
-  // };
-
-  // const handleImageChange = (index: number, file: any) => {
-  //   const updatedImages = [...imageList];
-  //   updatedImages[index].file = file;
-  //   setImageList(updatedImages);
-  // };
-
+  //
   //   let submitProductForm = async (e) => {
   //     e.preventDefault();
   //     if (imageList[0]["image"] == null) {
@@ -132,154 +67,27 @@ export default function AddProduct() {
   //     }
   //   };
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      category: "",
-      brand: "",
-      specification: [],
-      image: null,
-      images: [],
-      mrp: 0,
-      offer_price: 0,
-    },
-  });
-
   useEffect(() => {
     getCategory();
     getBrand();
   }, []);
 
   return (
-    <div className="p-6 flex items-center justify-center">
-      <div className="mx-auto">
-        <div>
-          <h2 className="font-semibold text-xl text-gray-600">Add Product</h2>
-          <p className="text-gray-500 mb-6"></p>
-          <div className="flex items-center justify-center w-full">
-            <div className="bg-gray-50 shadow-lg rounded-lg p-5">
-              <span className="text-blue-500 font-bold text-sm">
-                Basic Product Details
-              </span>
-              <Form {...form}>
-                <form
-                  // onSubmit={form.handleSubmit(onSubmit)}
-                  method="post"
-                  className="flex flex-col gap-4"
-                >
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Product Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Product Description</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder="" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="flex gap-2">
-                    <FormField
-                      control={form.control}
-                      name="mrp"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>MRP</FormLabel>
-                          <FormControl>
-                            <Input placeholder="" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="offer_price"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Offer Price</FormLabel>
-                          <FormControl>
-                            <Input placeholder="" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <FormField
-                      control={form.control}
-                      name="category"
-                      render={({ field }) => (
-                        <FormItem className="w-1/2">
-                          <FormLabel>Category</FormLabel>
-                          <FormControl>
-                            <Select>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select Category" />
-                              </SelectTrigger>
-                              <SelectContent {...field}>
-                                {category.map((cat: any) => (
-                                  <SelectItem value={cat.id} key={cat.id}>
-                                    {cat.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="brand"
-                      render={({ field }) => (
-                        <FormItem className="w-1/2">
-                          <FormLabel>Brand</FormLabel>
-                          <FormControl>
-                            <Select>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select Brand" />
-                              </SelectTrigger>
-                              <SelectContent {...field}>
-                                {brand.map((brd: any) => (
-                                  <SelectItem value={brd.id} key={brd.id}>
-                                    {brd.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <Button type="submit">Submit</Button>
-                </form>
-              </Form>
-            </div>
-          </div>
-        </div>
+    <div className="p-6 flex flex-col">
+      <h2 className="font-semibold text-xl text-gray-600">Add Product</h2>
+      <div className="flex gap-10 justify-center w-full ">
+        {activeTab == 1 ? (
+          <ProductAddBasicDetails
+            category={category}
+            brand={brand}
+            setActiveTab={setActiveTab}
+            setProduct={setProduct}
+          />
+        ) : (
+          <></>
+        )}
+        {activeTab == 2 ? <ProductAddImages product={product} /> : <></>}
+        {activeTab == 3 ? <ProductAddSpecs /> : <></>}
       </div>
     </div>
   );
