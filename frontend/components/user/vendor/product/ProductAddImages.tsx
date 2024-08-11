@@ -1,10 +1,20 @@
+import useAxios from "@/app/(utils)/hooks/useAxios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { useState } from "react";
-import { IoMdAddCircle, IoMdRemove, IoMdRemoveCircle } from "react-icons/io";
-export default function ProductAddImages({ product }: { product: any }) {
+import { IoMdAddCircle, IoMdRemoveCircle } from "react-icons/io";
+import { toast } from "sonner";
+
+export default function ProductAddImages({
+  product,
+  setActiveTab,
+}: {
+  product: any;
+  setActiveTab: any;
+}) {
   let [imageList, setImageList] = useState([{ file: null }]);
+  let api = useAxios();
 
   const handleAddImage = () => {
     const newImage = { file: null };
@@ -22,11 +32,28 @@ export default function ProductAddImages({ product }: { product: any }) {
     setImageList(updatedImages);
   };
 
-  async function Submit() {
-    console.log(imageList);
+  async function handleSubmit() {
+    const formData = new FormData();
+    imageList.forEach((image, index) => {
+      formData.append(`image${index + 1}`, image.file ?? "");
+    });
+    formData.append("product_id", product.id);
+
+    try {
+      let response = await api.post("/vendor/addProductImages/", formData);
+      console.log(response.data);
+      if (response.status == 201) {
+        toast.success("Product Images Added");
+        setActiveTab(3);
+      } else {
+        toast.error("Error Adding Images");
+      }
+    } catch (error) {
+      toast.error("Error Adding Images");
+    }
   }
   return (
-    <div className="bg-gray-50 shadow-lg rounded-lg p-5 ">
+    <div className="bg-gray-50 shadow-lg rounded-lg p-5 h-fit">
       <div className="flex justify-between items-center">
         <span className="text-blue-500 font-bold text-sm">
           Add Product Images
@@ -75,7 +102,9 @@ export default function ProductAddImages({ product }: { product: any }) {
           </div>
         ))}
       </div>
-      <Button onClick={Submit}>Submit</Button>
+      <Button onClick={handleSubmit} className="w-full">
+        Submit
+      </Button>
     </div>
   );
 }

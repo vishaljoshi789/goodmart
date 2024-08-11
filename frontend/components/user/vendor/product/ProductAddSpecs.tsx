@@ -1,9 +1,19 @@
+import useAxios from "@/app/(utils)/hooks/useAxios";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { IoMdAddCircle, IoMdRemoveCircle } from "react-icons/io";
-export default function ProductAddSpecs() {
-  let [specsList, setSpecsList] = useState([{ key: "", value: "" }]);
+import { toast } from "sonner";
 
+export default function ProductAddSpecs({
+  product,
+  setActiveTab,
+}: {
+  product: any;
+  setActiveTab: any;
+}) {
+  let [specsList, setSpecsList] = useState([{ key: "", value: "" }]);
+  let api = useAxios();
   const handleAddSpec = () => {
     // console.log(specsList)
     const newSpec = { key: "", value: "" };
@@ -21,9 +31,26 @@ export default function ProductAddSpecs() {
     );
     setSpecsList(updatedSpecs);
   };
+  async function handleSubmit() {
+    const formData = new FormData();
+    formData.append("specifications", JSON.stringify(specsList));
+    formData.append("product_id", product.id);
+
+    try {
+      let response = await api.post("/vendor/addProductSpecs/", formData);
+      console.log(response.data);
+      if (response.status == 201) {
+        toast.success("Product Specifications Added");
+      } else {
+        toast.error("Error Adding Specifications");
+      }
+    } catch (error) {
+      toast.error("Error Adding Specifications");
+    }
+  }
 
   return (
-    <div className="bg-gray-50 shadow-lg rounded-lg p-5 ">
+    <div className="bg-gray-50 shadow-lg rounded-lg p-5 h-fit">
       <div className="flex justify-between items-center">
         <span className="text-blue-500 font-bold text-sm">
           Add Product Specifications
@@ -62,6 +89,9 @@ export default function ProductAddSpecs() {
           </div>
         ))}
       </div>
+      <Button className="w-full" onClick={handleSubmit}>
+        Sumbit
+      </Button>
     </div>
   );
 }

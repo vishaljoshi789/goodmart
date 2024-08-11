@@ -11,7 +11,7 @@ export default function AddProduct() {
   let { baseURL } = useContext(GMContext);
   let [category, setCategory] = useState([]);
   let [brand, setBrand] = useState([]);
-  let [activeTab, setActiveTab] = useState(2);
+  let [activeTab, setActiveTab] = useState(1);
   let [product, setProduct] = useState<any>(null);
 
   let getCategory = async () => {
@@ -86,8 +86,16 @@ export default function AddProduct() {
         ) : (
           <></>
         )}
-        {activeTab == 2 ? <ProductAddImages product={product} /> : <></>}
-        {activeTab == 3 ? <ProductAddSpecs /> : <></>}
+        {activeTab == 2 ? (
+          <ProductAddImages product={product} setActiveTab={setActiveTab} />
+        ) : (
+          <></>
+        )}
+        {activeTab == 3 ? (
+          <ProductAddSpecs product={product} setActiveTab={setActiveTab} />
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

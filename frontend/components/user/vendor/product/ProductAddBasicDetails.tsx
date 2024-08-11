@@ -31,7 +31,7 @@ const formSchema = z.object({
   offer_price: z.string(),
   category: z.string(),
   brand: z.string(),
-  image: z.any().optional(),
+  image: z.any(),
   video: z.any().optional(),
   tags: z.string().optional(),
 });
@@ -74,20 +74,20 @@ export default function ProductAddBasicDetails({
     formData.append("mrp", values.mrp);
     formData.append("offer_price", values.offer_price);
     formData.append("image", values.image);
-    formData.append("video", values.video);
+    values.video && formData.append("video", values.video);
     formData.append("tags", values.tags ?? "");
     let response = await api.post("/vendor/addProduct/", formData);
     toast.dismiss();
     if (response.status == 201) {
-      toast.success("Product Created");
+      toast.success("Product Details Added");
       setProduct(response.data);
-      // setActiveTab(2);
+      setActiveTab(2);
     } else {
       toast.error("Error Creating Product");
     }
   }
   return (
-    <div className="bg-gray-50 shadow-lg rounded-lg p-5">
+    <div className="bg-gray-50 shadow-lg rounded-lg p-5 h-fit">
       <span className="text-blue-500 font-bold text-sm">
         Basic Product Details
       </span>

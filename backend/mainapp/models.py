@@ -128,8 +128,8 @@ class Product(models.Model):
     mrp = models.DecimalField(max_digits=8, decimal_places=1, blank=True, null=True)
     offer_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     status = models.BooleanField(default=False)
-    added_on = models.DateTimeField(auto_now_add=True)
-    modify_on = models.DateTimeField(auto_now=True)
+    added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
     tags = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
     video = models.FileField(upload_to=vendor_directory_path, blank=True, null=True)
@@ -153,28 +153,24 @@ class Product(models.Model):
 
 
     def __str__(self):
-        return self.name
+        return str(self.name)
     
 class Product_Image(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
-    added_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    modify_on = models.DateTimeField(auto_now=True, blank=True, null=True)
-    modify_by = models.IntegerField(blank=True, null=True)
-    status = models.BooleanField(default=True)
+    added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
     
     def __str__(self):
-        return self.product.name
+        return str(self.product.name)
     
 class Product_Specifications(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    specification = models.CharField(max_length=100, blank=True, null=True)
+    key = models.CharField(max_length=100, blank=True, null=True)
     value = models.CharField(max_length=100, blank=True, null=True)
-    added_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    modify_on = models.DateTimeField(auto_now=True, blank=True, null=True)
-    modify_by = models.IntegerField(blank=True, null=True)
-    status = models.BooleanField(default=True)
+    added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True) 
+    modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
     
     def __str__(self):
-        return self.product.name
+        return str(self.product.name)
     
