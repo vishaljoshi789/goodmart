@@ -16,3 +16,14 @@ class ProductSpecificationsSerializer(serializers.ModelSerializer):
         model = Product_Specifications
         fields = '__all__'
 
+
+class ProductDetailedSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True)
+    specifications = ProductSpecificationsSerializer(many=True)
+    category = serializers.StringRelatedField()
+    brand = serializers.StringRelatedField()
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'mrp', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video']
+
+

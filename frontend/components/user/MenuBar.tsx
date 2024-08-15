@@ -34,7 +34,7 @@ const HamburgerMenu = () => {
   };
 
   return (
-    <div>
+    <div className=" bg-gray-800">
       <button
         className={`absolute md:relative top-5 right-5 z-20 flex flex-col h-10 w-10 border-2 ${
           isOpen ? "border-white" : "border-gray-900"

@@ -125,7 +125,7 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Product_Category, on_delete=models.CASCADE, blank=True, null=True)
     brand = models.ForeignKey(Product_Brand, on_delete=models.CASCADE, blank=True, null=True)
-    mrp = models.DecimalField(max_digits=8, decimal_places=1, blank=True, null=True)
+    mrp = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     offer_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     status = models.BooleanField(default=True)
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -156,7 +156,7 @@ class Product(models.Model):
         return str(self.name)
     
 class Product_Image(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -165,7 +165,7 @@ class Product_Image(models.Model):
         return str(self.product.name)
     
 class Product_Specifications(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='specifications')
     key = models.CharField(max_length=100, blank=True, null=True)
     value = models.CharField(max_length=100, blank=True, null=True)
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True) 

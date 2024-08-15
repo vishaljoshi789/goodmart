@@ -29,6 +29,7 @@ import { useContext, useEffect, useState } from "react";
 import { IoMdAddCircle } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import { toast } from "sonner";
+import { FaEye, FaRegEdit } from "react-icons/fa";
 
 interface Product {
   id: number;
@@ -46,13 +47,13 @@ export default function Products() {
   let { baseURL } = useContext(GMContext);
   let api = useAxios();
   let [products, setProducts] = useState<Product[] | null>(null);
-
+  let [loading, setLoading] = useState(true);
   let getProducts = async () => {
-    console.log("getting products");
     try {
       let response = await api.get("/vendor/getProducts/");
       // console.log(response.data);
       setProducts(response.data);
+      setLoading(false);
       // toast.success("Products Fetched");
     } catch (error) {
       // console.log(error);
@@ -62,6 +63,32 @@ export default function Products() {
   useEffect(() => {
     getProducts();
   }, []);
+
+  useEffect(() => {
+    dateTime();
+  }, [loading]);
+  let dateTime = () => {
+    let date = document.querySelectorAll(".date");
+    console.log(date);
+    date.forEach((e) => {
+      const date = new Date((e as HTMLElement).innerText);
+
+      // Options for formatting the date
+      const options: Intl.DateTimeFormatOptions = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      };
+
+      // Convert to a readable format
+      const readableDate = date.toLocaleDateString("en-US", options);
+
+      (e as HTMLElement).innerText = readableDate;
+    });
+  };
 
   let changeStatus = async (id: number) => {
     try {
@@ -105,8 +132,6 @@ export default function Products() {
             <TableHead className="text-center">Product Description</TableHead>
             <TableHead className="text-center">MRP</TableHead>
             <TableHead className="text-center">Offer Price</TableHead>
-            <TableHead className="text-center">Category</TableHead>
-            <TableHead className="text-center">Brand</TableHead>
             <TableHead className="text-center">Added On</TableHead>
             <TableHead className="text-center">Status</TableHead>
             <TableHead className="text-center">Action</TableHead>
@@ -135,11 +160,7 @@ export default function Products() {
                 <TableCell className="text-center">
                   {product.offer_price}
                 </TableCell>
-                <TableCell className="text-center">
-                  {product.category}
-                </TableCell>
-                <TableCell className="text-center">{product.brand}</TableCell>
-                <TableCell className="text-center">
+                <TableCell className="text-center date">
                   {product.added_on}
                 </TableCell>
                 <TableCell className="text-center">
@@ -171,35 +192,47 @@ export default function Products() {
                     </AlertDialogContent>
                   </AlertDialog>
                 </TableCell>
-                <TableCell className="flex justify-center items-center">
-                  <AlertDialog>
-                    <AlertDialogTrigger>
+                <TableCell>
+                  <div className="flex justify-center items-center gap-2 h-full">
+                    <AlertDialog>
+                      <AlertDialogTrigger>
+                        <Button className="bg-white shadow-lg hover:bg-gray-300">
+                          <MdDelete className="text-red-500 text-3xl" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your product and remove your data from our
+                            servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-red-500 hover:bg-red-600"
+                            onClick={() => deleteProduct(product.id)}
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                    <Link href={`products/edit/${product.id}/`}>
                       <Button className="bg-white shadow-lg hover:bg-gray-300">
-                        <MdDelete className="text-red-500 text-3xl" />
+                        <FaRegEdit className="text-2xl text-black" />
                       </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. This will permanently
-                          delete your product and remove your data from our
-                          servers.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          className="bg-red-500 hover:bg-red-600"
-                          onClick={() => deleteProduct(product.id)}
-                        >
-                          Delete
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                    </Link>
+                    <Link href={`products/view/${product.id}/`}>
+                      <Button className="bg-white shadow-lg hover:bg-gray-300">
+                        <FaEye className="text-2xl text-violet-500" />
+                      </Button>
+                    </Link>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
