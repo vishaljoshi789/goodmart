@@ -77,6 +77,15 @@ export default function Products() {
       toast.error("Error Changing Product Status");
     }
   };
+  let deleteProduct = async (id: number) => {
+    let response = await api.delete(`/vendor/deleteProduct/${id}/`);
+    if (response.status == 200) {
+      toast.success("Product Deleted");
+      getProducts();
+    } else {
+      toast.error("Error Deleting Product");
+    }
+  };
   return (
     <div className="flex flex-col gap-3 p-5">
       <div className="flex justify-between ">
@@ -163,9 +172,34 @@ export default function Products() {
                   </AlertDialog>
                 </TableCell>
                 <TableCell className="flex justify-center items-center">
-                  <Button className="bg-white shadow-lg hover:bg-gray-300">
-                    <MdDelete className="text-red-500 text-3xl" />
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger>
+                      <Button className="bg-white shadow-lg hover:bg-gray-300">
+                        <MdDelete className="text-red-500 text-3xl" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete your product and remove your data from our
+                          servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-red-500 hover:bg-red-600"
+                          onClick={() => deleteProduct(product.id)}
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </TableCell>
               </TableRow>
             ))}

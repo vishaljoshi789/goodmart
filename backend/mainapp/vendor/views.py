@@ -60,5 +60,12 @@ def changeProductStatus(request, product_id):
     product.save()
     return Response(status=200)
 
+@api_view(['DELETE'])
+@permission_classes([isVendor])
+def deleteProduct(request, product_id):
+    product = Product.objects.get(id=product_id)
+    product.delete()
+    return Response(status=200)
+
 
 
