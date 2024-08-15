@@ -25,10 +25,10 @@ import useAxios from "@/app/(utils)/hooks/useAxios";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  mrp: z.string(),
-  offer_price: z.string(),
+  name: z.string().min(1, { message: "Name is required" }),
+  description: z.string().min(1, { message: "Description is required" }),
+  mrp: z.string().min(1, { message: "MRP is required" }),
+  offer_price: z.string().min(1, { message: "Offer Price is required" }),
   category: z.string(),
   brand: z.string(),
   image: z.any(),
@@ -224,6 +224,7 @@ export default function ProductAddBasicDetails({
                         }
                       }}
                       accept="image/*"
+                      required
                     />
                   </FormControl>
                   <FormMessage />

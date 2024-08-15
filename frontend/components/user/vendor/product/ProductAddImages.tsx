@@ -33,23 +33,33 @@ export default function ProductAddImages({
   };
 
   async function handleSubmit() {
-    const formData = new FormData();
-    imageList.forEach((image, index) => {
-      formData.append(`image${index + 1}`, image.file ?? "");
-    });
-    formData.append("product_id", product.id);
+    if (product == null) {
+      toast.error(
+        "Something went wrong. Please reload the page and try again."
+      );
+      return;
+    }
+    if (imageList.length > 0 && imageList[0].file) {
+      const formData = new FormData();
+      imageList.forEach((image, index) => {
+        formData.append(`image${index + 1}`, image.file ?? "");
+      });
+      formData.append("product_id", product.id);
 
-    try {
-      let response = await api.post("/vendor/addProductImages/", formData);
-      console.log(response.data);
-      if (response.status == 201) {
-        toast.success("Product Images Added");
-        setActiveTab(3);
-      } else {
+      try {
+        let response = await api.post("/vendor/addProductImages/", formData);
+        console.log(response.data);
+        if (response.status == 201) {
+          toast.success("Product Images Added");
+          setActiveTab(3);
+        } else {
+          toast.error("Error Adding Images");
+        }
+      } catch (error) {
         toast.error("Error Adding Images");
       }
-    } catch (error) {
-      toast.error("Error Adding Images");
+    } else {
+      toast.error("Add atleast 1 Image.");
     }
   }
   return (

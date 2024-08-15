@@ -53,7 +53,7 @@ const GMContext = createContext<GMContextType>({
 });
 
 const GMProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  let baseURL = "http://localhost:8000";
+  let baseURL = "http://127.0.0.1:8000";
   let router = useRouter();
   let [authToken, setAuthToken] = useState<AccessTokenType | null>(
     typeof window !== "undefined" && localStorage.getItem("accessToken")

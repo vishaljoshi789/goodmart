@@ -127,7 +127,7 @@ class Product(models.Model):
     brand = models.ForeignKey(Product_Brand, on_delete=models.CASCADE, blank=True, null=True)
     mrp = models.DecimalField(max_digits=8, decimal_places=1, blank=True, null=True)
     offer_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
-    status = models.BooleanField(default=False)
+    status = models.BooleanField(default=True)
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
     tags = models.TextField(blank=True, null=True)

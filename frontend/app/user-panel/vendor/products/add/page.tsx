@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
 import { GMContext } from "@/app/(utils)/context/GMContext";
-import { z } from "zod";
 
 import ProductAddBasicDetails from "@/components/user/vendor/product/ProductAddBasicDetails";
 import ProductAddImages from "@/components/user/vendor/product/ProductAddImages";
@@ -91,11 +90,7 @@ export default function AddProduct() {
         ) : (
           <></>
         )}
-        {activeTab == 3 ? (
-          <ProductAddSpecs product={product} setActiveTab={setActiveTab} />
-        ) : (
-          <></>
-        )}
+        {activeTab == 3 ? <ProductAddSpecs product={product} /> : <></>}
       </div>
     </div>
   );

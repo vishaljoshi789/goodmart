@@ -5,5 +5,6 @@ urlpatterns = [
     path('addProduct/', views.addProductInfo),
     path('addProductImages/', views.addProductImages),
     path('addProductSpecs/', views.addProductSpecifications),
-
+    path('getProducts/', views.getProducts),
+    path('changeProductStatus/<int:product_id>/', views.changeProductStatus),
 ]

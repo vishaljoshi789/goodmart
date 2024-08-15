@@ -45,5 +45,20 @@ def addProductSpecifications(request):
             return Response(serializer.errors, status=400)
     return Response(status=201)
 
+@api_view(['GET'])
+@permission_classes([isVendor])
+def getProducts(request):
+    products = Product.objects.filter(user=request.user)
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data, status=200)
+
+@api_view(['POST'])
+@permission_classes([isVendor])
+def changeProductStatus(request, product_id):
+    product = Product.objects.get(id=product_id)
+    product.status = not product.status
+    product.save()
+    return Response(status=200)
+
 
 

@@ -1,19 +1,15 @@
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IoMdAddCircle, IoMdRemoveCircle } from "react-icons/io";
 import { toast } from "sonner";
 
-export default function ProductAddSpecs({
-  product,
-  setActiveTab,
-}: {
-  product: any;
-  setActiveTab: any;
-}) {
+export default function ProductAddSpecs({ product }: { product: any }) {
   let [specsList, setSpecsList] = useState([{ key: "", value: "" }]);
   let api = useAxios();
+  let router = useRouter();
   const handleAddSpec = () => {
     // console.log(specsList)
     const newSpec = { key: "", value: "" };
@@ -32,15 +28,25 @@ export default function ProductAddSpecs({
     setSpecsList(updatedSpecs);
   };
   async function handleSubmit() {
+    if (product == null) {
+      toast.error(
+        "Something went wrong. Please reload the page and try again."
+      );
+      return;
+    }
+    if (specsList.length == 0 || specsList[0].key == "") {
+      toast.error("Please Add Specifications");
+      return;
+    }
     const formData = new FormData();
     formData.append("specifications", JSON.stringify(specsList));
     formData.append("product_id", product.id);
 
     try {
       let response = await api.post("/vendor/addProductSpecs/", formData);
-      console.log(response.data);
       if (response.status == 201) {
         toast.success("Product Specifications Added");
+        router.push("/user-panel/vendor/products");
       } else {
         toast.error("Error Adding Specifications");
       }
@@ -90,7 +96,7 @@ export default function ProductAddSpecs({
         ))}
       </div>
       <Button className="w-full" onClick={handleSubmit}>
-        Sumbit
+        Submit
       </Button>
     </div>
   );
