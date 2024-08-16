@@ -34,6 +34,7 @@ import { GMContext } from "@/app/(utils)/context/GMContext";
 interface Product {
   id: number;
   name: string;
+  user: string;
   description: string;
   mrp: number;
   offer_price: number;
@@ -130,6 +131,7 @@ export default function Products() {
             <TableHead className="text-center">Image</TableHead>
             <TableHead className="text-center">Product Name</TableHead>
             <TableHead className="text-center">Product Description</TableHead>
+            <TableHead className="text-center">Vendor</TableHead>
             <TableHead className="text-center">MRP</TableHead>
             <TableHead className="text-center">Offer Price</TableHead>
             <TableHead className="text-center">Added On</TableHead>
@@ -156,6 +158,7 @@ export default function Products() {
                 <TableCell className="text-center">
                   {product.description}
                 </TableCell>
+                <TableCell className="text-center">{product.user}</TableCell>
                 <TableCell className="text-center">{product.mrp}</TableCell>
                 <TableCell className="text-center">
                   {product.offer_price}
