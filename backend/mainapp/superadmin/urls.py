@@ -18,5 +18,5 @@ urlpatterns = [
     path('deleteProductBrand/<int:id>/', views.deleteProductBrand),
     path('getProductBrand/<int:id>/', views.getProductBrand),
     path('updateProductBrand/<int:id>/', views.updateProductBrand),
-    
+    path('getProducts/', views.getProducts),
 ]

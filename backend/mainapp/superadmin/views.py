@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer
-from ..models import User, Product_Category, Product_Brand
+from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer
+from ..models import User, Product_Category, Product_Brand, Product
 
 @api_view(['GET'])
 def is_admin(request):
@@ -193,3 +193,13 @@ def updateProductBrand(request, id):
         return Response(serializer.errors, status=400)
     else:
         return Response({"error": "Something Went Wrong"}, status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getProducts(request):
+    if request.method == 'GET':
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
