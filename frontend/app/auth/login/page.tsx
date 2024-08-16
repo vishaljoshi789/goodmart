@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function Register() {
+export default function Login() {
   let path = useSearchParams();
   let router = useRouter();
   let { baseURL, setAuthToken, setUserInfo } =
@@ -40,7 +40,6 @@ export default function Register() {
 
   // 2. Define a submit handler.
   let onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     let response = await fetch(`${baseURL}/auth/token/`, {
       method: "POST",
       headers: {
@@ -50,7 +49,6 @@ export default function Register() {
     });
     let data = await response.json();
     if (response.status === 200) {
-      console.log(data);
       localStorage.setItem("accessToken", JSON.stringify(data));
       setAuthToken(data);
       let response = await fetch(`${baseURL}/getUserInfo/`, {

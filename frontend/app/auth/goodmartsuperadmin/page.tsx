@@ -17,7 +17,7 @@ import { GMContext, GMContextType } from "@/app/(utils)/context/GMContext";
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function Register() {
+export default function AdminLogin() {
   let router = useRouter();
   let { baseURL, setAuthToken, authToken } =
     useContext<GMContextType>(GMContext);

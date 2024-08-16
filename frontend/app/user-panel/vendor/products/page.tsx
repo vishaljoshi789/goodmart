@@ -140,7 +140,7 @@ export default function Products() {
         <TableBody>
           {products &&
             products.map((product, index) => (
-              <TableRow className="text-center">
+              <TableRow className="text-center" key={index}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell className="flex justify-center items-center">
                   {product.image ? (

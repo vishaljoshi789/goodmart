@@ -27,3 +27,11 @@ class ProductDetailedSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'mrp', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video']
 
 
+class ProductEditSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True)
+    specifications = ProductSpecificationsSerializer(many=True)
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'mrp', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video']
+
+

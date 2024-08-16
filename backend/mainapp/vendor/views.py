@@ -1,5 +1,5 @@
 from ..models import Product
-from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductDetailedSerializer
+from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductDetailedSerializer, ProductEditSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from ..permissions import isVendor
@@ -73,6 +73,23 @@ def getProduct(request, product_id):
     product = Product.objects.get(id=product_id)
     serializer = ProductDetailedSerializer(product)
     return Response(serializer.data, status=200)
+
+@api_view(['GET'])
+@permission_classes([isVendor])
+def getProductToEdit(request, product_id):
+    product = Product.objects.get(id=product_id)
+    serializer = ProductEditSerializer(product)
+    return Response(serializer.data, status=200)
+
+@api_view(['PUT'])
+@permission_classes([isVendor])
+def updateProductDetails(request, product_id):
+    product = Product.objects.get(id=product_id)
+    serializer = ProductSerializer(product, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=200)
+    return Response(serializer.errors, status=400)
 
 
 

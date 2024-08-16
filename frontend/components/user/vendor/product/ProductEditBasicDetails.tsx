@@ -20,9 +20,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import { toast } from "sonner";
+import Image from "next/image";
+import { GMContext } from "@/app/(utils)/context/GMContext";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -36,32 +38,25 @@ const formSchema = z.object({
   tags: z.string().optional(),
 });
 
-export default function ProductAddBasicDetails({
+export default function ProductEditBasicDetails({
   category,
   brand,
-  setActiveTab,
-  setProduct,
+  productValues,
+  className,
 }: {
   category: any;
   brand: any;
-  setActiveTab: any;
-  setProduct: any;
+  productValues: any;
+  className?: string;
 }) {
   let [image, setImage] = useState<File | null>(null);
   let [video, setVideo] = useState<File | null>(null);
+  let { baseURL } = useContext(GMContext);
   let formData = new FormData();
   let api = useAxios();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      category: "",
-      brand: "",
-      mrp: "",
-      offer_price: "",
-      tags: "",
-    },
+    defaultValues: productValues,
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
     toast.loading("Uploading Product");
@@ -73,21 +68,22 @@ export default function ProductAddBasicDetails({
     formData.append("brand", values.brand);
     formData.append("mrp", values.mrp);
     formData.append("offer_price", values.offer_price);
-    formData.append("image", values.image);
+    values.image && formData.append("image", values.image);
     values.video && formData.append("video", values.video);
     formData.append("tags", values.tags ?? "");
-    let response = await api.post("/vendor/addProduct/", formData);
+    let response = await api.put(
+      `/vendor/updateProduct/${productValues.id}/`,
+      formData
+    );
     toast.dismiss();
-    if (response.status == 201) {
-      toast.success("Product Details Added");
-      setProduct(response.data);
-      setActiveTab(2);
+    if (response.status == 200) {
+      toast.success("Product Updated Successfully");
     } else {
-      toast.error("Error Creating Product");
+      toast.error("Error Updating Product");
     }
   }
   return (
-    <div className="bg-gray-50 shadow-lg rounded-lg p-5 h-fit">
+    <div className={`bg-gray-50 shadow-lg rounded-lg p-5 h-fit ${className}`}>
       <span className="text-blue-500 font-bold text-sm">
         Basic Product Details
       </span>
@@ -167,11 +163,12 @@ export default function ProductAddBasicDetails({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {category.map((cat: any) => (
-                        <SelectItem value={`${cat.id}`} key={cat.id}>
-                          {cat.name}
-                        </SelectItem>
-                      ))}
+                      {category &&
+                        category.map((cat: any) => (
+                          <SelectItem value={`${cat.id}`} key={cat.id}>
+                            {cat.name}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
 
@@ -195,11 +192,12 @@ export default function ProductAddBasicDetails({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {brand.map((brd: any) => (
-                        <SelectItem value={`${brd.id}`} key={brd.id}>
-                          {brd.name}
-                        </SelectItem>
-                      ))}
+                      {brand &&
+                        brand.map((brd: any) => (
+                          <SelectItem value={`${brd.id}`} key={brd.id}>
+                            {brd.name}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -224,10 +222,27 @@ export default function ProductAddBasicDetails({
                         }
                       }}
                       accept="image/*"
-                      required
+                      required={productValues.image ? false : true}
                     />
                   </FormControl>
                   <FormMessage />
+                  {image ? (
+                    <Image
+                      src={URL.createObjectURL(image)}
+                      alt="product-img"
+                      height={100}
+                      width={100}
+                    />
+                  ) : (
+                    productValues.image && (
+                      <Image
+                        src={`${baseURL}${productValues.image}`}
+                        alt="temp-img"
+                        height={100}
+                        width={100}
+                      />
+                    )
+                  )}
                 </FormItem>
               )}
             />
@@ -250,6 +265,11 @@ export default function ProductAddBasicDetails({
                     />
                   </FormControl>
                   <FormMessage />
+                  {productValues.video && (
+                    <video controls autoPlay loop muted className="w-60">
+                      <source src={`${baseURL}${productValues.video}`} />
+                    </video>
+                  )}
                 </FormItem>
               )}
             />
@@ -259,7 +279,7 @@ export default function ProductAddBasicDetails({
             name="tags"
             render={({ field }) => (
               <FormItem className="">
-                <FormLabel>Tags {`(Seprated By comma ',')`}</FormLabel>{" "}
+                <FormLabel>Tags {`(Seprated By comma ',')`} </FormLabel>{" "}
                 <FormControl>
                   <Textarea {...field} />
                 </FormControl>
