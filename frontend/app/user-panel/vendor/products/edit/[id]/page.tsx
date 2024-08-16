@@ -67,9 +67,9 @@ export default function EditProduct({ params }: { params: { id: string } }) {
     getProduct();
   }, []);
   return (
-    <div>
+    <div className="p-10">
       <h2 className="font-semibold text-xl text-gray-600">Edit Product</h2>
-      <div className="flex gap-10 justify-center w-full ">
+      <div className="flex gap-10 justify-center w-full flex-col xl:flex-row my-5">
         {product && (
           <>
             <ProductEditBasicDetails
