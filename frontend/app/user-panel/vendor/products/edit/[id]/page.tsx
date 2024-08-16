@@ -3,8 +3,8 @@
 import { GMContext } from "@/app/(utils)/context/GMContext";
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import ProductEditBasicDetails from "@/components/user/vendor/product/ProductEditBasicDetails";
+import ProductEditImages from "@/components/user/vendor/product/ProductEditImages";
 import { useContext, useEffect, useState } from "react";
-import { set } from "react-hook-form";
 
 interface ProductImage {
   id: number;
@@ -70,12 +70,15 @@ export default function EditProduct({ params }: { params: { id: string } }) {
       <h2 className="font-semibold text-xl text-gray-600">Edit Product</h2>
       <div className="flex gap-10 justify-center w-full ">
         {product && (
-          <ProductEditBasicDetails
-            category={category}
-            brand={brand}
-            productValues={product}
-            className="w-fit"
-          />
+          <>
+            <ProductEditBasicDetails
+              category={category}
+              brand={brand}
+              productValues={product}
+              className="w-fit"
+            />
+            <ProductEditImages product={product} />
+          </>
         )}
       </div>
     </div>

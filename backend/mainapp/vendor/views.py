@@ -91,5 +91,25 @@ def updateProductDetails(request, product_id):
         return Response(serializer.data, status=200)
     return Response(serializer.errors, status=400)
 
+@api_view(['PUT'])
+@permission_classes([isVendor])
+def updateProductImages(request, product_id):
+    images = []
+    product = Product.objects.get(id=product_id)
+    product_images = product.images.all()
+    for image in product_images:
+        image.delete()
+    for field, value in request.FILES.items():
+            if 'image' in field:
+                images.append({"image": request.FILES[field]})
+    for image in images:
+        image['product'] = product_id
+        serializer = ProductImageSerializer(data=image)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            return Response(serializer.errors, status=400)
+    return Response(status=201)
+
 
 
