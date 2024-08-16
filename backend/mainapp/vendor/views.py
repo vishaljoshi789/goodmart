@@ -111,5 +111,22 @@ def updateProductImages(request, product_id):
             return Response(serializer.errors, status=400)
     return Response(status=201)
 
+@api_view(['PUT'])
+@permission_classes([isVendor])
+def updateProductSpecifications(request, product_id):
+    product = Product.objects.get(id=product_id)
+    product_specifications = product.specifications.all()
+    for specification in product_specifications:
+        specification.delete()
+    specifications = json.loads(request.data['specifications'])
+    for specification in specifications:
+        specification['product'] = product_id
+        serializer = ProductSpecificationsSerializer(data=specification)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            return Response(serializer.errors, status=400)
+    return Response(status=201)
+
 
 

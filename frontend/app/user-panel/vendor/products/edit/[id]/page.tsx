@@ -4,6 +4,7 @@ import { GMContext } from "@/app/(utils)/context/GMContext";
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import ProductEditBasicDetails from "@/components/user/vendor/product/ProductEditBasicDetails";
 import ProductEditImages from "@/components/user/vendor/product/ProductEditImages";
+import ProductEditSpecs from "@/components/user/vendor/product/ProductEditSpecs";
 import { useContext, useEffect, useState } from "react";
 
 interface ProductImage {
@@ -78,6 +79,7 @@ export default function EditProduct({ params }: { params: { id: string } }) {
               className="w-fit"
             />
             <ProductEditImages product={product} />
+            <ProductEditSpecs product={product} />
           </>
         )}
       </div>
