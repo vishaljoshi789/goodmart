@@ -1,9 +1,9 @@
 "use client";
 
 import useAxios from "@/app/(utils)/hooks/useAxios";
-import ProductEditBasicDetails from "@/components/user/vendor/product/ProductEditBasicDetails";
-import ProductEditImages from "@/components/user/vendor/product/ProductEditImages";
-import ProductEditSpecs from "@/components/user/vendor/product/ProductEditSpecs";
+import ProductEditBasicDetails from "@/components/admin/product/ProductEditBasicDetails";
+import ProductEditImages from "@/components/admin/product/ProductEditImages";
+import ProductEditSpecs from "@/components/admin/product/ProductEditSpecs";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 

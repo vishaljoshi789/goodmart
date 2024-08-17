@@ -244,3 +244,13 @@ def getProductToEdit(request, id):
         return Response(serializer.data, status=200)
     else:
         return Response(status=400)
+    
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateProductDetails(request, id):
+    product = Product.objects.get(id=id)
+    serializer = ProductSerializer(product, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=200)
+    return Response(serializer.errors, status=400)

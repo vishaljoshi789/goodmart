@@ -144,7 +144,7 @@ export default function Products() {
             products.map((product, index) => (
               <TableRow className="text-center" key={index}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell className="flex justify-center items-center h-full">
+                <TableCell className="">
                   {product.image ? (
                     <Image
                       src={`${baseURL}${product.image}`}

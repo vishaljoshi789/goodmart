@@ -23,4 +23,5 @@ urlpatterns = [
     path('deleteProduct/<int:id>/', views.deleteProduct),
     path('getProduct/<int:id>/', views.getProduct),
     path('getProductToEdit/<int:id>/', views.getProductToEdit),
+    path('updateProductDetails/<int:id>/', views.updateProductDetails),
 ]
