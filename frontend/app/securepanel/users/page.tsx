@@ -211,7 +211,7 @@ const AdminPage: NextPage = () => {
                   </AlertDialogContent>
                 </AlertDialog>
 
-                <Link href={`/securepanel/users/${user.id}`}>
+                <Link href={`/securepanel/users/view?id=${user.id}`}>
                   <button className="px-4 py-2 bg-green-500 text-white">
                     <FaRegEye className="text-xl" />
                   </button>

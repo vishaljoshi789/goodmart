@@ -13,6 +13,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useSearchParams } from "next/navigation";
 
 interface ProductImage {
   image: string;
@@ -39,16 +40,18 @@ interface Product {
   images: ProductImage[];
   specifications: ProductSpec[];
 }
-export default function ViewProduct({ params }: { params: { id: string } }) {
+export default function ViewProduct() {
   let { baseURL } = useContext(GMContext);
   let api = useAxios();
+  let path = useSearchParams();
+  let id = path.get("id");
   let [product, setProduct] = useState<Product | null>(null);
   let [loading, setLoading] = useState(true);
   const [cApi, setCApi] = React.useState<CarouselApi>();
   let [activeImage, setActiveImage] = useState({});
 
   let getProduct = async () => {
-    let response = await api.get(`/vendor/getProduct/${params.id}/`);
+    let response = await api.get(`/vendor/getProduct/${id}/`);
     // console.log(response.data);
     if (response.status == 200) {
       setProduct(response.data);

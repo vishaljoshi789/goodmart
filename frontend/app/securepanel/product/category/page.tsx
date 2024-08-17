@@ -93,7 +93,7 @@ export default function ProductCategory() {
                 >
                   <MdDelete className="text-red-500 text-2xl" />
                 </Button>
-                <Link href={`/securepanel/product/category/edit/${cat.id}`}>
+                <Link href={`/securepanel/product/category/edit?id=${cat.id}`}>
                   <Button className="bg-white hover:bg-gray-300">
                     <MdModeEdit className="text-2xl text-yellow-500" />
                   </Button>

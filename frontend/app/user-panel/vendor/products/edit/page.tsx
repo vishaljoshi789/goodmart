@@ -1,11 +1,11 @@
 "use client";
 
-import { GMContext } from "@/app/(utils)/context/GMContext";
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import ProductEditBasicDetails from "@/components/user/vendor/product/ProductEditBasicDetails";
 import ProductEditImages from "@/components/user/vendor/product/ProductEditImages";
 import ProductEditSpecs from "@/components/user/vendor/product/ProductEditSpecs";
-import { useContext, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface ProductImage {
   id: number;
@@ -35,14 +35,15 @@ interface Product {
   specifications: ProductSpec[];
 }
 
-export default function EditProduct({ params }: { params: { id: string } }) {
-  let { baseURL } = useContext(GMContext);
+export default function EditProduct() {
   let api = useAxios();
+  let path = useSearchParams();
+  let id = path.get("id");
   let [product, setProduct] = useState<Product | null>(null);
   let [category, setCategory] = useState<any>(null);
   let [brand, setBrand] = useState<any>(null);
   let getProduct = async () => {
-    let response = await api.get(`/vendor/getProductToEdit/${params.id}/`);
+    let response = await api.get(`/vendor/getProductToEdit/${id}/`);
     if (response.status == 200) {
       response.data.category = response.data.category.toString();
       response.data.brand = response.data.brand.toString();

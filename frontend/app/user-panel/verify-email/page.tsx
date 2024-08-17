@@ -1,16 +1,14 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { GMContext } from "@/app/(utils)/context/GMContext";
 
-export default function VerifyEmail({
-  params,
-}: {
-  params: { uidb64: string; token: string };
-}) {
+export default function VerifyEmail() {
   let { baseURL } = useContext(GMContext);
-  const { uidb64, token } = params;
+  let path = useSearchParams();
+  let uidb64 = path.get("uid");
+  let token = path.get("token");
   let router = useRouter();
   let [status, setStatus] = useState<string>("Verifying Email");
 

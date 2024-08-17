@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { GMContext } from "@/app/(utils)/context/GMContext";
 
@@ -26,50 +26,37 @@ const formSchema = z.object({
   description: z.string(),
   image: z.any(),
   featured: z.boolean(),
-  parent: z.any(),
 });
 
-interface Category {
+interface Brand {
   id: number;
   name: string;
   description: string;
   image: string;
   featured: boolean;
-  parent: string;
 }
-export default function ProductCategoryEdit({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function ProductBrandEdit() {
   let router = useRouter();
   let api = useAxios();
-  let [category, setCategory] = useState<Category>();
+  let [brand, setBrand] = useState<Brand>();
   let [image, setImage] = useState<any>(null);
-  let [categories, setCategories] = useState<Category[]>([]);
   let { baseURL } = useContext(GMContext);
+  let path = useSearchParams();
+  let id = path.get("id");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: category,
+    defaultValues: brand,
   });
 
   let fetchCategory = async () => {
-    let response = await api.get(
-      `/admin/getProductCategoryParentId/${params.id}/`
-    );
-    setCategory(response.data);
+    let response = await api.get(`/admin/getProductBrand/${id}/`);
+    setBrand(response.data);
     form.reset(response.data);
-  };
-
-  let fetchCategories = async () => {
-    let response = await api.get("/admin/getProductCategories/");
-    setCategories(response.data);
   };
 
   useEffect(() => {
     fetchCategory();
-    fetchCategories();
   }, []);
 
   let onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -81,25 +68,22 @@ export default function ProductCategoryEdit({
       formData.append("description", values.description);
       formData.append("featured", values.featured.toString());
       let response = await api.put(
-        `/admin/updateProductCategory/${params.id}/`,
+        `/admin/updateProductBrand/${id}/`,
         formData
       );
       //   console.log(response);
       if (response.status === 200) {
         toast.success("Category Updated Successfully");
-        router.push("/securepanel/product/category");
+        router.push("/securepanel/product/brand");
       } else {
         toast.error("Error Updating Category");
       }
     } else {
-      let response = await api.put(
-        `/admin/updateProductCategory/${params.id}/`,
-        values
-      );
+      let response = await api.put(`/admin/updateProductBrand/${id}/`, values);
       console.log(response);
       if (response.status === 200) {
         toast.success("Category Updated Successfully");
-        router.push("/securepanel/product/category");
+        router.push("/securepanel/product/brand");
       } else {
         toast.error("Error Updating Category");
       }
@@ -107,7 +91,7 @@ export default function ProductCategoryEdit({
   };
 
   return (
-    category && (
+    brand && (
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -147,10 +131,10 @@ export default function ProductCategoryEdit({
               render={() => (
                 <FormItem>
                   <FormLabel>Image</FormLabel>
-                  {category.image && (
+                  {brand.image && (
                     <Image
-                      src={`${baseURL}${category.image}`}
-                      alt={category.name}
+                      src={`${baseURL}${brand.image}`}
+                      alt={brand.name}
                       width={50}
                       height={50}
                     />
@@ -192,27 +176,6 @@ export default function ProductCategoryEdit({
                     />
                   </FormControl>
                   <FormLabel className="!mt-0">Featured</FormLabel>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="parent"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Parent Category</FormLabel>
-                  <FormControl>
-                    <select {...field} className="w-full">
-                      <option value="">None</option>
-                      {categories &&
-                        categories.map((cat, index) => (
-                          <option key={index} value={cat.id}>
-                            {cat.name}
-                          </option>
-                        ))}
-                    </select>
-                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

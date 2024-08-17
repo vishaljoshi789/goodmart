@@ -1,6 +1,7 @@
 "use client";
 import useAxios from "@/app/(utils)/hooks/useAxios";
-import React, { useContext, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface User {
@@ -83,9 +84,10 @@ interface User {
   date_joined: string;
 }
 
-export default function UserView({ params }: { params: { id: string } }) {
+export default function UserView() {
   let api = useAxios();
-  let { id } = params;
+  let path = useSearchParams();
+  let id = path.get("id");
   let [user, setUser] = useState<User | null>(null);
   let [loading, setLoading] = useState(true);
   let getUser = async () => {

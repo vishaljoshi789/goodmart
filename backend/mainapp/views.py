@@ -30,7 +30,7 @@ def registerUser(request):
         user = serializer.save()
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = email_verification_token.make_token(user)
-        verification_link = f"{settings.FRONTEND_URL}/user-panel/verify-email/{uid}/{token}/"
+        verification_link = f"{settings.FRONTEND_URL}/user-panel/verify-email?uid={uid}&token={token}"
         try:
             subject = 'Registered to GoodMart'
             html_message = render_to_string('registerMail.html', {'url': verification_link, 'name': user.name, 'email': user.email, 'phone': user.phone_no, 'user_id': user.user_id})

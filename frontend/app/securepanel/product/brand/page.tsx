@@ -89,7 +89,7 @@ export default function ProductBrand() {
                 >
                   <MdDelete className="text-red-500 text-2xl" />
                 </Button>
-                <Link href={`/securepanel/product/brand/edit/${brand.id}`}>
+                <Link href={`/securepanel/product/brand/edit?id=${brand.id}`}>
                   <Button className="bg-white hover:bg-gray-300">
                     <MdModeEdit className="text-2xl text-yellow-500" />
                   </Button>

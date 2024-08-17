@@ -222,12 +222,12 @@ export default function Products() {
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
-                    <Link href={`products/edit/${product.id}/`}>
+                    <Link href={`products/edit?id=${product.id}`}>
                       <Button className="bg-white shadow-lg hover:bg-gray-300">
                         <FaRegEdit className="text-2xl text-black" />
                       </Button>
                     </Link>
-                    <Link href={`products/view/${product.id}/`}>
+                    <Link href={`products/view?id=${product.id}`}>
                       <Button className="bg-white shadow-lg hover:bg-gray-300">
                         <FaEye className="text-2xl text-violet-500" />
                       </Button>
