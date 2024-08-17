@@ -75,7 +75,7 @@ export default function ProductEditImages({ product }: { product: any }) {
 
       try {
         let response = await api.put(
-          `/vendor/updateProductImages/${product.id}/`,
+          `/admin/updateProductImages/${product.id}/`,
           formData
         );
         console.log(response.data);

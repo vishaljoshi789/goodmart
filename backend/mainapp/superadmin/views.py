@@ -1,8 +1,9 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer
+from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer
 from ..models import User, Product_Category, Product_Brand, Product
+import json
 
 @api_view(['GET'])
 def is_admin(request):
@@ -254,3 +255,43 @@ def updateProductDetails(request, id):
         serializer.save()
         return Response(serializer.data, status=200)
     return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateProductImages(request, id):
+    images = []
+    product = Product.objects.get(id=id)
+    product_images = product.images.all()
+    for image in product_images:
+        image.delete()
+    for field, value in request.FILES.items():
+            if 'image' in field:
+                images.append({"image": request.FILES[field]})
+    for image in images:
+        image['product'] = id
+        serializer = ProductImageSerializer(data=image)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            return Response(serializer.errors, status=400)
+    return Response(status=201)
+
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateProductSpecifications(request, id):
+    product = Product.objects.get(id=id)
+    product_specifications = product.specifications.all()
+    for specification in product_specifications:
+        specification.delete()
+    specifications = json.loads(request.data['specifications'])
+    for specification in specifications:
+        specification['product'] = id
+        serializer = ProductSpecificationsSerializer(data=specification)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            return Response(serializer.errors, status=400)
+    return Response(status=201)
+
+
+

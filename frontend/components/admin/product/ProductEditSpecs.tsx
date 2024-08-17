@@ -48,7 +48,7 @@ export default function ProductEditSpecs({ product }: { product: any }) {
 
     try {
       let response = await api.put(
-        `/vendor/updateProductSpecs/${product.id}/`,
+        `/admin/updateProductSpecs/${product.id}/`,
         formData
       );
       if (response.status == 201) {
