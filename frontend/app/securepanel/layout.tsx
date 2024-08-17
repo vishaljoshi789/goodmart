@@ -28,7 +28,7 @@ export default function RootLayout({
       <AdminRoute>
         <div className="flex">
           <Sidebar />
-          <div className="flex-1">
+          <div className="w-full">
             <Header />
             {children}
           </div>

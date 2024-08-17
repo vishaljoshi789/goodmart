@@ -15,7 +15,7 @@ const AdminRoute = ({ children, ...rest }: { children: ReactNode }) => {
     }
   }, [loading]);
 
-  return <div>{isAdmin ? children : <NotFoundPage />}</div>;
+  return <>{isAdmin ? children : <NotFoundPage />}</>;
 };
 
 export default AdminRoute;

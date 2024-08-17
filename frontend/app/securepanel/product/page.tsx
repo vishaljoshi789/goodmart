@@ -126,7 +126,7 @@ export default function Products() {
       </div>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="">
             <TableHead className="text-center">S.No.</TableHead>
             <TableHead className="text-center">Image</TableHead>
             <TableHead className="text-center">Product Name</TableHead>
@@ -144,10 +144,10 @@ export default function Products() {
             products.map((product, index) => (
               <TableRow className="text-center" key={index}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell className="flex justify-center items-center">
+                <TableCell className="flex justify-center items-center h-full">
                   {product.image ? (
                     <Image
-                      src={`${baseURL}/${product.image}`}
+                      src={`${baseURL}${product.image}`}
                       alt="product image"
                       height={40}
                       width={40}

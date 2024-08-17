@@ -1,7 +1,7 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer
+from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer
 from ..models import User, Product_Category, Product_Brand, Product
 
 @api_view(['GET'])
@@ -231,6 +231,16 @@ def getProduct(request, id):
     if request.method == 'GET':
         product = Product.objects.get(id=id)
         serializer = ProductDetailedSerializer(product)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getProductToEdit(request, id):
+    if request.method == 'GET':
+        product = Product.objects.get(id=id)
+        serializer = ProductEditSerializer(product)
         return Response(serializer.data, status=200)
     else:
         return Response(status=400)
