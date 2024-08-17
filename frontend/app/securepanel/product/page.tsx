@@ -158,7 +158,9 @@ export default function Products() {
                 <TableCell className="text-center">
                   {product.description}
                 </TableCell>
-                <TableCell className="text-center">{product.user}</TableCell>
+                <TableCell className="text-center text-blue-500 underline">
+                  <Link href={`users/view?id=${product.user}`}>View</Link>
+                </TableCell>
                 <TableCell className="text-center">{product.mrp}</TableCell>
                 <TableCell className="text-center">
                   {product.offer_price}
@@ -225,12 +227,12 @@ export default function Products() {
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
-                    <Link href={`products/edit/${product.id}/`}>
+                    <Link href={`product/edit?id=${product.id}`}>
                       <Button className="bg-white shadow-lg hover:bg-gray-300">
                         <FaRegEdit className="text-2xl text-black" />
                       </Button>
                     </Link>
-                    <Link href={`products/view/${product.id}/`}>
+                    <Link href={`product/view?id=${product.id}`}>
                       <Button className="bg-white shadow-lg hover:bg-gray-300">
                         <FaEye className="text-2xl text-violet-500" />
                       </Button>
