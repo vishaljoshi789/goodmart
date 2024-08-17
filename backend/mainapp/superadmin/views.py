@@ -203,3 +203,24 @@ def getProducts(request):
         return Response(serializer.data, status=200)
     else:
         return Response(status=400)
+    
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def changeProductStatus(request, id):
+    if request.method == 'POST':
+        product = Product.objects.get(id=id)
+        product.status = not product.status
+        product.save()
+        return Response({"status": "Product status changed."}, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def deleteProduct(request, id):
+    if request.method == 'DELETE':
+        product = Product.objects.get(id=id)
+        product.delete()
+        return Response({"status": "Product deleted."}, status=204)
+    else:
+        return Response(status=400)

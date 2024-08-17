@@ -93,7 +93,7 @@ export default function Products() {
 
   let changeStatus = async (id: number) => {
     try {
-      let response = await api.post(`/vendor/changeProductStatus/${id}/`);
+      let response = await api.post(`/admin/changeProductStatus/${id}/`);
       if (response.status == 200) {
         toast.success("Product Status Changed");
         getProducts();
@@ -106,8 +106,8 @@ export default function Products() {
     }
   };
   let deleteProduct = async (id: number) => {
-    let response = await api.delete(`/vendor/deleteProduct/${id}/`);
-    if (response.status == 200) {
+    let response = await api.delete(`/admin/deleteProduct/${id}/`);
+    if (response.status == 204) {
       toast.success("Product Deleted");
       getProducts();
     } else {
@@ -120,9 +120,9 @@ export default function Products() {
         <span className="text-2xl font-bold text-blue-500 underline ">
           Products
         </span>
-        <Link href="products/add" className="">
+        {/* <Link href="products/add" className="">
           <IoMdAddCircle className="text-green-500 text-3xl" />
-        </Link>
+        </Link> */}
       </div>
       <Table>
         <TableHeader>
