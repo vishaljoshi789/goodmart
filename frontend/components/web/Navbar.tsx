@@ -11,6 +11,14 @@ import {
 } from "@/components/ui/menubar";
 import { useContext } from "react";
 import { GMContext } from "@/app/(utils)/context/GMContext";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { IoMdSearch } from "react-icons/io";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export default function Navbar() {
   let { authToken, logout } = useContext(GMContext);
@@ -23,53 +31,91 @@ export default function Navbar() {
           sizes="100vw"
           width={0}
           height={0}
-          className="bg-white rounded-full w-16 h-16"
+          className="bg-white rounded-full md:w-16 md:h-16 w-10 h-10"
         />
         <Link
           href={`/`}
-          className="text-white font-bold font-carterOne text-2xl"
+          className="text-white font-bold font-carterOne text-2xl hidden md:block"
         >
           GOODMART
         </Link>
       </div>
-      <Menubar>
-        <MenubarMenu>
-          <MenubarTrigger>
-            <FaUser className="text-red-500 text-xl" />
-          </MenubarTrigger>
-
-          <MenubarContent className="text-red-500">
-            {authToken ? (
-              <>
-                <MenubarItem className="hover:bg-red-500 hover:text-white focus:bg-red-500 focus:text-white">
-                  <Link href={`/user-panel`} className="w-full">
-                    Dashboard
-                  </Link>
-                </MenubarItem>
-                <MenubarItem
-                  onClick={logout}
-                  className="hover:bg-red-500 hover:text-white focus:bg-red-500 focus:text-white"
+      <div className="md:flex hidden items-center bg-white rounded-md shadow-md">
+        <Input
+          type="text"
+          placeholder="Search your Products"
+          className="rounded-r-none w-80"
+        />
+        <Button
+          type="submit"
+          className="rounded-l-none bg-red-500 hover:bg-red-600"
+        >
+          <IoMdSearch className="text-xl" />
+        </Button>
+      </div>
+      <div className="flex gap-2 items-center">
+        <div className="block md:hidden">
+          <Popover>
+            <PopoverTrigger className="px-4 py-2 bg-white text-red-500 rounded-md">
+              <IoMdSearch className="text-xl" />
+            </PopoverTrigger>
+            <PopoverContent>
+              <div className="flex items-center bg-white rounded-md shadow-md border">
+                <Input
+                  type="text"
+                  placeholder="Search your Products"
+                  className="rounded-r-none"
+                />
+                <Button
+                  type="submit"
+                  className="rounded-l-none bg-red-500 hover:bg-red-600"
                 >
-                  Logout
-                </MenubarItem>
-              </>
-            ) : (
-              <>
-                <MenubarItem className="hover:bg-red-500 hover:text-white focus:bg-red-500 focus:text-white">
-                  <Link href={`/auth/login`} className="w-full">
-                    Login
-                  </Link>
-                </MenubarItem>
-                <MenubarItem className="hover:bg-red-500 hover:text-white focus:bg-red-500 focus:text-white">
-                  <Link href={`/auth/register`} className="w-full">
-                    Register
-                  </Link>
-                </MenubarItem>
-              </>
-            )}
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
+                  <IoMdSearch className="text-xl" />
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <Menubar>
+          <MenubarMenu>
+            <MenubarTrigger className="">
+              <FaUser className="text-red-500 text-xl" />
+            </MenubarTrigger>
+
+            <MenubarContent className="text-red-500">
+              {authToken ? (
+                <>
+                  <MenubarItem className="hover:bg-red-500 hover:text-white focus:bg-red-500 focus:text-white">
+                    <Link href={`/user-panel`} className="w-full">
+                      Dashboard
+                    </Link>
+                  </MenubarItem>
+                  <MenubarItem
+                    onClick={logout}
+                    className="hover:bg-red-500 hover:text-white focus:bg-red-500 focus:text-white"
+                  >
+                    Logout
+                  </MenubarItem>
+                </>
+              ) : (
+                <>
+                  <MenubarItem className="hover:bg-red-500 hover:text-white focus:bg-red-500 focus:text-white">
+                    <Link href={`/auth/login`} className="w-full">
+                      Login
+                    </Link>
+                  </MenubarItem>
+                  <MenubarItem className="hover:bg-red-500 hover:text-white focus:bg-red-500 focus:text-white">
+                    <Link href={`/auth/register`} className="w-full">
+                      Register
+                    </Link>
+                  </MenubarItem>
+                </>
+              )}
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
+      </div>
     </div>
   );
 }
