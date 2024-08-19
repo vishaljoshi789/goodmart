@@ -9,7 +9,7 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { GMContext } from "@/app/(utils)/context/GMContext";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -22,6 +22,7 @@ import {
 
 export default function Navbar() {
   let { authToken, logout } = useContext(GMContext);
+  let [search, setSearch] = useState("");
   return (
     <div className="bg-red-700 flex justify-between items-center p-5">
       <div className="flex items-center gap-3">
@@ -45,13 +46,16 @@ export default function Navbar() {
           type="text"
           placeholder="Search your Products"
           className="rounded-r-none w-80"
+          onChange={(e) => setSearch(e.target.value)}
         />
-        <Button
-          type="submit"
-          className="rounded-l-none bg-red-500 hover:bg-red-600"
-        >
-          <IoMdSearch className="text-xl" />
-        </Button>
+        <Link href={search != "" ? `/products?q=${search}` : ``}>
+          <Button
+            type="submit"
+            className="rounded-l-none bg-red-500 hover:bg-red-600"
+          >
+            <IoMdSearch className="text-xl" />
+          </Button>
+        </Link>
       </div>
       <div className="flex gap-2 items-center">
         <div className="block md:hidden">
@@ -65,13 +69,16 @@ export default function Navbar() {
                   type="text"
                   placeholder="Search your Products"
                   className="rounded-r-none"
+                  onChange={(e) => setSearch(e.target.value)}
                 />
-                <Button
-                  type="submit"
-                  className="rounded-l-none bg-red-500 hover:bg-red-600"
-                >
-                  <IoMdSearch className="text-xl" />
-                </Button>
+                <Link href={search != "" ? `/products?q=${search}` : ``}>
+                  <Button
+                    type="submit"
+                    className="rounded-l-none bg-red-500 hover:bg-red-600"
+                  >
+                    <IoMdSearch className="text-xl" />
+                  </Button>
+                </Link>
               </div>
             </PopoverContent>
           </Popover>
