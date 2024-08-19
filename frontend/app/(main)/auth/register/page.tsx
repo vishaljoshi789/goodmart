@@ -174,160 +174,35 @@ export default function Register() {
   };
 
   return (
-    <div className="space-y-2 md:w-96 bg-white rounded-md shadow-md m-auto">
-      <div className="typeButton flex justify-center gap-2">
-        <span
-          className={`
+    <div className="h-full flex items-center mt-10 justify-center">
+      <div className="space-y-2 md:w-96 bg-white rounded-md shadow-md">
+        <div className="flex">
+          <h1 className="text-2xl font-bold text-red-500 underline">
+            Register
+          </h1>
+        </div>
+        <div className="flex justify-center gap-2">
+          <span
+            className={`
             ${
               type == "Customer"
                 ? "bg-red-500 text-white"
                 : "bg-white text-black"
             }  w-1/2 p-2 text-sm cursor-pointer text-center`}
-          onClick={() => setType("Customer")}
-        >
-          Customer
-        </span>
-        <span
-          className={`${
-            type == "Vendor" ? "bg-red-500 text-white" : "bg-white text-black"
-          }  w-1/2 p-2 text-sm cursor-pointer text-center`}
-          onClick={() => setType("Vendor")}
-        >
-          Business Partner
-        </span>
-      </div>
-      {type == "Customer" ? (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="p-5 space-y-3"
+            onClick={() => setType("Customer")}
           >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Full Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Email Address" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone_no"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Phone Number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />{" "}
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter Password"
-                      {...field}
-                      type="password"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />{" "}
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Re-Enter Password"
-                      {...field}
-                      type="password"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />{" "}
-            <AlertDialog>
-              <AlertDialogTrigger
-                type="submit"
-                className="bg-gray-800 text-white p-2 rounded-md font-bold"
-              >
-                Submit
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    Location is required for Registration
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Location is required for registration for verification
-                    process. Please enable location services and try again.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Back</AlertDialogCancel>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-            <hr />
-            <div className="flex justify-center items-center gap-2">
-              <span>Already have account. </span>
-              <Link href="/auth/login">
-                <Button className="bg-blue-500 hover:bg-blue-600">Login</Button>
-              </Link>
-            </div>
-          </form>
-        </Form>
-      ) : (
-        <div>
-          <hr />
-          <div className="typeButton flex justify-center gap-2 mt-2">
-            <span
-              className={`
-              ${
-                vendorType == "Product Vendor" ? "bg-red-500 text-white" : ""
-              } w-1/2 p-2 text-sm cursor-pointer text-center`}
-              onClick={() => setVendorType("Product Vendor")}
-            >
-              Product Vendor
-            </span>
-            <span
-              className={`${
-                vendorType == "Service Vendor" ? "bg-red-500 text-white" : ""
-              } w-1/2 p-2 text-sm cursor-pointer text-center`}
-              onClick={() => setVendorType("Service Vendor")}
-            >
-              Service Vendor
-            </span>
-          </div>
+            Customer
+          </span>
+          <span
+            className={`${
+              type == "Vendor" ? "bg-red-500 text-white" : "bg-white text-black"
+            }  w-1/2 p-2 text-sm cursor-pointer text-center`}
+            onClick={() => setType("Vendor")}
+          >
+            Business Partner
+          </span>
+        </div>
+        {type == "Customer" ? (
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -374,32 +249,6 @@ export default function Register() {
               />{" "}
               <FormField
                 control={form.control}
-                name="aadhar"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Aadhar Number</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter Aadhar Number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />{" "}
-              <FormField
-                control={form.control}
-                name="pan"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Pan Number</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter PAN Number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />{" "}
-              <FormField
-                control={form.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
@@ -434,8 +283,8 @@ export default function Register() {
               />{" "}
               <AlertDialog>
                 <AlertDialogTrigger
-                  className="bg-gray-800 text-white p-2 rounded-md font-bold"
                   type="submit"
+                  className="bg-gray-800 text-white p-2 rounded-md font-bold"
                 >
                   Submit
                 </AlertDialogTrigger>
@@ -465,8 +314,168 @@ export default function Register() {
               </div>
             </form>
           </Form>
-        </div>
-      )}
+        ) : (
+          <div>
+            <hr />
+            <div className="typeButton flex justify-center gap-2 mt-2">
+              <span
+                className={`
+              ${
+                vendorType == "Product Vendor" ? "bg-red-500 text-white" : ""
+              } w-1/2 p-2 text-sm cursor-pointer text-center`}
+                onClick={() => setVendorType("Product Vendor")}
+              >
+                Product Vendor
+              </span>
+              <span
+                className={`${
+                  vendorType == "Service Vendor" ? "bg-red-500 text-white" : ""
+                } w-1/2 p-2 text-sm cursor-pointer text-center`}
+                onClick={() => setVendorType("Service Vendor")}
+              >
+                Service Vendor
+              </span>
+            </div>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="p-5 space-y-3"
+              >
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Full Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Email Address" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone_no"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Phone Number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />{" "}
+                <FormField
+                  control={form.control}
+                  name="aadhar"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Aadhar Number</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter Aadhar Number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />{" "}
+                <FormField
+                  control={form.control}
+                  name="pan"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Pan Number</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter PAN Number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />{" "}
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter Password"
+                          {...field}
+                          type="password"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />{" "}
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Re-Enter Password"
+                          {...field}
+                          type="password"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />{" "}
+                <AlertDialog>
+                  <AlertDialogTrigger
+                    className="bg-gray-800 text-white p-2 rounded-md font-bold"
+                    type="submit"
+                  >
+                    Submit
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Location is required for Registration
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Location is required for registration for verification
+                        process. Please enable location services and try again.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Back</AlertDialogCancel>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+                <hr />
+                <div className="flex justify-center items-center gap-2">
+                  <span>Already have account. </span>
+                  <Link href="/auth/login">
+                    <Button className="bg-blue-500 hover:bg-blue-600">
+                      Login
+                    </Button>
+                  </Link>
+                </div>
+              </form>
+            </Form>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -32,7 +32,6 @@ export default function RootLayout({
             <Header />
             {children}
           </div>
-          <Toaster richColors />
         </div>
       </AdminRoute>
     </GMAdminProvider>
