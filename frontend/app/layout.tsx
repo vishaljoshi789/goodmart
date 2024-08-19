@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Inter as FontSans } from "next/font/google";
+import { Inter as FontSans, Carter_One } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { GMProvider } from "./(utils)/context/GMContext";
+import Navbar from "@/components/web/Navbar";
 
 const fontSans = FontSans({
   subsets: ["latin"],
+});
+
+const carterOne = Carter_One({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-carter-one",
 });
 
 export const metadata: Metadata = {
@@ -24,10 +31,14 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.className
+          fontSans.className,
+          carterOne.variable
         )}
       >
-        <GMProvider>{children}</GMProvider>
+        <GMProvider>
+          <Navbar />
+          {children}
+        </GMProvider>
         <Toaster richColors expand={true} />
       </body>
     </html>

@@ -74,6 +74,7 @@ const config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)"],
+        carterOne: ["var(--font-carter-one)"],
       },
     },
   },
