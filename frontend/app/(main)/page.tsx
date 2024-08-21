@@ -1,17 +1,62 @@
+"use client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { TbAlertTriangle } from "react-icons/tb";
 
 export default function Home() {
+  let [location, setLocation] = useState(null);
+  let showPosition = (position: GeolocationPosition) => {
+    let lat = position.coords.latitude;
+    let long = position.coords.longitude;
+    localStorage.setItem("location", JSON.stringify({ lat: lat, long: long }));
+  };
+  let showError = (error: GeolocationPositionError) => {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        console.log("User denied the request for Geolocation.");
+        break;
+      case error.POSITION_UNAVAILABLE:
+        console.log("Location information is unavailable.");
+        break;
+      case error.TIMEOUT:
+        console.log("The request to get user location timed out.");
+        break;
+    }
+  };
+
+  let getLocation = () => {
+    console.log("Getting location");
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
+  useEffect(() => {
+    if (localStorage.getItem("location") != null) {
+      setLocation(JSON.parse(localStorage.getItem("location") as string));
+    }
+  }, []);
   return (
     <div>
-      <Alert variant="default">
-        <ExclamationTriangleIcon className="h-4 w-4" />
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          Your session has expired. Please log in again.
-        </AlertDescription>
-      </Alert>
+      {!location ? (
+        <Alert className="text-yellow-500 shadow-lg">
+          <TbAlertTriangle className="w-6 h-6 !text-yellow-500" />
+          <AlertTitle className="font-bold">Location Not Find.</AlertTitle>
+          <AlertDescription>
+            Allow location access to get the most accurate product availability.
+            <Button
+              onClick={getLocation}
+              className="bg-yellow-500 hover:bg-yellow-600 ml-5"
+            >
+              Allow Location{" "}
+            </Button>
+          </AlertDescription>
+        </Alert>
+      ) : (
+        location
+      )}
       <h1>Home</h1>
       <p>Home page</p>
     </div>

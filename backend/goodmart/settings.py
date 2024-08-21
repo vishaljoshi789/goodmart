@@ -18,7 +18,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['103.186.184.54', 'locahost', '127.0.0.1', '192.168.1.3']
 
-FRONTEND_URL = "http://192.168.1.3:3000"
+# FRONTEND_URL = "http://192.168.1.3:3000"
+FRONTEND_URL = "http://localhost:3000"
 # Application definition
 
 INSTALLED_APPS = [
