@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { Inter as FontSans } from "next/font/google";
-import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import Sidebar from "@/components/admin/Sidebar";
 import Header from "@/components/admin/Header";
@@ -26,7 +25,7 @@ export default function RootLayout({
   return (
     <GMAdminProvider>
       <AdminRoute>
-        <div className="flex">
+        <div className={cn("flex", fontSans.className)}>
           <Sidebar />
           <div className="w-full">
             <Header />

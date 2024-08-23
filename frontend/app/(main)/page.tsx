@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 import { TbAlertTriangle } from "react-icons/tb";
 
 export default function Home() {
-  let [location, setLocation] = useState(null);
+  let [location, setLocation] = useState<any>(null);
   let showPosition = (position: GeolocationPosition) => {
     let lat = position.coords.latitude;
     let long = position.coords.longitude;
+    console.log(lat, long);
+    setLocation({ lat: lat, long: long });
     localStorage.setItem("location", JSON.stringify({ lat: lat, long: long }));
   };
   let showError = (error: GeolocationPositionError) => {
@@ -35,7 +37,9 @@ export default function Home() {
   };
   useEffect(() => {
     if (localStorage.getItem("location") != null) {
-      setLocation(JSON.parse(localStorage.getItem("location") as string));
+      let location = JSON.parse(localStorage.getItem("location") || "");
+      console.log(location);
+      setLocation(location);
     }
   }, []);
   return (

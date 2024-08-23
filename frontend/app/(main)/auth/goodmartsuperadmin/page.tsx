@@ -19,7 +19,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 export default function AdminLogin() {
   let router = useRouter();
-  let { baseURL, setAuthToken, authToken } =
+  let { baseURL, setAuthToken, authToken, setUserInfo } =
     useContext<GMContextType>(GMContext);
   const formSchema = z.object({
     email: z.string(),
@@ -46,9 +46,20 @@ export default function AdminLogin() {
     });
     let data = await response.json();
     if (response.status === 200) {
-      console.log(data);
       localStorage.setItem("accessToken", JSON.stringify(data));
       setAuthToken(data);
+      let response = await fetch(`${baseURL}/getUserInfo/`, {
+        headers: {
+          Authorization: `Bearer ${data?.access}`,
+        },
+      });
+      data = await response.json();
+      if (response.status === 200) {
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        setUserInfo(data);
+      } else {
+        toast.error("Error getting user info");
+      }
       toast.success("Login Success!");
       router.push("/securepanel");
     } else {
