@@ -4,8 +4,13 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { TbAlertTriangle } from "react-icons/tb";
 
+interface Location {
+  lat: number | null;
+  long: number | null;
+}
+
 export default function Home() {
-  let [location, setLocation] = useState<any>(null);
+  let [location, setLocation] = useState<Location>({ lat: null, long: null });
   let showPosition = (position: GeolocationPosition) => {
     let lat = position.coords.latitude;
     let long = position.coords.longitude;
@@ -44,7 +49,7 @@ export default function Home() {
   }, []);
   return (
     <div>
-      {!location ? (
+      {!location.lat || !location.lat ? (
         <Alert className="text-yellow-500 shadow-lg">
           <TbAlertTriangle className="w-6 h-6 !text-yellow-500" />
           <AlertTitle className="font-bold">Location Not Find.</AlertTitle>
@@ -59,7 +64,9 @@ export default function Home() {
           </AlertDescription>
         </Alert>
       ) : (
-        location
+        <div>
+          {location.lat} {location.long}
+        </div>
       )}
       <h1>Home</h1>
       <p>Home page</p>

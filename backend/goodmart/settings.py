@@ -16,10 +16,10 @@ SECRET_KEY = 'django-insecure-%-rb(*q!m@6@$mldw-5#n3#by@6pu0g5$ll)y(qsp2)d=!lqz%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['103.186.184.54', 'locahost', '127.0.0.1', '192.168.1.3', '0.0.0.0']
+ALLOWED_HOSTS = ['103.186.184.54', 'locahost', '127.0.0.1', '192.168.1.5', '0.0.0.0']
 
-# FRONTEND_URL = "http://192.168.1.3:3000"
-FRONTEND_URL = "http://localhost:3000"
+FRONTEND_URL = "http://192.168.1.5:3000"
+# FRONTEND_URL = "http://localhost:3000"
 # Application definition
 
 INSTALLED_APPS = [
@@ -122,7 +122,7 @@ WSGI_APPLICATION = 'goodmart.wsgi.application'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://192.168.1.3:3000",
+    "http://192.168.1.5:3000",
 ]
 
 

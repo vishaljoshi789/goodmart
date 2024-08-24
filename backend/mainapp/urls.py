@@ -9,4 +9,5 @@ urlpatterns = [
     path('verify-email/<uidb64>/<token>/', views.verify_email, name='verify-email'),
     path('getProductCategory/', views.getProductCategory),
     path('getProductBrand/', views.getProductBrand),
+    path('getSearchProducts/<str:search>/', views.getSearchProducts),
 ]

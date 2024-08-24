@@ -19,9 +19,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Navbar() {
+  let router = useRouter();
   let { authToken, logout } = useContext(GMContext);
+  let path = useSearchParams();
+  let q = path.get("q");
   let [search, setSearch] = useState("");
   return (
     <div className="bg-red-700 flex justify-between items-center p-5">
@@ -41,22 +45,28 @@ export default function Navbar() {
           GOODMART
         </Link>
       </div>
-      <div className="md:flex hidden items-center bg-white rounded-md shadow-md">
+      <form
+        className="md:flex hidden items-center bg-white rounded-md shadow-md"
+        onSubmit={(e) => {
+          e.preventDefault();
+          router.push(`/products?q=${search}`);
+        }}
+      >
         <Input
           type="text"
           placeholder="Search your Products"
           className="rounded-r-none w-80"
+          name="q"
+          defaultValue={q || ""}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Link href={search != "" ? `/products?q=${search}` : ``}>
-          <Button
-            type="submit"
-            className="rounded-l-none bg-red-500 hover:bg-red-600"
-          >
-            <IoMdSearch className="text-xl" />
-          </Button>
-        </Link>
-      </div>
+        <Button
+          type="submit"
+          className="rounded-l-none bg-red-500 hover:bg-red-600"
+        >
+          <IoMdSearch className="text-xl" />
+        </Button>
+      </form>
       <div className="flex gap-2 items-center">
         <div className="block md:hidden">
           <Popover>
@@ -64,22 +74,28 @@ export default function Navbar() {
               <IoMdSearch className="text-xl" />
             </PopoverTrigger>
             <PopoverContent>
-              <div className="flex items-center bg-white rounded-md shadow-md border">
+              <form
+                className="flex items-center bg-white rounded-md shadow-md border"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  router.push(`/products?q=${search}`);
+                }}
+              >
                 <Input
                   type="text"
                   placeholder="Search your Products"
                   className="rounded-r-none"
+                  name="q"
+                  defaultValue={q || ""}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-                <Link href={search != "" ? `/products?q=${search}` : ``}>
-                  <Button
-                    type="submit"
-                    className="rounded-l-none bg-red-500 hover:bg-red-600"
-                  >
-                    <IoMdSearch className="text-xl" />
-                  </Button>
-                </Link>
-              </div>
+                <Button
+                  type="submit"
+                  className="rounded-l-none bg-red-500 hover:bg-red-600"
+                >
+                  <IoMdSearch className="text-xl" />
+                </Button>
+              </form>
             </PopoverContent>
           </Popover>
         </div>
