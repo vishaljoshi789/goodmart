@@ -49,7 +49,7 @@ export default function Navbar() {
         className="md:flex hidden items-center bg-white rounded-md shadow-md"
         onSubmit={(e) => {
           e.preventDefault();
-          router.push(`/products?q=${search}`);
+          search != "" && router.push(`/products?q=${search}`);
         }}
       >
         <Input
@@ -78,7 +78,7 @@ export default function Navbar() {
                 className="flex items-center bg-white rounded-md shadow-md border"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  router.push(`/products?q=${search}`);
+                  search != "" && router.push(`/products?q=${search}`);
                 }}
               >
                 <Input

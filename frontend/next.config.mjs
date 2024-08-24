@@ -10,7 +10,7 @@ export const images = {
     },
     {
       protocol: "http",
-      hostname: "192.168.1.3",
+      hostname: "192.168.1.5",
       port: "8000",
       pathname: "**",
     },
