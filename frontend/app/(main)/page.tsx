@@ -253,6 +253,7 @@ export default function Home() {
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
+
       <div className="py-5 px-10">
         <h3 className="text-red-500 font-bold text-2xl font-serif">
           Deals of the Day

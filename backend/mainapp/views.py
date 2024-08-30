@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import User, Product_Category, Product_Brand, Product
-from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductSerializer
+from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductSerializer, ProductDetailedSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -138,6 +138,18 @@ def getSearchProducts(request, search):
 
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['GET'])
+def getProduct(request, id):
+    if request.method == 'GET':
+        try:
+            product = Product.objects.get(id=id)
+            serializer = ProductDetailedSerializer(product)
+            return Response(serializer.data, status=200)
+        except:
+            return Response(status=404)
     else:
         return Response(status=400)
     
