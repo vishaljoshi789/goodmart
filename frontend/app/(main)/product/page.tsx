@@ -59,6 +59,10 @@ export default function Product() {
                 <Carousel
                   className="w-full xl:max-w-2xl lg:max-w-md md:max-w-sm"
                   setApi={setApi}
+                  opts={{
+                    align: "start",
+                    loop: true,
+                  }}
                 >
                   <CarouselContent>
                     {product.images &&
