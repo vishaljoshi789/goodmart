@@ -2,8 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+.Stars {
+  --percent: calc(var(--rating) / 5 * 100%);
+
+  display: inline-block;
+  font-family: Times;
+  line-height: 1;
+
+  &::before {
+    content: "★★★★★";
+    letter-spacing: 3px;
+    background: linear-gradient(
+      90deg,
+      var(--bg) var(--percent),
+      gray var(--percent)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
 @layer base {
   :root {
+    --star-color: #fff;
+    --bg: #fc0;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
