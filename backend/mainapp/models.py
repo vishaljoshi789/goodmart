@@ -174,3 +174,13 @@ class Product_Specifications(models.Model):
     def __str__(self):
         return str(self.product.name)
     
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
+    quantity = models.IntegerField(blank=True, null=True)
+    added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
+    
+    def __str__(self):
+        return str(self.product.name)
+    

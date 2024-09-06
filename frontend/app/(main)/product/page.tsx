@@ -17,6 +17,8 @@ import { ScrollBar } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { FaShare } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { BsFillCartPlusFill } from "react-icons/bs";
 
 export default function Product() {
   let id = useSearchParams().get("id");
@@ -168,6 +170,31 @@ export default function Product() {
                   </span>
                 </div>
                 <p className="leading-relaxed">{product.description}</p>
+                <div className="Product-specs m-10">
+                  <Table>
+                    {/* <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-[100px]">Invoice</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Method</TableHead>
+                        <TableHead className="text-right">Amount</TableHead>
+                      </TableRow>
+                    </TableHeader> */}
+                    <TableBody>
+                      {product.specifications &&
+                        product.specifications.map((item: any) => (
+                          <TableRow key={item.id} className="flex">
+                            <TableCell className="font-bold bg-blue-100">
+                              {item.key} :
+                            </TableCell>
+                            <TableCell className="bg-blue-200">
+                              {item.value}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </div>
                 <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5"></div>
                 <div className="flex">
                   <div className="flex gap-5">
@@ -178,9 +205,9 @@ export default function Product() {
                       ₹{product.offer_price}
                     </span>
                   </div>
-                  <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
-                    Button
-                  </button>
+                  <Button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                    <BsFillCartPlusFill />
+                  </Button>
                   <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
                     <svg
                       fill="currentColor"

@@ -63,4 +63,6 @@ class ProductDetailedSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'user', 'name', 'mrp', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video']
 
-
+class CartSerializer(serializers.Serializer):
+    class Meta:
+        fields = '__all__'
