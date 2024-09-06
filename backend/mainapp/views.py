@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User, Product_Category, Product_Brand, Product
-from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductSerializer, ProductDetailedSerializer, CartSerializer
+from .models import User, Product_Category, Product_Brand, Product, Cart
+from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductSerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -157,12 +157,76 @@ def getProduct(request, id):
 @permission_classes([IsAuthenticated])
 def addToCart(request):
     if request.method == 'POST':
-        data = request.data
-        data['user'] = request.user
-        serializer = CartSerializer(data=data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-        return Response({'status': 'Added to cart'}, status=200)
-    else:
-        return Response(status=400)
+        product = Product.objects.get(id=request.data["id"])
+        user = request.user
+        if Cart.objects.filter(user=user, product=product).exists():
+            cart = Cart.objects.get(user=user, product=product)
+            cart.quantity = cart.quantity+1
+            cart.save()
+            serializer = CartSerializer(cart)
+            return Response(serializer.data, status=200)
+        else:
+            cart = Cart.objects.create(user = user, product=product, quantity=1)
+            cart.save()
+            serializer = CartSerializer(cart)
+            return Response(serializer.data, status=200)
+    return Response(serializer.errors, status=400)
+
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getCart(request):
+    if request.method == 'GET':
+        user = request.user
+        cart = user.cart.all()
+        serializer = CartDetailedSerializer(cart, many=True)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def remove_cart(request):
+    if request.method == "POST":
+        product = Product.objects.get(id=request.data["id"])
+        user = request.user
+        if Cart.objects.filter(user=user, product=product).exists():
+            cart = Cart.objects.get(user=user, product=product)
+            if cart.quantity == 1:
+                cart.delete()
+                return Response(status=200)
+            else:
+                cart.quantity -= 1
+                cart.save()
+                serializer = CartSerializer(cart)
+                return Response(serializer.data, status=200)
+    return Response(serializer.errors, status=400)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def remove_all_cart(request):
+    if request.method == "POST":
+        product = Product.objects.get(id=request.data["id"])
+        user = request.user
+        if Cart.objects.filter(user=user, product=product).exists():
+            cart = Cart.objects.get(user=user, product=product)
+            cart.delete()
+            return Response(status=200)
+    return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def clear_cart(request):
+    if request.method == "POST":
+        Cart.objects.filter(user=request.user).delete()
+        return Response(status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_cart_count(request):
+    if request.method == "GET":
+        user = request.user
+        cart = user.cart.all().count()
+        return Response({'cartCount': cart}, status=200)
+    return Response(status=400)
     
