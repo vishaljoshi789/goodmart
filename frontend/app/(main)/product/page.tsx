@@ -23,6 +23,7 @@ import { BsFillCartPlusFill } from "react-icons/bs";
 export default function Product() {
   let id = useSearchParams().get("id");
   const [api, setApi] = useState<CarouselApi>();
+  let axios = useAxios();
   let { baseURL } = useContext(GMContext);
   let [product, setProduct] = useState<any>({});
   let [activeImage, setActiveImage] = useState(0);
@@ -36,6 +37,18 @@ export default function Product() {
     if (response.status == 404) {
       toast.error("Product Not Found!");
       setProduct(null);
+    }
+  };
+
+  let addToCart = async () => {
+    let response = await axios.post("/addToCart/", {
+      product: id,
+      quantity: 1,
+    });
+    if (response.status == 200) {
+      toast.success("Product Added to Cart");
+    } else {
+      toast.error("Something Went Wrong");
     }
   };
 
@@ -205,7 +218,10 @@ export default function Product() {
                       ₹{product.offer_price}
                     </span>
                   </div>
-                  <Button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                  <Button
+                    className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                    onClick={addToCart}
+                  >
                     <BsFillCartPlusFill />
                   </Button>
                   <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">

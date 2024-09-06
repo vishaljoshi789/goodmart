@@ -11,5 +11,5 @@ urlpatterns = [
     path('getProductBrand/', views.getProductBrand),
     path('getSearchProducts/<str:search>/', views.getSearchProducts),
     path('getProduct/<int:id>/', views.getProduct),
-
+    path('addToCart/', views.addToCart),
 ]

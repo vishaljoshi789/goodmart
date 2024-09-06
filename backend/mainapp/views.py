@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import User, Product_Category, Product_Brand, Product
-from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductSerializer, ProductDetailedSerializer
+from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductSerializer, ProductDetailedSerializer, CartSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -150,6 +150,19 @@ def getProduct(request, id):
             return Response(serializer.data, status=200)
         except:
             return Response(status=404)
+    else:
+        return Response(status=400)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def addToCart(request):
+    if request.method == 'POST':
+        data = request.data
+        data['user'] = request.user
+        serializer = CartSerializer(data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+        return Response({'status': 'Added to cart'}, status=200)
     else:
         return Response(status=400)
     

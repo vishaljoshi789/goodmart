@@ -13,7 +13,7 @@ import { useContext, useState } from "react";
 import { GMContext } from "@/app/(utils)/context/GMContext";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { IoMdSearch } from "react-icons/io";
+import { IoMdCart, IoMdSearch } from "react-icons/io";
 import {
   Popover,
   PopoverContent,
@@ -99,6 +99,13 @@ export default function Navbar() {
             </PopoverContent>
           </Popover>
         </div>
+
+        <Link
+          href={"/cart"}
+          className="text-red-500 bg-white py-2 px-4 rounded-md text-xl"
+        >
+          <IoMdCart />
+        </Link>
 
         <Menubar>
           <MenubarMenu>
