@@ -37,6 +37,7 @@ interface GMContextType {
   setProgress: Dispatch<SetStateAction<number>>;
   userInfo: UserInfoType | null;
   setUserInfo: Dispatch<SetStateAction<UserInfoType | null>>;
+  // cartCount: number | null;
 }
 
 export type { GMContextType };
@@ -50,6 +51,7 @@ const GMContext = createContext<GMContextType>({
   setProgress: () => {},
   userInfo: null,
   setUserInfo: () => {},
+  // cartCount: null,
 });
 
 const GMProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -85,6 +87,25 @@ const GMProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     router.push("/auth/login");
   };
 
+  // let [cartCount, setCartCount] = useState<number | null>(null);
+  // let getCartCount = async () => {
+  //   let response = await fetch(`${baseURL}/getCartCount/`, {
+  //     headers: {
+  //       Authorization: `Bearer ${authToken?.access}`,
+  //     },
+  //   });
+  //   if (response.status == 200) {
+  //     let data = await response.json();
+  //     setCartCount(data.cartCount);
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (authToken) {
+  //     getCartCount();
+  //     console.log("Cart Count Updated");
+  //   }
+  // }, [authToken]);
+
   let ContextData: GMContextType = {
     authToken,
     setAuthToken,
@@ -94,6 +115,7 @@ const GMProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setProgress,
     userInfo,
     setUserInfo,
+    // cartCount,
   };
 
   return (

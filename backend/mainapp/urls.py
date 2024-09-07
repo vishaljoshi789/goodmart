@@ -15,4 +15,5 @@ urlpatterns = [
     path('getCart/', views.getCart),
     path('removeFromCart/', views.remove_cart),
     path('removeCart/', views.remove_all_cart),
+    path('getCartCount/', views.get_cart_count),
 ]

@@ -9,7 +9,7 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GMContext } from "@/app/(utils)/context/GMContext";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -20,6 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useRouter, useSearchParams } from "next/navigation";
+import useAxios from "@/app/(utils)/hooks/useAxios";
 
 export default function Navbar() {
   let router = useRouter();
@@ -27,6 +28,7 @@ export default function Navbar() {
   let path = useSearchParams();
   let q = path.get("q");
   let [search, setSearch] = useState("");
+
   return (
     <div className="bg-red-700 flex justify-between items-center p-5">
       <div className="flex items-center gap-3">
@@ -102,9 +104,14 @@ export default function Navbar() {
 
         <Link
           href={"/cart"}
-          className="text-red-500 bg-white py-2 px-4 rounded-md text-xl"
+          className="text-red-500 bg-white py-2 px-4 rounded-md text-xl flex"
         >
           <IoMdCart />
+          {/* {cartCount && (
+            <span className="bg-red-500 text-white rounded-full absolute text-xs w-4 h-4 text-center translate-x-3 translate-y-2">
+              {cartCount}
+            </span>
+          )} */}
         </Link>
 
         <Menubar>
