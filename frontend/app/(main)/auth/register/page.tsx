@@ -69,18 +69,6 @@ export default function Register() {
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[a-zA-Z\d\W_]{8,}$/,
           "Password must include one small letter, one uppercase letter, one number and one special character"
         ),
-      aadhar: z
-        .string()
-        .max(16, { message: "Enter a valid Aadhar Number" })
-        .min(16, { message: "Enter a valid Aadhar number." })
-        .optional()
-        .or(z.literal("")),
-      pan: z
-        .string()
-        .max(10, { message: "Enter a valid PAN Number" })
-        .min(10, { message: "Enter a valid PAN number." })
-        .optional()
-        .or(z.literal("")),
       user_type: z.string().optional().or(z.literal("")),
       user_id: z.string().optional().or(z.literal("")),
       co_ordinates: z.string().optional().or(z.literal("")),
@@ -102,8 +90,6 @@ export default function Register() {
       name: "",
       password: "",
       confirmPassword: "",
-      aadhar: "",
-      pan: "",
     },
   });
   let showPosition = (position: GeolocationPosition) => {
@@ -147,7 +133,7 @@ export default function Register() {
           ? "GV"
           : "GS";
       values["user_id"] = prefix + timestampPart + randomPart;
-      console.log(values);
+      // console.log(values);
       let response = await fetch(`${baseURL}/registerUser/`, {
         method: "POST",
         headers: {
@@ -165,6 +151,8 @@ export default function Register() {
         }
         if (data.phone_no) {
           toast.error("Phone Number already in use");
+        } else {
+          toast.error("Something went wrong!!! Please try again");
         }
       }
       toast.dismiss();
@@ -375,32 +363,6 @@ export default function Register() {
                       <FormLabel>Phone</FormLabel>
                       <FormControl>
                         <Input placeholder="Phone Number" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />{" "}
-                <FormField
-                  control={form.control}
-                  name="aadhar"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Aadhar Number</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter Aadhar Number" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />{" "}
-                <FormField
-                  control={form.control}
-                  name="pan"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Pan Number</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter PAN Number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

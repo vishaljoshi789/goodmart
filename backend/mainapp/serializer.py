@@ -5,7 +5,7 @@ from .models import User, Product_Category, Product_Brand, Product, Product_Imag
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'user_id', 'name', 'phone_no', 'aadhar', 'password', 'pan', 'username', 'user_type']
+        fields = ['id', 'email', 'user_id', 'name', 'phone_no', 'password', 'username', 'user_type']
         extra_kwargs = {'password': {'write_only': True}}
     def create(self, validated_data):
         password = validated_data.pop('password', None)
@@ -27,7 +27,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'user_id', 'name', 'phone_no', 'date_joined', "last_login", 'email_verified', 'phone_verified', 'user_type', 'status', 'aadhar_verified', 'pan_verified', 'aadhar', 'pan']
+        fields = ['id', 'email', 'user_id', 'name', 'phone_no', 'date_joined', "last_login", 'email_verified', 'phone_verified', 'user_type', 'status']
 
 class ProductBrandSerializer(serializers.ModelSerializer):
     class Meta:

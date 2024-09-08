@@ -7,6 +7,17 @@ import json
 
 @api_view(['POST'])
 @permission_classes([isVendor])
+def getVendorInfo(request):
+    user = request.user
+    try:
+        details = user.vendor
+        print(details)
+    except:
+        return Response(status=404)
+    return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([isVendor])
 def addProductInfo(request):
     data = request.data
     data['user'] = request.user.id

@@ -1,10 +1,8 @@
 "use client";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useState } from "react";
 
 import { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
-import { get } from "http";
-import useAxios from "../hooks/useAxios";
 
 interface UserInfoType {
   id: number;
