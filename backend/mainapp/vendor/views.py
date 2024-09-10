@@ -1,5 +1,5 @@
 from ..models import Product
-from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductDetailedSerializer, ProductEditSerializer
+from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from ..permissions import isVendor
@@ -129,5 +129,15 @@ def updateProductSpecifications(request, product_id):
             return Response(serializer.errors, status=400)
     return Response(status=201)
 
-
+@api_view(['POST'])
+@permission_classes([isVendor])
+def addKYC(request):
+    if request.method == 'POST':
+        data = request.data
+        data['user'] = request.user.id
+        serializer = VendorDetailSerializer(data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)    
 

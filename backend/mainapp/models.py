@@ -12,7 +12,7 @@ def vendor_directory_path(instance, filename):
 class User(AbstractUser):
     user_id = models.CharField(max_length=50, blank=True, null=True)
     email = models.EmailField(unique=True, blank=True, null=True)
-    phone_no = models.CharField(unique=True, max_length=10, blank=True, null=True)
+    phone_no = models.CharField(unique=True, max_length=15, blank=True, null=True)
     name = models.CharField(max_length=50, blank=True, null=True)
     user_type = models.CharField(max_length=20, blank=True, null=True, choices=(("Customer", "Customer"), ("Product Vendor", "Product Vendor"), ("Service Vendor", "Service Vendor")))
     added_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -98,24 +98,13 @@ class Address(models.Model):
     city = models.CharField(max_length=100, blank=True, null=True)
     state = models.CharField(max_length=100, blank=True, null=True)
     pin = models.CharField(max_length=6, blank=True, null=True)
-    phone = models.CharField(max_length=10, blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
+    alternate_phone = models.CharField(max_length=15, blank=True, null=True)
     added_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     modify_on = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     
-class Vendor_Detail(models.Model):
-    firm_name = models.CharField(max_length=100, blank=True, null=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='vendor')
-    photograph = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
-    gst = models.CharField(max_length=20, blank=True, null=True)
-    gst_certificate = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
-    pan = models.CharField(max_length=20, blank=True, null=True)
-    pan_certificate = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
-    aadhar = models.CharField(max_length=20, blank=True, null=True)
-    aadhar_certificate = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, blank=True, null=True)
 
-    
 class Product_Category(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -128,6 +117,25 @@ class Product_Category(models.Model):
     
     def __str__(self):
         return self.name
+
+class Vendor_Detail(models.Model):
+    firm = models.CharField(max_length=100, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    category = models.ForeignKey(Product_Category, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='vendor')
+    photograph = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
+    gst = models.CharField(max_length=20, blank=True, null=True)
+    gst_certificate = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
+    pan = models.CharField(max_length=20, blank=True, null=True)
+    pan_certificate = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
+    aadhar = models.CharField(max_length=20, blank=True, null=True)
+    aadhar_front_image = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
+    aadhar_back_image = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, blank=True, null=True)
+    qr = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
+    added_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    modify_on = models.DateTimeField(auto_now=True, blank=True, null=True)
+
     
 class Product_Brand(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)

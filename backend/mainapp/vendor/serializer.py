@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Product, Product_Image, Product_Specifications
+from ..models import Product, Product_Image, Product_Specifications, Vendor_Detail
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,3 +35,7 @@ class ProductEditSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'mrp', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video']
 
 
+class VendorDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vendor_Detail
+        fields = '__all__'

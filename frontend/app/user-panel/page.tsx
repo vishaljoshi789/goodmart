@@ -85,7 +85,7 @@ const Home: NextPage = () => {
       {user.VendorInfo || (
         <Alert className="bg-red-500 text-white">
           <MdError className="!text-red-900 text-2xl" />
-          <AlertTitle>KYC Incomplete</AlertTitle>
+          <AlertTitle className="font-bold">KYC Incomplete</AlertTitle>
           <AlertDescription>
             Complete your KYC to proceed with your Vendor Profile
             <Link className=" ml-10" href="/user-panel/kyc-verification">
