@@ -5,16 +5,6 @@ from rest_framework.decorators import api_view, permission_classes
 from ..permissions import isVendor
 import json
 
-@api_view(['POST'])
-@permission_classes([isVendor])
-def getVendorInfo(request):
-    user = request.user
-    try:
-        details = user.vendor
-        print(details)
-    except:
-        return Response(status=404)
-    return Response(status=400)
 
 @api_view(['POST'])
 @permission_classes([isVendor])

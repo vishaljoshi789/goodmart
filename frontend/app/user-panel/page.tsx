@@ -6,6 +6,10 @@ import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { UserDashboardSkeleton } from "@/components/user/skeleton/UserDashboard";
 import { GMContext } from "../(utils)/context/GMContext";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { MdError } from "react-icons/md";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const Home: NextPage = () => {
   interface User {
@@ -19,6 +23,7 @@ const Home: NextPage = () => {
     email_verified: boolean;
     phone_verified: boolean;
     user_type: string;
+    VendorInfo: any;
   }
   let { setUserInfo } = useContext(GMContext);
   let api = useAxios();
@@ -27,6 +32,7 @@ const Home: NextPage = () => {
   let getUserInfo = async () => {
     let response = await api.get("/getUserInfo/");
     if (response.status === 200) {
+      // console.log(response.data);
       setUser(response.data);
       localStorage.setItem("userInfo", JSON.stringify(response.data));
       setUserInfo(response.data);
@@ -75,27 +81,43 @@ const Home: NextPage = () => {
   return user === null ? (
     <UserDashboardSkeleton />
   ) : (
-    <div className="flex-1 p-6 bg-gray-100">
-      <h1 className="lg:text-3xl text-xl font-bold mb-6">User Profile</h1>
-      <div className="flex justify-center w-full">
-        <UserCard
-          name={user.name}
-          email={user.email}
-          phone_no={user.phone_no}
-          username={user.user_id}
-          address={user.p_address}
-          date_joined={user.date_joined}
-          last_login={user.last_login}
-          email_verified={user.email_verified}
-          phone_verified={user.phone_verified}
-          verifyMail={verifyMail}
-        />
-      </div>
-      <div className="mt-6">
-        <h2 className="text-2xl font-semibold mb-4">More Information</h2>
-        <p className="text-gray-700">
-          Here you can add more detailed information about the user.
-        </p>
+    <div className="w-full">
+      {user.VendorInfo || (
+        <Alert className="bg-red-500 text-white">
+          <MdError className="!text-red-900 text-2xl" />
+          <AlertTitle>KYC Incomplete</AlertTitle>
+          <AlertDescription>
+            Complete your KYC to proceed with your Vendor Profile
+            <Link className=" ml-10" href="/user-panel/kyc-verification">
+              <Button className="bg-white text-red-500 hover:bg-gray-200">
+                Complete Your KYC
+              </Button>
+            </Link>
+          </AlertDescription>
+        </Alert>
+      )}
+      <div className="flex-1 p-6 bg-gray-100">
+        <h1 className="lg:text-3xl text-xl font-bold mb-6">User Profile</h1>
+        <div className="flex justify-center w-full">
+          <UserCard
+            name={user.name}
+            email={user.email}
+            phone_no={user.phone_no}
+            username={user.user_id}
+            address={user.p_address}
+            date_joined={user.date_joined}
+            last_login={user.last_login}
+            email_verified={user.email_verified}
+            phone_verified={user.phone_verified}
+            verifyMail={verifyMail}
+          />
+        </div>
+        <div className="mt-6">
+          <h2 className="text-2xl font-semibold mb-4">More Information</h2>
+          <p className="text-gray-700">
+            Here you can add more detailed information about the user.
+          </p>
+        </div>
       </div>
     </div>
   );

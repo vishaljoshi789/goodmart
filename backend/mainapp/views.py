@@ -56,7 +56,13 @@ def getUserInfo(request):
     if request.method == 'GET':
         user = request.user
         serializer = UserInfoSerializer(user)
-        return Response(serializer.data, status=200)
+        response = serializer.data
+        if user.user_type == "Product Vendor":
+            try:
+                response["VendorInfo"] = user.vendor
+            except:
+                response["VendorInfo"] = False
+        return Response(response, status=200)
     else:
         return Response(status=400)
     
