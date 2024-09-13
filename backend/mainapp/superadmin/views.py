@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer
-from ..models import User, Product_Category, Product_Brand, Product
+from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView
+from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail
 import json
 
 @api_view(['GET'])
@@ -293,5 +293,24 @@ def updateProductSpecifications(request, id):
             return Response(serializer.errors, status=400)
     return Response(status=201)
 
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getVendorDetails(request):
+    if request.method == 'GET':
+        vendors = Vendor_Detail.objects.all()
+        serializer = VendorDetailSerializer(vendors, many=True)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getVendorDetail(request, id):
+    if request.method == 'GET':
+        vendor = Vendor_Detail.objects.get(id=id)
+        serializer = VendorDetailSerializerForDetailedView(vendor)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
 
 

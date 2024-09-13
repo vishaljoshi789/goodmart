@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications
+from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -71,4 +71,14 @@ class ProductEditSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'user',  'name', 'mrp', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video']
 
+class VendorDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vendor_Detail
+        fields = '__all__'
 
+class VendorDetailSerializerForDetailedView(serializers.ModelSerializer):
+    user = UserSerializer()
+    category = ProductCategorySerializer()
+    class Meta:
+        model = Vendor_Detail
+        fields = '__all__'
