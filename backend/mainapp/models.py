@@ -133,6 +133,8 @@ class Vendor_Detail(models.Model):
     aadhar_back_image = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, blank=True, null=True)
     qr = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
+    status = models.CharField(max_length=20, blank=True, null=True, choices=(("Pending", "Pending"), ("Approved", "Approved"), ("Rejected", "Rejected")), default="Pending")
+    status_message = models.CharField(max_length=100, blank=True, null=True, default="Status is in Pending State")
     added_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     modify_on = models.DateTimeField(auto_now=True, blank=True, null=True)
 

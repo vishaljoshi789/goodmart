@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import User, Product_Category, Product_Brand, Product, Cart
-from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductSerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer
+from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductSerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -13,9 +13,9 @@ from smtplib import SMTPException
 from django.core.mail import BadHeaderError
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+import json
 
 
-# Create your views here.
 def index(request):
     return HttpResponse('HelloWorld')
 
@@ -59,7 +59,7 @@ def getUserInfo(request):
         response = serializer.data
         if user.user_type == "Product Vendor":
             try:
-                response["VendorInfo"] = user.vendor
+                response["VendorInfo"] = VendorDetailSerializer(user.vendor).data
             except:
                 response["VendorInfo"] = False
         return Response(response, status=200)

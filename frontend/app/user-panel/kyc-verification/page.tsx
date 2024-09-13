@@ -1,5 +1,5 @@
 "use client";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -26,7 +26,8 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { nullable } from "zod";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function KYCVerification() {
   const form = useForm({
@@ -45,7 +46,9 @@ export default function KYCVerification() {
     },
   });
   let api = useAxios();
+  let router = useRouter();
   let [category, setCategory] = useState<any>(null);
+  let [images, setImages] = useState<any>(null);
 
   let getCategory = async () => {
     let response = await api.get("/getProductCategory/");
@@ -72,7 +75,20 @@ export default function KYCVerification() {
     if (values.photograph == "") {
       delete values.photograph;
     }
-    let response = await api.post("/vendor/addKYC/", values);
+    let formData = new FormData();
+    for (let key in values) {
+      formData.append(key, values[key]);
+    }
+    for (let key in images) {
+      formData.append(key, images[key]);
+    }
+    let response = await api.post("/vendor/addKYC/", formData);
+    if (response.status == 201) {
+      toast.success("KYC Submitted Successfully, Wait for Approval");
+      return router.push("/user-panel/");
+    } else {
+      toast.error("Error Submitting KYC");
+    }
     console.log(response.data);
   }
   return (
@@ -161,8 +177,15 @@ export default function KYCVerification() {
                     <FormControl>
                       <Input
                         placeholder=""
-                        {...field}
                         type="file"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            setImages({
+                              ...images,
+                              gst_certificate: e.target.files[0],
+                            });
+                          }
+                        }}
                         accept="image/*"
                         required
                       />
@@ -225,7 +248,14 @@ export default function KYCVerification() {
                     <FormControl>
                       <Input
                         placeholder=""
-                        {...field}
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            setImages({
+                              ...images,
+                              aadhar_front_image: e.target.files[0],
+                            });
+                          }
+                        }}
                         type="file"
                         accept="image/*"
                         required
@@ -244,7 +274,14 @@ export default function KYCVerification() {
                     <FormControl>
                       <Input
                         placeholder=""
-                        {...field}
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            setImages({
+                              ...images,
+                              aadhar_back_image: e.target.files[0],
+                            });
+                          }
+                        }}
                         type="file"
                         accept="image/*"
                         required
@@ -277,7 +314,14 @@ export default function KYCVerification() {
                   <FormControl>
                     <Input
                       placeholder=""
-                      {...field}
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setImages({
+                            ...images,
+                            pan_certificate: e.target.files[0],
+                          });
+                        }
+                      }}
                       type="file"
                       accept="image/*"
                       required
@@ -296,7 +340,14 @@ export default function KYCVerification() {
                   <FormControl>
                     <Input
                       placeholder=""
-                      {...field}
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setImages({
+                            ...images,
+                            photograph: e.target.files[0],
+                          });
+                        }
+                      }}
                       type="file"
                       accept="image/*"
                       required

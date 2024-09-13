@@ -133,7 +133,7 @@ def updateProductSpecifications(request, product_id):
 @permission_classes([isVendor])
 def addKYC(request):
     if request.method == 'POST':
-        data = request.data
+        data = request.data.copy()
         data['user'] = request.user.id
         serializer = VendorDetailSerializer(data=data, partial=True)
         if serializer.is_valid():

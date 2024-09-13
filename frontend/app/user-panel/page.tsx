@@ -7,9 +7,10 @@ import { toast } from "sonner";
 import { UserDashboardSkeleton } from "@/components/user/skeleton/UserDashboard";
 import { GMContext } from "../(utils)/context/GMContext";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { MdError } from "react-icons/md";
+import { MdError, MdPending } from "react-icons/md";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { TbError404 } from "react-icons/tb";
 
 const Home: NextPage = () => {
   interface User {
@@ -32,7 +33,7 @@ const Home: NextPage = () => {
   let getUserInfo = async () => {
     let response = await api.get("/getUserInfo/");
     if (response.status === 200) {
-      // console.log(response.data);
+      console.log(response.data);
       setUser(response.data);
       localStorage.setItem("userInfo", JSON.stringify(response.data));
       setUserInfo(response.data);
@@ -82,7 +83,7 @@ const Home: NextPage = () => {
     <UserDashboardSkeleton />
   ) : (
     <div className="w-full">
-      {user.VendorInfo || (
+      {user.user_type == "Product Vendor" && !user?.VendorInfo ? (
         <Alert className="bg-red-500 text-white">
           <MdError className="!text-red-900 text-2xl" />
           <AlertTitle className="font-bold">KYC Incomplete</AlertTitle>
@@ -95,6 +96,27 @@ const Home: NextPage = () => {
             </Link>
           </AlertDescription>
         </Alert>
+      ) : user.user_type == "Product Vendor" &&
+        user.VendorInfo.status == "Pending" ? (
+        <Alert className="bg-yellow-500 text-white">
+          <MdPending className="!text-red-900 text-2xl" />
+          <AlertTitle className="font-bold">KYC Pending</AlertTitle>
+          <AlertDescription>
+            Your KYC is in <b>Pending</b> state, Please wait until your KYC gets
+            approved.
+          </AlertDescription>
+        </Alert>
+      ) : user.user_type == "Product Vendor" &&
+        user.VendorInfo.status == "Rejected" ? (
+        <Alert className="bg-red-500 text-white">
+          <MdError className="!text-red-900 text-2xl" />
+          <AlertTitle className="font-bold">KYC Rejected</AlertTitle>
+          <AlertDescription>
+            Your KYC is <b>Rejected</b>
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <></>
       )}
       <div className="flex-1 p-6 bg-gray-100">
         <h1 className="lg:text-3xl text-xl font-bold mb-6">User Profile</h1>

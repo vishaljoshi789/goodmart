@@ -19,6 +19,7 @@ interface UserInfoType {
   date_joined: string;
   last_login: string;
   status: boolean;
+  VendorInfo: any;
 }
 
 interface AccessTokenType {

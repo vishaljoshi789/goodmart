@@ -20,10 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <GMProvider>
-        <Navbar />
-        {children}
-      </GMProvider>
+      <Navbar />
+      {children}
     </>
   );
 }

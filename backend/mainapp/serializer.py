@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart
+from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -73,3 +73,9 @@ class CartDetailedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ['id', 'user', 'product', 'quantity']
+
+class VendorDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vendor_Detail
+        fields = '__all__'
+
