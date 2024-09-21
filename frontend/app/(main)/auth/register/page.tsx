@@ -28,11 +28,12 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
 export default function Register() {
   let router = useRouter();
-  let [type, setType] = useState<string>("Customer");
-  let [vendorType, setVendorType] = useState<string>("Product Vendor");
+  let [type, setType] = useState<any>(null);
+  let [vendorType, setVendorType] = useState<any>(null);
   let { baseURL } = useContext<GMContextType>(GMContext);
   const formSchema = z
     .object({
@@ -69,7 +70,7 @@ export default function Register() {
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[a-zA-Z\d\W_]{8,}$/,
           "Password must include one small letter, one uppercase letter, one number and one special character"
         ),
-      user_type: z.string().optional().or(z.literal("")),
+      user_type: z.any(),
       user_id: z.string().optional().or(z.literal("")),
       co_ordinates: z.string().optional().or(z.literal("")),
     })
@@ -162,35 +163,39 @@ export default function Register() {
   };
 
   return (
-    <div className="h-full flex items-center mt-10 justify-center">
-      <div className="space-y-2 md:w-96 bg-white rounded-md shadow-md">
+    <div className="h-3/4 flex items-center mt-10 justify-center">
+      <div className="space-y-10 md:w-96 bg-white rounded-md shadow-md p-5 h-full">
+        {type && (
+          <Button
+            onClick={() => {
+              setType(null);
+              setVendorType(null);
+            }}
+          >
+            <ArrowLeftIcon />
+          </Button>
+        )}
         <div className="flex">
-          <h1 className="text-2xl font-bold text-red-500 underline">
-            Register
+          <h1 className="text-2xl font-bold text-gray-500 underline">
+            Register To Goodmart {type && `as ${type}`}
           </h1>
         </div>
-        <div className="flex justify-center gap-2">
-          <span
-            className={`
-            ${
-              type == "Customer"
-                ? "bg-red-500 text-white"
-                : "bg-white text-black"
-            }  w-1/2 p-2 text-sm cursor-pointer text-center`}
-            onClick={() => setType("Customer")}
-          >
-            Customer
-          </span>
-          <span
-            className={`${
-              type == "Vendor" ? "bg-red-500 text-white" : "bg-white text-black"
-            }  w-1/2 p-2 text-sm cursor-pointer text-center`}
-            onClick={() => setType("Vendor")}
-          >
-            Business Partner
-          </span>
-        </div>
-        {type == "Customer" ? (
+        {!type ? (
+          <div className="h-full w-full flex gap-10 flex-col">
+            <Button
+              className="rounded-full bg-red-500 text-3xl p-5 h-fit"
+              onClick={() => setType("Customer")}
+            >
+              Customer
+            </Button>
+            <Button
+              className="rounded-full bg-blue-500 text-3xl p-5 h-fit"
+              onClick={() => setType("Vendor")}
+            >
+              Business Partner
+            </Button>
+          </div>
+        ) : type == "Customer" ? (
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -302,28 +307,25 @@ export default function Register() {
               </div>
             </form>
           </Form>
+        ) : !vendorType ? (
+          <div className="h-full w-full flex gap-10 flex-col">
+            <Button
+              className="rounded-full bg-red-500 text-3xl p-5 h-fit"
+              onClick={() => setVendorType("Product Vendor")}
+            >
+              Product Vendor
+            </Button>
+            <Button
+              className="rounded-full bg-blue-500 text-3xl p-5 h-fit"
+              onClick={() => setVendorType("Service Vendor")}
+            >
+              Service Vendor
+            </Button>
+          </div>
         ) : (
           <div>
             <hr />
-            <div className="typeButton flex justify-center gap-2 mt-2">
-              <span
-                className={`
-              ${
-                vendorType == "Product Vendor" ? "bg-red-500 text-white" : ""
-              } w-1/2 p-2 text-sm cursor-pointer text-center`}
-                onClick={() => setVendorType("Product Vendor")}
-              >
-                Product Vendor
-              </span>
-              <span
-                className={`${
-                  vendorType == "Service Vendor" ? "bg-red-500 text-white" : ""
-                } w-1/2 p-2 text-sm cursor-pointer text-center`}
-                onClick={() => setVendorType("Service Vendor")}
-              >
-                Service Vendor
-              </span>
-            </div>
+
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
