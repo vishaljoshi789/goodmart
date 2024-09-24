@@ -30,7 +30,7 @@ export default function Navbar() {
   let [search, setSearch] = useState("");
 
   return (
-    <div className="bg-red-700 flex justify-between items-center p-5">
+    <div className="bg-red-700 flex justify-between items-center p-5 gap-20">
       <div className="flex items-center gap-3">
         <Image
           src="/images/logo.gif"
@@ -48,7 +48,7 @@ export default function Navbar() {
         </Link>
       </div>
       <form
-        className="md:flex hidden items-center bg-white rounded-md shadow-md"
+        className="md:flex hidden items-center bg-white rounded-md shadow-md w-full"
         onSubmit={(e) => {
           e.preventDefault();
           search != "" && router.push(`/products?q=${search}`);
@@ -57,7 +57,7 @@ export default function Navbar() {
         <Input
           type="text"
           placeholder="Search your Products"
-          className="rounded-r-none w-80"
+          className="rounded-r-none w-full"
           name="q"
           defaultValue={q || ""}
           onChange={(e) => setSearch(e.target.value)}

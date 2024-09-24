@@ -15,20 +15,38 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { CiLocationOn } from "react-icons/ci";
 
 interface Location {
   lat: number | null;
   long: number | null;
+  zip: number | null;
 }
 
 export default function Home() {
-  let [location, setLocation] = useState<Location>({ lat: null, long: null });
+  let [location, setLocation] = useState<Location>({
+    lat: null,
+    long: null,
+    zip: null,
+  });
+  let [zip, setZip] = useState<any>(null);
+  let [editZip, setEditZip] = useState(false);
   let showPosition = (position: GeolocationPosition) => {
     let lat = position.coords.latitude;
     let long = position.coords.longitude;
     console.log(lat, long);
-    setLocation({ lat: lat, long: long });
-    localStorage.setItem("location", JSON.stringify({ lat: lat, long: long }));
+    setLocation({ lat: lat, long: long, zip: zip });
+    localStorage.setItem(
+      "location",
+      JSON.stringify({ lat: lat, long: long, zip: zip })
+    );
+    window.location.reload();
   };
   let showError = (error: GeolocationPositionError) => {
     switch (error.code) {
@@ -57,26 +75,83 @@ export default function Home() {
       let location = JSON.parse(localStorage.getItem("location") || "");
       console.log(location);
       setLocation(location);
+      setZip(location.zip);
     }
   }, []);
   return (
     <div>
-      {!location.lat || !location.lat ? (
+      {!location.zip ? (
         <Alert className="text-yellow-500 shadow-lg">
           <TbAlertTriangle className="w-6 h-6 !text-yellow-500" />
           <AlertTitle className="font-bold">Location Not Find.</AlertTitle>
           <AlertDescription>
-            Allow location access to get the most accurate product availability.
+            <div>
+              <span>Provide Your Zipcode to access the shops near you</span>
+              <InputOTP maxLength={6} onChange={(e) => setZip(e)} value={zip}>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
             <Button
               onClick={getLocation}
-              className="bg-yellow-500 hover:bg-yellow-600 ml-5"
+              className="bg-yellow-500 hover:bg-yellow-600 my-5"
+              disabled={!zip || zip.length < 6}
             >
               Allow Location{" "}
             </Button>
           </AlertDescription>
         </Alert>
       ) : (
-        <div></div>
+        <Alert className="text-green-500 shadow-lg">
+          <CiLocationOn className="w-6 h-6 !text-green-500" />
+          <AlertTitle className="font-bold">
+            Viewing Products for Zipcode {location.zip}
+          </AlertTitle>
+          <AlertDescription>
+            <div>
+              <Button
+                className="bg-green-500 hover:bg-green-600"
+                onClick={() => setEditZip(true)}
+              >
+                Edit
+              </Button>
+            </div>
+            {editZip && (
+              <div>
+                <div>
+                  <span>Provide Your Zipcode to access the shops near you</span>
+                  <InputOTP
+                    maxLength={6}
+                    onChange={(e) => setZip(e)}
+                    value={zip}
+                  >
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </div>
+                <Button
+                  onClick={getLocation}
+                  className="bg-green-500 hover:bg-green-600 my-5"
+                  disabled={!zip || zip.length < 6}
+                >
+                  Allow Location{" "}
+                </Button>
+              </div>
+            )}
+          </AlertDescription>
+        </Alert>
       )}
       <div className="lg:w-1/2 m-auto p-5">
         <AspectRatio ratio={8 / 5} className="bg-gray-400">

@@ -1,5 +1,6 @@
 export const reactStrictMode = false;
 // export const output = "export";
+export const optimizeFonts = false;
 export const images = {
   remotePatterns: [
     {
