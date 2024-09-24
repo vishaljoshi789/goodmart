@@ -153,10 +153,12 @@ export default function Home() {
           </AlertDescription>
         </Alert>
       )}
-      <div className="lg:w-1/2 m-auto p-5">
-        <AspectRatio ratio={8 / 5} className="bg-gray-400">
-          {/* <Image src="..." alt="Image" className="rounded-md object-cover" /> */}
-        </AspectRatio>
+      <div>
+        <div className="lg:w-3/5 p-5">
+          <AspectRatio ratio={8 / 5} className="bg-gray-400">
+            {/* <Image src="..." alt="Image" className="rounded-md object-cover" /> */}
+          </AspectRatio>
+        </div>
       </div>
 
       <Separator />
