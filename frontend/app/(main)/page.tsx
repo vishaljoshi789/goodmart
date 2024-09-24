@@ -161,14 +161,14 @@ export default function Home() {
 
       <Separator />
 
-      <div className="browse flex justify-center gap-20 text-center my-20">
+      {/* <div className="browse flex justify-center gap-20 text-center my-20">
         <div className="text-3xl bg-red-500 text-white p-10 w-1/4 rounded-full">
           Browse Product
         </div>
         <div className="text-3xl bg-blue-500 text-white p-10 w-1/4 rounded-full">
           Browse Service
         </div>
-      </div>
+      </div> */}
 
       <Separator />
 
