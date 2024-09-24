@@ -174,8 +174,8 @@ export default function Home() {
 
       <Separator />
 
-      <ScrollArea>
-        <div className="flex gap-3 py-5 justify-evenly">
+      <div className="flex p-5">
+        <div className="flex gap-10 flex-wrap">
           <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
             <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
             <div className="md:w-full h-full">
@@ -331,8 +331,7 @@ export default function Home() {
             </div>
           </Card>
         </div>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+      </div>
 
       <div className="py-5 px-10">
         <h3 className="text-red-500 font-bold text-2xl font-serif">
