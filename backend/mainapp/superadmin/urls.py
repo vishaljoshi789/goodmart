@@ -28,4 +28,7 @@ urlpatterns = [
     path('updateProductSpecs/<int:id>/', views.updateProductSpecifications),
     path('getKyc/', views.getVendorDetails),
     path('getKycDetails/<int:id>/', views.getVendorDetail),
+    path('updateKycStatus/<int:id>/<str:status>/', views.updateVendorKYCStatus),
+    path('getSetting/', views.getSetting),
+    path('updateSetting/', views.updateSetting),
 ]

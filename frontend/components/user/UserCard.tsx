@@ -34,7 +34,7 @@ const UserCard: React.FC<UserCardProps> = ({
   verifyMail,
 }) => {
   return (
-    <div className="bg-white shadow-md rounded-lg p-10 w-fit flex flex-col gap-2">
+    <div className="bg-white shadow-md rounded-lg p-10 w-1/4 flex flex-col gap-2">
       <CgProfile className="text-9xl text-yellow-300 text-center w-full" />
       <h3 className="text-2xl font-bold mb-2 underline text-center my-2">
         {name}

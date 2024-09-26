@@ -10,7 +10,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { MdError, MdPending } from "react-icons/md";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { TbError404 } from "react-icons/tb";
 
 const Home: NextPage = () => {
   interface User {
@@ -71,7 +70,6 @@ const Home: NextPage = () => {
         // minute: "2-digit",
         // second: "2-digit",
       };
-
       // Convert to a readable format
       const readableDate = date.toLocaleDateString("en-US", options);
 
@@ -120,7 +118,7 @@ const Home: NextPage = () => {
       )}
       <div className="flex-1 p-6 bg-gray-100">
         <h1 className="lg:text-3xl text-xl font-bold mb-6">User Profile</h1>
-        <div className="flex justify-center w-full">
+        <div className="flex justify-center w-full h-full gap-10 flex-wrap">
           <UserCard
             name={user.name}
             email={user.email}
@@ -133,6 +131,12 @@ const Home: NextPage = () => {
             phone_verified={user.phone_verified}
             verifyMail={verifyMail}
           />
+          <div className="qr bg-gray-600 w-1/3 rounded-lg flex justify-center items-center text-white">
+            QR
+          </div>
+          <div className="qr bg-white w-1/3 flex justify-center items-center">
+            Orders
+          </div>
         </div>
         <div className="mt-6">
           <h2 className="text-2xl font-semibold mb-4">More Information</h2>

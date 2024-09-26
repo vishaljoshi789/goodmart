@@ -22,8 +22,8 @@ const KycPage: NextPage = () => {
     toast.success("All KYC fetched successfully");
   }, []);
 
-  const handleToggleStatus = async (userId: number) => {
-    let response = await api.get(`/admin/toggleUserStatus/${userId}/`);
+  const handleToggleStatus = async (id: number, status: string) => {
+    let response = await api.put(`/admin/updateKycStatus/${id}/${status}/`);
     if (response.status === 200) {
       toast.success("Status toggled successfully");
       getKycs();
@@ -63,8 +63,18 @@ const KycPage: NextPage = () => {
               <td className="py-2 px-4 border-b border-r text-center text-blue-500">
                 <Link href={`users/view?id=${item.user}`}>View</Link>
               </td>
-              <td className="py-2 px-4 border-b border-r text-center">
-                {item.status}
+              <td className="py-2 px-4 border-b border-r text-center border">
+                <select
+                  name=""
+                  id=""
+                  defaultValue={item.status}
+                  onChange={(e) => handleToggleStatus(item.id, e.target.value)}
+                  className="p-2 border"
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
               </td>
 
               <td className="py-2 px-4 border-b flex justify-evenly">

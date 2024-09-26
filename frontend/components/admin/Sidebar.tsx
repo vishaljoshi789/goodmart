@@ -91,6 +91,18 @@ const Sidebar: React.FC = () => {
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
+              <Link
+                href={"/securepanel/kyc"}
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer font-bold"
+              >
+                <span>KYC</span>
+              </Link>
+              <Link
+                href={"/securepanel/setting"}
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer font-bold"
+              >
+                <span>Web Settings</span>
+              </Link>
             </div>
           </div>
           <div>

@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView
-from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail
+from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer
+from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting
 import json
 
 @api_view(['GET'])
@@ -312,5 +312,40 @@ def getVendorDetail(request, id):
         return Response(serializer.data, status=200)
     else:
         return Response(status=400)
+    
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateVendorKYCStatus(request, id, status):
+    if request.method == 'PUT':
+        vendor = Vendor_Detail.objects.get(id=id)
+        vendor.status = status
+        vendor.save()
+        return Response({"status": "KYC status changed."}, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getSetting(request):
+    if request.method == 'GET':
+        setting = Setting.objects.all().first()
+        serializer = SettingSerializer(setting)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def updateSetting(request):
+    if request.method == 'POST':
+        setting = Setting.objects.all().first()
+        if setting:
+            serializer = SettingSerializer(setting, data=request.data, partial=True)
+        else:
+            serializer = SettingSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
 
 

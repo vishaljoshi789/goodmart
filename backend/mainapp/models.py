@@ -138,6 +138,25 @@ class Vendor_Detail(models.Model):
     added_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     modify_on = models.DateTimeField(auto_now=True, blank=True, null=True)
 
+class Shop(models.Model):
+    vendor = models.ForeignKey(Vendor_Detail, on_delete=models.CASCADE, blank=True, null=True, related_name='shop')
+    name = models.CharField(max_length=100, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
+    alternate_phone = models.CharField(max_length=15, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    image1 = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
+    image2 = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
+    image3 = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
+    status = models.BooleanField(default=True)
+    added_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    modify_on = models.DateTimeField(auto_now=True, blank=True, null=True)
+    modify_by = models.IntegerField(blank=True, null=True)
+    
+    def __str__(self):
+        return self.name
+
     
 class Product_Brand(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
@@ -212,5 +231,16 @@ class Cart(models.Model):
     quantity = models.IntegerField(blank=True, null=True)
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
-    
-    
+
+class Points(models.Model):
+    code = models.CharField(max_length=20, null=True, blank=True)
+    amount = models.PositiveIntegerField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    redeem_at = models.DateField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    used_for = models.CharField(max_length=100, null=True, blank=True)
+    description = models.CharField(max_length=500, null=True, blank=True)
+
+class Setting(models.Model):
+    registration_points = models.PositiveIntegerField(null=True, blank=True, default=0)
+
