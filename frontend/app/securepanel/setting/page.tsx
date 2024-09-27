@@ -68,8 +68,8 @@ export default function Setting() {
     updateSetting(values);
   }
   return (
-    <div className="flex justify-center items-center flex-col gap-5 p-10">
-      <h1>WEB Settings</h1>
+    <div className="flex justify-center items-center flex-col gap- p-10">
+      <span className="font-bold w-full text-red-500">WEB Settings</span>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField

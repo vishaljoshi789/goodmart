@@ -2,22 +2,26 @@
 import { GMContext, GMContextType } from "@/app/(utils)/context/GMContext";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
+import { BsBox } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { CiShop } from "react-icons/ci";
+import { TbTicket } from "react-icons/tb";
 const HamburgerMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   let { userInfo } = useContext<GMContextType>(GMContext);
-  let options =
+  const options =
     userInfo && userInfo.user_type == "Customer"
       ? [
           { Profile: "/user-panel/", icon: <CgProfile /> },
           { Shop: "/", icon: <CiShop /> },
+          { Coupen: "/user-panel/coupen/", icon: <TbTicket /> },
         ]
       : userInfo && userInfo.user_type == "Product Vendor"
       ? [
           { Profile: "/user-panel/", icon: <CgProfile /> },
-          { Products: "/user-panel/vendor/products/", icon: <CiShop /> },
+          { Products: "/user-panel/vendor/products/", icon: <BsBox /> },
           { Shop: "/", icon: <CiShop /> },
+          { Coupen: "/user-panel/coupen/", icon: <TbTicket /> },
         ]
       : [];
   const [isMounted, setIsMounted] = useState(false);
@@ -61,7 +65,7 @@ const HamburgerMenu = () => {
       <div
         className={`absolute right-0 a-10 w-64 min-h-screen bg-white flex flex-col items-center justify-center transform ${
           isOpen ? "translate-x-0 block" : "translate-x-full hidden md:flex"
-        } transition-transform duration-300 ease-in-out md:translate-x-0 md:relative`}
+        } transition-transform duration-300 ease-in-out md:translate-x-0 md:relative z-20`}
       >
         <div className="w-64 min-h-screen bg-gray-800 text-white">
           <div className="p-4 font-bold text-xl">

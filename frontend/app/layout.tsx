@@ -14,7 +14,6 @@ const carterOne = Carter_One({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-carter-one",
-  display: "swap",
 });
 
 export const metadata: Metadata = {

@@ -10,21 +10,23 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { MdError, MdPending } from "react-icons/md";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import DashboardContent from "@/components/user/DashboardContent";
+
+interface User {
+  name: string;
+  email: string;
+  user_id: string;
+  phone_no: string;
+  p_address: string;
+  date_joined: string;
+  last_login: string;
+  email_verified: boolean;
+  phone_verified: boolean;
+  user_type: string;
+  VendorInfo: any;
+}
 
 const Home: NextPage = () => {
-  interface User {
-    name: string;
-    email: string;
-    user_id: string;
-    phone_no: string;
-    p_address: string;
-    date_joined: string;
-    last_login: string;
-    email_verified: boolean;
-    phone_verified: boolean;
-    user_type: string;
-    VendorInfo: any;
-  }
   let { setUserInfo } = useContext(GMContext);
   let api = useAxios();
   let [user, setUser] = useState<User | null>(null);
@@ -138,12 +140,7 @@ const Home: NextPage = () => {
             Orders
           </div>
         </div>
-        <div className="mt-6">
-          <h2 className="text-2xl font-semibold mb-4">More Information</h2>
-          <p className="text-gray-700">
-            Here you can add more detailed information about the user.
-          </p>
-        </div>
+        <DashboardContent />
       </div>
     </div>
   );

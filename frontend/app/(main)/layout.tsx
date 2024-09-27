@@ -6,6 +6,7 @@ import { GMProvider } from "../(utils)/context/GMContext";
 
 const fontSans = FontSans({
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
