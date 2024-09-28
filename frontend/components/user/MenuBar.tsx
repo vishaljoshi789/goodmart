@@ -2,9 +2,11 @@
 import { GMContext, GMContextType } from "@/app/(utils)/context/GMContext";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
-import { BsBox } from "react-icons/bs";
+import { BsBox, BsBox2, BsWallet } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { CiShop } from "react-icons/ci";
+import { FaShippingFast } from "react-icons/fa";
+import { MdBusiness } from "react-icons/md";
 import { TbTicket } from "react-icons/tb";
 const HamburgerMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +17,8 @@ const HamburgerMenu = () => {
           { Profile: "/user-panel/", icon: <CgProfile /> },
           { Shop: "/", icon: <CiShop /> },
           { Coupon: "/user-panel/coupon/", icon: <TbTicket /> },
+          { Wallet: "/user-panel/wallet/", icon: <BsWallet /> },
+          { Orders: "/user-panel/orders/", icon: <BsBox2 /> },
         ]
       : userInfo && userInfo.user_type == "Product Vendor"
       ? [
@@ -22,6 +26,16 @@ const HamburgerMenu = () => {
           { Products: "/user-panel/vendor/products/", icon: <BsBox /> },
           { Shop: "/", icon: <CiShop /> },
           { Coupon: "/user-panel/coupon/", icon: <TbTicket /> },
+          {
+            "Business Details": "/user-panel/vendor/business-details/",
+            icon: <MdBusiness />,
+          },
+          {
+            Shipping: "/user-panel/vendor/shipping/",
+            icon: <FaShippingFast />,
+          },
+          { Wallet: "/user-panel/wallet/", icon: <BsWallet /> },
+          { Orders: "/user-panel/orders/", icon: <BsBox2 /> },
         ]
       : [];
   const [isMounted, setIsMounted] = useState(false);

@@ -133,10 +133,10 @@ const Home: NextPage = () => {
             phone_verified={user.phone_verified}
             verifyMail={verifyMail}
           />
-          <div className="qr bg-gray-600 w-1/3 rounded-lg flex justify-center items-center text-white">
+          <div className="qr bg-gray-600 lg:w-1/3 w-full rounded-lg flex justify-center items-center text-white">
             QR
           </div>
-          <div className="qr bg-white w-1/3 flex justify-center items-center">
+          <div className="qr bg-white w-full lg:w-1/3 flex justify-center items-center">
             Orders
           </div>
         </div>
