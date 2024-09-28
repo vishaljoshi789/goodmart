@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import { toast } from "sonner";
 import { MdDeleteForever } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaLockOpen } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { GMContext } from "@/app/(utils)/context/GMContext";
 
 interface User {
   id: number;
@@ -100,12 +101,24 @@ interface User {
 const AdminPage: NextPage = () => {
   let api = useAxios();
   const [users, setUsers] = useState<User[]>([]);
+  let { setAuthToken } = useContext(GMContext);
   let getUsers = async () => {
     let response = await api.get("/admin/users/");
     if (response.status === 200) {
       setUsers(response.data);
     } else {
       toast.error("Failed to fetch users");
+    }
+  };
+  let login_user = async (userId: number) => {
+    let response = await api.get(`/admin/loginUser/${userId}/`);
+    if (response.status === 200) {
+      setAuthToken(response.data);
+      localStorage.setItem("accessToken", JSON.stringify(response.data));
+      toast.success("User logged in successfully");
+      window.location.href = "/user-panel";
+    } else {
+      toast.error("Failed to login");
     }
   };
   useEffect(() => {
@@ -139,7 +152,7 @@ const AdminPage: NextPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="mx-auto p-4 w-full">
       <h1 className="text-2xl font-bold mb-4">Users</h1>
       <table className="min-w-full bg-white border border-gray-200">
         <thead>
@@ -206,6 +219,28 @@ const AdminPage: NextPage = () => {
                         onClick={() => handleDelete(user.id)}
                       >
                         Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+                <AlertDialog>
+                  <AlertDialogTrigger className="px-4 py-2 bg-yellow-500 text-white">
+                    <FaLockOpen className="text-xl" />
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure to login as this user?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription></AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-green-500"
+                        onClick={() => login_user(user.id)}
+                      >
+                        Login
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>

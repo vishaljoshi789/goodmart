@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer
 from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting
 import json
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import status
+
 
 @api_view(['GET'])
 def is_admin(request):
@@ -21,6 +24,19 @@ def get_users(request):
         return Response(serializer.data)
     else:
         return Response(serializer.errors, status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def login_user(request, id):
+    if request.method == "GET":
+        try:
+            user = User.objects.get(id=id)
+        except:
+            return Response({"error": "User not found."}, status=404)
+        refresh = RefreshToken.for_user(user)
+        return Response({"refresh": str(refresh), "access": str(refresh.access_token)}, status=200)
+    else:
+        return Response(status=400)
     
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
