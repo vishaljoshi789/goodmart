@@ -14,14 +14,14 @@ const HamburgerMenu = () => {
       ? [
           { Profile: "/user-panel/", icon: <CgProfile /> },
           { Shop: "/", icon: <CiShop /> },
-          { Coupen: "/user-panel/coupen/", icon: <TbTicket /> },
+          { Coupon: "/user-panel/coupon/", icon: <TbTicket /> },
         ]
       : userInfo && userInfo.user_type == "Product Vendor"
       ? [
           { Profile: "/user-panel/", icon: <CgProfile /> },
           { Products: "/user-panel/vendor/products/", icon: <BsBox /> },
           { Shop: "/", icon: <CiShop /> },
-          { Coupen: "/user-panel/coupen/", icon: <TbTicket /> },
+          { Coupon: "/user-panel/coupon/", icon: <TbTicket /> },
         ]
       : [];
   const [isMounted, setIsMounted] = useState(false);

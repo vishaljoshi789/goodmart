@@ -12,7 +12,7 @@ export default function DashboardContent() {
       ? [
           { Shop: "/", icon: <BsShop className="text-4xl" /> },
           {
-            Coupen: "/user-panel/coupen/",
+            Coupon: "/user-panel/coupon/",
             icon: <TbTicket className="text-4xl" />,
           },
         ]
@@ -24,7 +24,7 @@ export default function DashboardContent() {
           },
           { Shop: "/", icon: <BsShop className="text-4xl" /> },
           {
-            Coupen: "/user-panel/coupen/",
+            Coupon: "/user-panel/coupon/",
             icon: <TbTicket className="text-4xl" />,
           },
         ]

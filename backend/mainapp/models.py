@@ -232,7 +232,7 @@ class Cart(models.Model):
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
 
-class Points(models.Model):
+class Coupon(models.Model):
     code = models.CharField(max_length=20, null=True, blank=True)
     amount = models.PositiveIntegerField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -240,6 +240,12 @@ class Points(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     used_for = models.CharField(max_length=100, null=True, blank=True)
     description = models.CharField(max_length=500, null=True, blank=True)
+
+class Points(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, null=True, blank=True)
+    added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 class Setting(models.Model):
     registration_points = models.PositiveIntegerField(null=True, blank=True, default=0)
