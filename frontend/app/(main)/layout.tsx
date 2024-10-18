@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import { Inter as FontSans } from "next/font/google";
+import { Inter as FontSans, Carter_One } from "next/font/google";
 import Navbar from "@/components/web/Navbar";
-import { GMProvider } from "../(utils)/context/GMContext";
+import React from "react";
 
 const fontSans = FontSans({
   subsets: ["latin"],
+  display: "swap",
+});
+
+const carterOne = Carter_One({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-carter-one",
   display: "swap",
 });
 
@@ -20,9 +27,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <div className={`${fontSans.className} ${carterOne.variable}`}>
       <Navbar />
       {children}
-    </>
+    </div>
   );
 }

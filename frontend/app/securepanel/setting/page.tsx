@@ -68,7 +68,7 @@ export default function Setting() {
     updateSetting(values);
   }
   return (
-    <div className="flex justify-center items-center flex-col gap- p-10">
+    <div className="flex justify-center flex-col gap-10 p-10">
       <span className="font-bold w-full text-red-500">WEB Settings</span>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -77,10 +77,15 @@ export default function Setting() {
             name="registration_points"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Registration Points</FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
+                <div className="flex items-center gap-10">
+                  <FormLabel className="whitespace-nowrap">
+                    Registration Points
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} className="w-full" />
+                  </FormControl>
+                </div>
+
                 <FormMessage />
               </FormItem>
             )}

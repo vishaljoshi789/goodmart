@@ -124,6 +124,7 @@ class Vendor_Detail(models.Model):
     description = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Product_Category, on_delete=models.CASCADE, blank=True, null=True, related_name='shop')
     primary_category = models.ForeignKey(Product_Category, on_delete=models.CASCADE, blank=True, null=True, related_name='primary_shop')
+    business_category = models.CharField(max_length=100, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='vendor')
     photograph = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
     gst = models.CharField(max_length=20, blank=True, null=True)

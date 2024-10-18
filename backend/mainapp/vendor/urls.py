@@ -14,4 +14,5 @@ urlpatterns = [
     path('updateProductImages/<int:product_id>/', views.updateProductImages),
     path('updateProductSpecs/<int:product_id>/', views.updateProductSpecifications),
     path('addKYC/', views.addKYC),
+    path('getVendorDetails/', views.getVendorDetails)
 ]

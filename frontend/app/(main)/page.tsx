@@ -18,7 +18,6 @@ import Image from "next/image";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { CiLocationOn } from "react-icons/ci";

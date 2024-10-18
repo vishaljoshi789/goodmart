@@ -1,6 +1,7 @@
 "use client";
 import { GMContext, GMContextType } from "@/app/(utils)/context/GMContext";
 import Link from "next/link";
+import React from "react";
 import { useContext, useEffect, useState } from "react";
 import { BsBox, BsBox2, BsWallet } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
@@ -54,7 +55,7 @@ const HamburgerMenu = () => {
   return (
     <div className=" bg-gray-800">
       <button
-        className={`absolute md:relative top-5 right-5 z-20 flex flex-col h-10 w-10 border-2 ${
+        className={`absolute md:relative top-5 right-5 z-50 flex flex-col h-10 w-10 border-2 ${
           isOpen ? "border-white" : "border-gray-900"
         } rounded justify-center items-center group md:hidden`}
         onClick={toggleMenu}

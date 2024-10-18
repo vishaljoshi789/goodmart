@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Product, Product_Image, Product_Specifications, Vendor_Detail
+from ..models import Product, Product_Image, Product_Specifications, Vendor_Detail, Address
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,7 +35,28 @@ class ProductEditSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'mrp', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video']
 
 
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'
+
 class VendorDetailSerializer(serializers.ModelSerializer):
+    category = serializers.StringRelatedField()
+    primary_category = serializers.StringRelatedField()
     class Meta:
         model = Vendor_Detail
         fields = '__all__'
+
+class GetVendorDetailSerializer(serializers.ModelSerializer):
+    category = serializers.StringRelatedField()
+    primary_category = serializers.StringRelatedField()
+    address = AddressSerializer()
+    class Meta:
+        model = Vendor_Detail
+        fields = '__all__'
+
+class KYCDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vendor_Detail
+        fields = '__all__'
+

@@ -116,7 +116,25 @@ const Home: NextPage = () => {
           </AlertDescription>
         </Alert>
       ) : (
-        <></>
+        user.VendorInfo.qr == null && (
+          <Alert className="bg-yellow-500 text-white">
+            <MdError className="!text-red-900 text-2xl" />
+            <AlertTitle className="font-bold">
+              Vendor Profile Incomplete
+            </AlertTitle>
+            <AlertDescription>
+              Complete your Vendor Profile and add your Shop Info
+              <Link
+                className=" ml-10"
+                href="/user-panel/vendor/business-details"
+              >
+                <Button className="bg-white text-red-500 hover:bg-gray-200">
+                  Complete Your Profile
+                </Button>
+              </Link>
+            </AlertDescription>
+          </Alert>
+        )
       )}
       <div className="flex-1 p-6 bg-gray-100">
         <h1 className="lg:text-3xl text-xl font-bold mb-6">User Profile</h1>

@@ -1,9 +1,13 @@
-from ..models import Product
-from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer
+from ..models import Product, Vendor_Detail
+from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer, AddressSerializer, KYCDetailSerializer, GetVendorDetailSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from ..permissions import isVendor
 import json
+import qrcode
+from io import BytesIO
+from django.core.files import File
+from django.conf import settings 
 
 
 @api_view(['POST'])
@@ -133,11 +137,61 @@ def updateProductSpecifications(request, product_id):
 @permission_classes([isVendor])
 def addKYC(request):
     if request.method == 'POST':
-        data = request.data.copy()
+        data = request.data.dict() if isinstance(request.data, dict) else dict(request.data)
         data['user'] = request.user.id
-        serializer = VendorDetailSerializer(data=data, partial=True)
+        data['category'] = int(request.data['category'])
+        addData = {
+            'user': request.user.id,
+            'address': data.pop('address'),
+            'landmark': data.pop('landmark'),
+            'city': data.pop('city'),
+            'state': data.pop('state'),
+            'pin': data.pop('pin'),
+            'name': request.user.name,
+            'phone': request.user.phone_no,   
+            'co_ordinates': data.pop('co_ordinates')
+        }
+        serializer = AddressSerializer(data=addData, partial=True)
         if serializer.is_valid():
-            serializer.save()
+            instance = serializer.save()
+        data['address'] = instance.id
+        serializer = KYCDetailSerializer(data=data, partial=True)
+        if serializer.is_valid():
+            shop = serializer.save()
+            # shop_url = f"{settings.FRONTEND_URL}/shop/{shop.id}"
+            
+            # # Generate QR code
+            # qr = qrcode.QRCode(
+            #     version=1,
+            #     error_correction=qrcode.constants.ERROR_CORRECT_L,
+            #     box_size=10,
+            #     border=4,
+            # )
+            # qr.add_data(shop_url)
+            # qr.make(fit=True)
+            
+            # # Create an image from the QR code
+            # img = qr.make_image(fill="black", back_color="white")
+            
+            # # Save the image in memory as a PNG
+            # buffer = BytesIO()
+            # img.save(buffer, format="PNG")
+            # buffer.seek(0)
+            
+            # # Attach the QR code image to the vendor's model if needed
+            # shop.qr.save(f"vendor_{shop.id}_qr.png", File(buffer), save=True)
+            
+            # Return the serializer data and a success response
             return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)    
+    return Response(serializer.errors, status=400) 
+
+@api_view(['GET'])
+@permission_classes([isVendor])
+def getVendorDetails(request):
+    if request.method == 'GET':
+        user = request.user
+        details =  Vendor_Detail.objects.get(user = user.id)
+        serializer = GetVendorDetailSerializer(details)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
 

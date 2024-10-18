@@ -37,12 +37,46 @@ export default function KYCVerification() {
       pan: "",
       pan_certificate: "",
       photograph: "",
+      address: "",
+      landmark: "",
+      city: "",
+      state: "",
+      pin: "",
+      co_ordinates: "",
     },
   });
   let api = useAxios();
   let router = useRouter();
   let [category, setCategory] = useState<any>(null);
   let [images, setImages] = useState<any>(null);
+
+  let showPosition = (position: GeolocationPosition) => {
+    let values = form.getValues();
+    values["co_ordinates"] =
+      position.coords.latitude + "," + position.coords.longitude;
+    onSubmit(values);
+  };
+  let showError = (error: GeolocationPositionError) => {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        console.log("User denied the request for Geolocation.");
+        break;
+      case error.POSITION_UNAVAILABLE:
+        console.log("Location information is unavailable.");
+        break;
+      case error.TIMEOUT:
+        console.log("The request to get user location timed out.");
+        break;
+    }
+  };
+
+  let getLocation = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
 
   let getCategory = async () => {
     let response = await api.get("/getProductCategory/");
@@ -54,36 +88,40 @@ export default function KYCVerification() {
   }, []);
 
   async function onSubmit(values: any) {
-    if (values.gst_certificate == "") {
-      delete values.gst_certificate;
-    }
-    if (values.aadhar_front_image == "") {
-      delete values.aadhar_front_image;
-    }
-    if (values.aadhar_back_image == "") {
-      delete values.aadhar_back_image;
-    }
-    if (values.pan_certificate == "") {
-      delete values.pan_certificate;
-    }
-    if (values.photograph == "") {
-      delete values.photograph;
-    }
-    let formData = new FormData();
-    for (let key in values) {
-      formData.append(key, values[key]);
-    }
-    for (let key in images) {
-      formData.append(key, images[key]);
-    }
-    let response = await api.post("/vendor/addKYC/", formData);
-    if (response.status == 201) {
-      toast.success("KYC Submitted Successfully, Wait for Approval");
-      return router.push("/user-panel/");
+    if (values.co_ordinates == "") {
+      await getLocation();
     } else {
-      toast.error("Error Submitting KYC");
+      if (values.gst_certificate == "") {
+        delete values.gst_certificate;
+      }
+      if (values.aadhar_front_image == "") {
+        delete values.aadhar_front_image;
+      }
+      if (values.aadhar_back_image == "") {
+        delete values.aadhar_back_image;
+      }
+      if (values.pan_certificate == "") {
+        delete values.pan_certificate;
+      }
+      if (values.photograph == "") {
+        delete values.photograph;
+      }
+      let formData = new FormData();
+      for (let key in values) {
+        formData.append(key, values[key]);
+      }
+      for (let key in images) {
+        formData.append(key, images[key]);
+      }
+      let response = await api.post("/vendor/addKYC/", formData);
+      if (response.status == 201) {
+        toast.success("KYC Submitted Successfully, Wait for Approval");
+        return router.push("/user-panel/");
+      } else {
+        toast.error("Error Submitting KYC");
+      }
+      console.log(response.data);
     }
-    console.log(response.data);
   }
   return (
     <div className="flex flex-col w-full p-5 gap-5">
@@ -351,6 +389,75 @@ export default function KYCVerification() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address Line</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" type="text" required {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex flex-col md:flex-row justify-between gap-5">
+              <FormField
+                control={form.control}
+                name="landmark"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Landmark</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" type="text" required {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>City</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" type="text" required {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex flex-col md:flex-row justify-between gap-5">
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>State</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" type="text" required {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="pin"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Pincode</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" type="text" required {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <Button type="submit">Submit</Button>
           </form>
         </Form>
