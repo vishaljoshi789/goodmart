@@ -31,6 +31,7 @@ interface Product {
   image: string;
   tags: string;
   video: string;
+  barcode_number: string;
   images: ProductImage[];
   specifications: ProductSpec[];
 }

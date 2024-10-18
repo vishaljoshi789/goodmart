@@ -15,6 +15,7 @@ from django.conf import settings
 def addProductInfo(request):
     data = request.data
     data['user'] = request.user.id
+    data['company_id'] = request.user.vendor.id
     serializer = ProductSerializer(data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
@@ -90,7 +91,10 @@ def getProductToEdit(request, product_id):
 @permission_classes([isVendor])
 def updateProductDetails(request, product_id):
     product = Product.objects.get(id=product_id)
-    serializer = ProductSerializer(product, data=request.data, partial=True)
+    data = request.data.copy()
+    data['user'] = request.user.id
+    data['company_id'] = request.user.vendor.id
+    serializer = ProductSerializer(product, data=data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=200)

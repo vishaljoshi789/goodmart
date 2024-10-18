@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
+import Quagga from "quagga";
 import {
   Form,
   FormControl,
@@ -20,11 +21,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import { toast } from "sonner";
 import Image from "next/image";
 import { GMContext } from "@/app/(utils)/context/GMContext";
+import { CiBarcode } from "react-icons/ci";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -35,6 +44,7 @@ const formSchema = z.object({
   brand: z.string(),
   image: z.any(),
   video: z.any().optional(),
+  barcode_number: z.string().optional(),
   tags: z.string().optional(),
 });
 
@@ -51,9 +61,90 @@ export default function ProductEditBasicDetails({
 }) {
   let [image, setImage] = useState<File | null>(null);
   let [video, setVideo] = useState<File | null>(null);
+  const [barcodeData, setBarcodeData] = useState("");
+  const scannerRef = useRef<HTMLDivElement>(null);
+  const [scannedCodes, setScannedCodes] = useState<string[]>([]);
+  let [scanning, setScanning] = useState<any>(false);
+  const [isQuaggaRunning, setIsQuaggaRunning] = useState(false);
+
   let { baseURL } = useContext(GMContext);
   let formData = new FormData();
   let api = useAxios();
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (scanning && scannerRef.current) {
+        Quagga.init(
+          {
+            inputStream: {
+              type: "LiveStream",
+              target: scannerRef.current, // DOM element to attach the camera stream
+              constraints: {
+                facingMode: "environment", // Use rear camera
+              },
+              halfSample: false,
+            },
+            decoder: {
+              readers: [
+                "code_128_reader",
+                "ean_reader",
+                "ean_8_reader",
+                "upc_reader",
+                "upc_e_reader",
+              ],
+            },
+          },
+          function (err: any) {
+            if (err) {
+              console.log(err);
+              return;
+            }
+            console.log("Quagga initialized");
+            Quagga.start();
+            setIsQuaggaRunning(true);
+          }
+        );
+
+        // When a barcode is detected
+        Quagga.onDetected((result: any) => {
+          const barcode = result.codeResult.code;
+          setScannedCodes((prev) => [...prev, barcode]); // Fill the input field with the scanned barcode
+          // Quagga.stop(); // Stop scanning after success (you can adjust this as needed)
+        });
+
+        // Clean up Quagga on component unmount
+        return () => {
+          Quagga.stop();
+          setIsQuaggaRunning(false);
+        };
+      } else {
+        isQuaggaRunning && Quagga.stop();
+        setIsQuaggaRunning(false);
+      }
+    }, 1);
+  }, [scannerRef, scanning]);
+
+  useEffect(() => {
+    const codeFrequency = scannedCodes.reduce((acc, code) => {
+      acc[code] = (acc[code] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    // If a code is consistently scanned 3 times, use it
+    for (const [code, count] of Object.entries(codeFrequency)) {
+      if (count >= 25) {
+        // Adjust the threshold as needed
+        setBarcodeData(code); // Set the input with consistent value
+        setScannedCodes([]); // Reset the scanned codes
+        Quagga.stop(); // Stop scanning
+        setIsQuaggaRunning(false);
+        setScanning(false); // Close the dialog
+        toast.success("Barcode Scanned Successfully");
+        break;
+      }
+    }
+  }, [scannedCodes]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: productValues,
@@ -205,6 +296,46 @@ export default function ProductEditBasicDetails({
               )}
             />
           </div>
+
+          <FormField
+            control={form.control}
+            name="barcode_number"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Barcode Number</FormLabel>{" "}
+                <div className="flex gap-5">
+                  <FormControl className="w-full">
+                    <Input
+                      {...field}
+                      value={barcodeData}
+                      onChange={(e) => setBarcodeData(e.target.value)}
+                      placeholder="Scanned Barcode"
+                    />
+                  </FormControl>
+                  <Dialog
+                    onOpenChange={(open) => setScanning(open)}
+                    open={scanning}
+                  >
+                    <DialogTrigger className="bg-white text-black hover:text-white hover:bg-gray-500 px-2 rounded-md ease-in-out transition-all shadow-lg">
+                      <CiBarcode className="text-3xl" />
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>BarCode Scanner</DialogTitle>
+                      </DialogHeader>
+                      <div
+                        ref={scannerRef}
+                        style={{ width: "425px", height: "425px" }}
+                        className="m-auto"
+                      ></div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <div className="flex gap-2">
             <FormField
               control={form.control}

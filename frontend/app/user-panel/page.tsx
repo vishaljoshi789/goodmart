@@ -116,6 +116,7 @@ const Home: NextPage = () => {
           </AlertDescription>
         </Alert>
       ) : (
+        user.VendorInfo &&
         user.VendorInfo.qr == null && (
           <Alert className="bg-yellow-500 text-white">
             <MdError className="!text-red-900 text-2xl" />

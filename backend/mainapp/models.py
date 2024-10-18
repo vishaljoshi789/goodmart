@@ -184,6 +184,7 @@ class Product(models.Model):
     item_type = models.CharField(max_length=10, blank=True, null=True, choices=(("Packed", "Packed"), ("Open", "Open")))
     point = models.IntegerField(default=0, blank=True, null=True)
     company_id = models.ForeignKey(Vendor_Detail, on_delete=models.CASCADE, blank=True, null=True)
+    barcode_number = models.CharField(max_length=100, blank=True, null=True)
     # position = models.IntegerField(blank=True, null=True)
     # unit = models.CharField(max_length=100, blank=True, null=True)
     # rating = models.IntegerField(blank=True, null=True)
