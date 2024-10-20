@@ -154,7 +154,9 @@ export default function Products() {
                 </TableCell>
                 <TableCell className="text-center">{product.name}</TableCell>
                 <TableCell className="text-center">
-                  {product.description}
+                  {product.description.length > 50
+                    ? product.description.slice(0, 50) + "..."
+                    : product.description}
                 </TableCell>
                 <TableCell className="text-center">{product.mrp}</TableCell>
                 <TableCell className="text-center">

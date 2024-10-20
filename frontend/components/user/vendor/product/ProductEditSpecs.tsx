@@ -63,7 +63,7 @@ export default function ProductEditSpecs({ product }: { product: any }) {
   }
 
   return (
-    <div className="bg-gray-50 shadow-lg rounded-lg p-5 h-fit">
+    <div className="bg-gray-50 shadow-lg rounded-lg p-5 h-fit w-full">
       <div className="flex justify-between items-center">
         <span className="text-blue-500 font-bold text-sm">
           Edit Product Specifications

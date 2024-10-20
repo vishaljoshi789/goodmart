@@ -3,6 +3,7 @@
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import ProductEditBasicDetails from "@/components/user/vendor/product/ProductEditBasicDetails";
 import ProductEditImages from "@/components/user/vendor/product/ProductEditImages";
+import ProductEditProductVariants from "@/components/user/vendor/product/ProductEditProductVariants";
 import ProductEditSpecs from "@/components/user/vendor/product/ProductEditSpecs";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -48,6 +49,7 @@ export default function EditProduct() {
     if (response.status == 200) {
       response.data.category = response.data.category.toString();
       response.data.brand = response.data.brand.toString();
+      console.log(response.data);
       setProduct(response.data);
     }
   };
@@ -81,7 +83,10 @@ export default function EditProduct() {
               className="w-fit"
             />
             <ProductEditImages product={product} />
-            <ProductEditSpecs product={product} />
+            <div className="flex flex-col gap-5 justify-evenly">
+              <ProductEditSpecs product={product} />
+              <ProductEditProductVariants product={product} />
+            </div>
           </>
         )}
       </div>
