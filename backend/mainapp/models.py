@@ -170,8 +170,6 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Product_Category, on_delete=models.CASCADE, blank=True, null=True)
     brand = models.ForeignKey(Product_Brand, on_delete=models.CASCADE, blank=True, null=True)
-    mrp = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
-    offer_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     status = models.BooleanField(default=True)
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -180,11 +178,16 @@ class Product(models.Model):
     video = models.FileField(upload_to=vendor_directory_path, blank=True, null=True)
     hsn = models.CharField(max_length=100, blank=True, null=True)
     tax = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
-    stock = models.IntegerField(blank=True, null=True)
-    item_type = models.CharField(max_length=10, blank=True, null=True, choices=(("Packed", "Packed"), ("Open", "Open")))
-    point = models.IntegerField(default=0, blank=True, null=True)
+    item_type = models.CharField(max_length=10, blank=True, null=True, choices=(("Packed", "Packed"), ("Open", "Open"), ("Loose", "Loose")))
     company_id = models.ForeignKey(Vendor_Detail, on_delete=models.CASCADE, blank=True, null=True)
     barcode_number = models.CharField(max_length=100, blank=True, null=True)
+    inventory_fee = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, default=10)
+    
+
+    # point = models.IntegerField(default=0, blank=True, null=True)
+    # stock = models.IntegerField(blank=True, null=True)
+    # offer_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    # mrp = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     # position = models.IntegerField(blank=True, null=True)
     # unit = models.CharField(max_length=100, blank=True, null=True)
     # rating = models.IntegerField(blank=True, null=True)
@@ -198,6 +201,20 @@ class Product(models.Model):
     # pairs = models.IntegerField(blank=True, null=True)
 
 
+    def __str__(self):
+        return str(self.name)
+    
+class Product_Variant(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variants')
+    name = models.CharField(max_length=100, blank=True, null=True)
+    type = models.CharField(max_length=100, blank=True, null=True, choices=(("Size", "Size"), ("Color", "Color"), ("Weight", "Weight"), ("Material", "Material")))
+    offer_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    stock = models.IntegerField(blank=True, null=True)
+    expiry_date = models.DateField(blank=True, null=True)
+    added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
+    
     def __str__(self):
         return str(self.name)
     

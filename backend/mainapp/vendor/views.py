@@ -16,6 +16,7 @@ def addProductInfo(request):
     data = request.data
     data['user'] = request.user.id
     data['company_id'] = request.user.vendor.id
+    print(data)
     serializer = ProductSerializer(data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
@@ -94,6 +95,7 @@ def updateProductDetails(request, product_id):
     data = request.data.copy()
     data['user'] = request.user.id
     data['company_id'] = request.user.vendor.id
+    print(data)
     serializer = ProductSerializer(product, data=data, partial=True)
     if serializer.is_valid():
         serializer.save()

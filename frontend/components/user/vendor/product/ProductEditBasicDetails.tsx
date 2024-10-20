@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Quagga from "quagga";
 import {
@@ -38,14 +38,14 @@ import {
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   description: z.string().min(1, { message: "Description is required" }),
-  mrp: z.string().min(1, { message: "MRP is required" }),
-  offer_price: z.string().min(1, { message: "Offer Price is required" }),
   category: z.string(),
   brand: z.string(),
   image: z.any(),
   video: z.any().optional(),
   barcode_number: z.string().optional(),
   tags: z.string().optional(),
+  tax: z.string().optional(),
+  item_type: z.string().optional(),
 });
 
 export default function ProductEditBasicDetails({
@@ -61,7 +61,6 @@ export default function ProductEditBasicDetails({
 }) {
   let [image, setImage] = useState<File | null>(null);
   let [video, setVideo] = useState<File | null>(null);
-  const [barcodeData, setBarcodeData] = useState("");
   const scannerRef = useRef<HTMLDivElement>(null);
   const [scannedCodes, setScannedCodes] = useState<string[]>([]);
   let [scanning, setScanning] = useState<any>(false);
@@ -124,6 +123,11 @@ export default function ProductEditBasicDetails({
     }, 1);
   }, [scannerRef, scanning]);
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: productValues,
+  });
+
   useEffect(() => {
     const codeFrequency = scannedCodes.reduce((acc, code) => {
       acc[code] = (acc[code] || 0) + 1;
@@ -134,7 +138,7 @@ export default function ProductEditBasicDetails({
     for (const [code, count] of Object.entries(codeFrequency)) {
       if (count >= 25) {
         // Adjust the threshold as needed
-        setBarcodeData(code); // Set the input with consistent value
+        form.setValue("barcode_number", code); // Set the input with consistent value
         setScannedCodes([]); // Reset the scanned codes
         Quagga.stop(); // Stop scanning
         setIsQuaggaRunning(false);
@@ -145,10 +149,6 @@ export default function ProductEditBasicDetails({
     }
   }, [scannedCodes]);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: productValues,
-  });
   async function onSubmit(values: z.infer<typeof formSchema>) {
     toast.loading("Uploading Product");
     values.image = image;
@@ -157,8 +157,9 @@ export default function ProductEditBasicDetails({
     formData.append("description", values.description);
     formData.append("category", values.category);
     formData.append("brand", values.brand);
-    formData.append("mrp", values.mrp);
-    formData.append("offer_price", values.offer_price);
+    formData.append("barcode_number", values.barcode_number ?? "");
+    formData.append("tax", values.tax ?? "");
+    formData.append("item_type", values.item_type ?? "");
     values.image && formData.append("image", values.image);
     values.video && formData.append("video", values.video);
     formData.append("tags", values.tags ?? "");
@@ -209,7 +210,7 @@ export default function ProductEditBasicDetails({
               </FormItem>
             )}
           />
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             <FormField
               control={form.control}
               name="mrp"
@@ -235,8 +236,8 @@ export default function ProductEditBasicDetails({
                   <FormMessage />
                 </FormItem>
               )}
-            />
-          </div>
+            /> 
+          </div> */}
           <div className="flex gap-2">
             <FormField
               control={form.control}
@@ -297,6 +298,47 @@ export default function ProductEditBasicDetails({
             />
           </div>
 
+          <div className="flex w-full gap-5">
+            <FormField
+              control={form.control}
+              name="tax"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Tax</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="item_type"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Quality</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="">
+                        <SelectValue placeholder="Select Quality" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Open">Open</SelectItem>
+                        <SelectItem value="Packed">Packed</SelectItem>
+                        <SelectItem value="Loose">Loose</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <FormField
             control={form.control}
             name="barcode_number"
@@ -305,12 +347,7 @@ export default function ProductEditBasicDetails({
                 <FormLabel>Barcode Number</FormLabel>{" "}
                 <div className="flex gap-5">
                   <FormControl className="w-full">
-                    <Input
-                      {...field}
-                      value={barcodeData}
-                      onChange={(e) => setBarcodeData(e.target.value)}
-                      placeholder="Scanned Barcode"
-                    />
+                    <Input {...field} placeholder="Scanned Barcode" />
                   </FormControl>
                   <Dialog
                     onOpenChange={(open) => setScanning(open)}
