@@ -5,6 +5,7 @@ import { GMContext } from "@/app/(utils)/context/GMContext";
 import ProductAddBasicDetails from "@/components/user/vendor/product/ProductAddBasicDetails";
 import ProductAddImages from "@/components/user/vendor/product/ProductAddImages";
 import ProductAddSpecs from "@/components/user/vendor/product/ProductAddSpecs";
+import ProductAddProductVariants from "@/components/user/vendor/product/ProductAddProductVariants";
 
 export default function AddProduct() {
   let { baseURL } = useContext(GMContext);
@@ -90,7 +91,16 @@ export default function AddProduct() {
         ) : (
           <></>
         )}
-        {activeTab == 3 ? <ProductAddSpecs product={product} /> : <></>}
+        {activeTab == 3 ? (
+          <ProductAddSpecs product={product} setActiveTab={setActiveTab} />
+        ) : (
+          <></>
+        )}
+        {activeTab == 4 ? (
+          <ProductAddProductVariants product={product} />
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

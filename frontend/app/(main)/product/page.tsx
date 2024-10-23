@@ -27,11 +27,18 @@ export default function Product() {
   let { baseURL } = useContext(GMContext);
   let [product, setProduct] = useState<any>({});
   let [activeImage, setActiveImage] = useState(0);
+
+  const validTypes = ["Size", "Color", "Weight", "Material"];
+
+  // Function to filter variants by type
+  const getVariantsByType = (type: string) => {
+    return product.variants.filter((variant: any) => variant.type === type);
+  };
   let getProduct = async () => {
     let response = await fetch(`${baseURL}/getProduct/${id}/`);
     if (response.status == 200) {
       let data = await response.json();
-      console.log(data);
+      // console.log(data);
       setProduct(data);
     }
     if (response.status == 404) {
@@ -76,6 +83,7 @@ export default function Product() {
   useEffect(() => {
     getProduct();
   }, []);
+
   return (
     <div>
       {product ? (
@@ -235,6 +243,39 @@ export default function Product() {
                       <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
                     </svg>
                   </button>
+                </div>
+                <div>
+                  {product.variants &&
+                    validTypes.map((type) =>
+                      getVariantsByType(type).length === 0 ? (
+                        <></>
+                      ) : (
+                        <section key={type} className="mt-6">
+                          <h2 className="text-2xl font-bold mb-4">{type}</h2>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                            {getVariantsByType(type).map((variant: any) => (
+                              <div
+                                key={variant.id}
+                                className="border rounded-lg p-4 shadow-md"
+                              >
+                                <h3 className="text-lg font-semibold mb-2">
+                                  {variant.name}
+                                </h3>
+                                <div className="flex gap-3">
+                                  {" "}
+                                  <s className="text-sm text-red-500">
+                                    ₹{variant.mrp}
+                                  </s>
+                                  <p className="text-sm text-gray-600 mb-2">
+                                    ₹{variant.offer_price}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </section>
+                      )
+                    )}
                 </div>
               </div>
             </div>

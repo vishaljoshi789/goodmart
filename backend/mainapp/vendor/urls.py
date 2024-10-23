@@ -5,6 +5,7 @@ urlpatterns = [
     path('addProduct/', views.addProductInfo),
     path('addProductImages/', views.addProductImages),
     path('addProductSpecs/', views.addProductSpecifications),
+    path('addProductVariant/', views.addProductVariants),
     path('getProducts/', views.getProducts),
     path('changeProductStatus/<int:product_id>/', views.changeProductStatus),
     path('deleteProduct/<int:product_id>/', views.deleteProduct),
@@ -13,6 +14,7 @@ urlpatterns = [
     path('updateProduct/<int:product_id>/', views.updateProductDetails),
     path('updateProductImages/<int:product_id>/', views.updateProductImages),
     path('updateProductSpecs/<int:product_id>/', views.updateProductSpecifications),
+    path('updateProductVariants/<int:product_id>/', views.updateProductVariants),
     path('addKYC/', views.addKYC),
     path('getVendorDetails/', views.getVendorDetails)
 ]

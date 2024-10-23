@@ -1,3 +1,4 @@
+import React from "react";
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,11 +10,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IoMdAddCircle, IoMdRemoveCircle } from "react-icons/io";
 import { toast } from "sonner";
 
-export default function ProductEditProductVariants({
+export default function ProductAddProductVariants({
   product,
 }: {
   product: any;
@@ -48,42 +49,35 @@ export default function ProductEditProductVariants({
     const updatedSpecs = variants.map((spec, i) =>
       i === index ? { ...spec, [field]: newValue } : spec
     );
-    console.log(updatedSpecs);
     setVariants(updatedSpecs);
   };
-  useEffect(() => {
-    if (product.variants.length !== 0) {
-      setVariants(product.variants);
-    }
-  }, []);
+
   async function handleSubmit() {
-    if (product == null) {
-      toast.error(
-        "Something went wrong. Please reload the page and try again."
-      );
-      return;
-    }
-    // if (variants.length == 0 || variants[0].name == "") {
-    //   toast.error("Please Add Specifications");
+    // if (product == null) {
+    //   toast.error(
+    //     "Something went wrong. Please reload the page and try again."
+    //   );
     //   return;
     // }
+    if (variants.length == 0 || variants[0].name == "") {
+      toast.error("Please Add Variants");
+      return;
+    }
     const formData = new FormData();
     formData.append("variants", JSON.stringify(variants));
     formData.append("product_id", product.id);
+    console.log(formData);
 
     try {
-      let response = await api.put(
-        `/vendor/updateProductVariants/${product.id}/`,
-        formData
-      );
+      let response = await api.post(`/vendor/addProductVariant/`, formData);
       if (response.status == 201) {
-        toast.success("Product Variants Edited Successfully");
-        // router.push("/user-panel/vendor/products");
+        toast.success("Product Variation Added Successfully");
+        router.push("/user-panel/vendor/products");
       } else {
-        toast.error("Error Editing Variants");
+        toast.error("Error adding Variation");
       }
     } catch (error) {
-      toast.error("Error Editing Variants");
+      toast.error("Error adding Variation");
     }
   }
 
@@ -112,7 +106,7 @@ export default function ProductEditProductVariants({
                   onValueChange={(value) =>
                     handleVariantChange(index, "type", value)
                   }
-                  value={spec.type}
+                  defaultValue={spec.type}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Type" />
@@ -140,7 +134,6 @@ export default function ProductEditProductVariants({
                 />
               </div>
             </div>
-
             <div className="flex flex-col gap-1 w-full">
               <label htmlFor="" className="font-medium text-sm">
                 Name

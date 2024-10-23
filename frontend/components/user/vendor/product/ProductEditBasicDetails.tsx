@@ -46,6 +46,8 @@ const formSchema = z.object({
   tags: z.string().optional(),
   tax: z.string().optional(),
   item_type: z.string().optional(),
+  mrp: z.string(),
+  offer_price: z.string(),
 });
 
 export default function ProductEditBasicDetails({
@@ -159,6 +161,8 @@ export default function ProductEditBasicDetails({
     formData.append("brand", values.brand);
     formData.append("barcode_number", values.barcode_number ?? "");
     formData.append("tax", values.tax ?? "");
+    formData.append("mrp", values.mrp);
+    formData.append("offer_price", values.offer_price);
     formData.append("item_type", values.item_type ?? "");
     values.image && formData.append("image", values.image);
     values.video && formData.append("video", values.video);
@@ -210,7 +214,7 @@ export default function ProductEditBasicDetails({
               </FormItem>
             )}
           />
-          {/* <div className="flex gap-2">
+          <div className="flex gap-2">
             <FormField
               control={form.control}
               name="mrp"
@@ -236,8 +240,8 @@ export default function ProductEditBasicDetails({
                   <FormMessage />
                 </FormItem>
               )}
-            /> 
-          </div> */}
+            />
+          </div>
           <div className="flex gap-2">
             <FormField
               control={form.control}

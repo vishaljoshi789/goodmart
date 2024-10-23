@@ -1,5 +1,5 @@
 from ..models import Product, Vendor_Detail
-from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer, AddressSerializer, KYCDetailSerializer, GetVendorDetailSerializer
+from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductVariantSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer, AddressSerializer, KYCDetailSerializer, GetVendorDetailSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from ..permissions import isVendor
@@ -46,6 +46,19 @@ def addProductSpecifications(request):
     for specification in specifications:
         specification['product'] = request.data['product_id']
         serializer = ProductSpecificationsSerializer(data=specification)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            return Response(serializer.errors, status=400)
+    return Response(status=201)
+
+@api_view(['POST'])
+@permission_classes([isVendor])
+def addProductVariants(request):
+    variants = json.loads(request.data['variants'])
+    for variant in variants:
+        variant['product'] = request.data['product_id']
+        serializer = ProductVariantSerializer(data=variant)
         if serializer.is_valid():
             serializer.save()
         else:
@@ -133,6 +146,23 @@ def updateProductSpecifications(request, product_id):
     for specification in specifications:
         specification['product'] = product_id
         serializer = ProductSpecificationsSerializer(data=specification)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            return Response(serializer.errors, status=400)
+    return Response(status=201)
+
+@api_view(['PUT'])
+@permission_classes([isVendor])
+def updateProductVariants(request, product_id):
+    product = Product.objects.get(id=product_id)
+    product_variants = product.variants.all()
+    for variant in product_variants:
+        variant.delete()
+    variants = json.loads(request.data['variants'])
+    for variant in variants:
+        variant['product'] = product_id
+        serializer = ProductVariantSerializer(data=variant)
         if serializer.is_valid():
             serializer.save()
         else:

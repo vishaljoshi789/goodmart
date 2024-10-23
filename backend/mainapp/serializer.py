@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail
+from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail, Product_Variant
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -54,14 +54,20 @@ class ProductSpecificationsSerializer(serializers.ModelSerializer):
         model = Product_Specifications
         fields = '__all__'
 
+class ProductVariantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product_Variant
+        fields = '__all__'
+
 class ProductDetailedSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True)
     specifications = ProductSpecificationsSerializer(many=True)
     category = serializers.StringRelatedField()
     brand = serializers.StringRelatedField()
+    variants = ProductVariantSerializer(many=True)
     class Meta:
         model = Product
-        fields = ['id', 'user', 'name', 'mrp', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video']
+        fields = ['id', 'user', 'name', 'mrp', 'variants', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video']
 
 class CartSerializer(serializers.ModelSerializer):
     class Meta:

@@ -44,6 +44,8 @@ const formSchema = z.object({
   tax: z.string().optional(),
   barcode_number: z.string().optional(),
   item_type: z.string().optional(),
+  mrp: z.string(),
+  offer_price: z.string(),
 });
 
 export default function ProductAddBasicDetails({
@@ -132,6 +134,8 @@ export default function ProductAddBasicDetails({
       barcode_number: "",
       tax: "",
       item_type: "",
+      mrp: "",
+      offer_price: "",
     },
   });
 
@@ -168,8 +172,8 @@ export default function ProductAddBasicDetails({
     formData.append("tax", values.tax ?? "");
     formData.append("item_type", values.item_type ?? "");
     formData.append("brand", values.brand);
-    // formData.append("mrp", values.mrp);
-    // formData.append("offer_price", values.offer_price);
+    formData.append("mrp", values.mrp);
+    formData.append("offer_price", values.offer_price);
     formData.append("image", values.image);
     values.video && formData.append("video", values.video);
     formData.append("tags", values.tags ?? "");
@@ -220,7 +224,7 @@ export default function ProductAddBasicDetails({
               </FormItem>
             )}
           />
-          {/* <div className="flex gap-2">
+          <div className="flex gap-2">
             <FormField
               control={form.control}
               name="mrp"
@@ -247,7 +251,7 @@ export default function ProductAddBasicDetails({
                 </FormItem>
               )}
             />
-          </div> */}
+          </div>
           <div className="flex gap-2">
             <FormField
               control={form.control}

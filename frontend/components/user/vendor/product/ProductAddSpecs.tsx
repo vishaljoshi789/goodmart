@@ -6,7 +6,13 @@ import { useState } from "react";
 import { IoMdAddCircle, IoMdRemoveCircle } from "react-icons/io";
 import { toast } from "sonner";
 
-export default function ProductAddSpecs({ product }: { product: any }) {
+export default function ProductAddSpecs({
+  product,
+  setActiveTab,
+}: {
+  product: any;
+  setActiveTab: any;
+}) {
   let [specsList, setSpecsList] = useState([{ key: "", value: "" }]);
   let api = useAxios();
   let router = useRouter();
@@ -46,7 +52,8 @@ export default function ProductAddSpecs({ product }: { product: any }) {
       let response = await api.post("/vendor/addProductSpecs/", formData);
       if (response.status == 201) {
         toast.success("Product Specifications Added");
-        router.push("/user-panel/vendor/products");
+        setActiveTab(4);
+        // router.push("/user-panel/vendor/products");
       } else {
         toast.error("Error Adding Specifications");
       }
