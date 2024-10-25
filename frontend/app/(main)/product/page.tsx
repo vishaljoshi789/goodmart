@@ -19,9 +19,11 @@ import { FaShare } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { BsFillCartPlusFill } from "react-icons/bs";
+import Link from "next/link";
 
 export default function Product() {
   let id = useSearchParams().get("id");
+  let variant = useSearchParams().get("variant");
   const [api, setApi] = useState<CarouselApi>();
   let axios = useAxios();
   let { baseURL } = useContext(GMContext);
@@ -32,7 +34,7 @@ export default function Product() {
 
   // Function to filter variants by type
   const getVariantsByType = (type: string) => {
-    return product.variants.filter((variant: any) => variant.type === type);
+    return product.variants.filter((item: any) => item.type === type);
   };
   let getProduct = async () => {
     let response = await fetch(`${baseURL}/getProduct/${id}/`);
@@ -216,13 +218,35 @@ export default function Product() {
                   </Table>
                 </div>
                 <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5"></div>
-                <div className="flex">
+                <div className="flex gap-5">
+                  {variant && (
+                    <span className="title-font font-medium text-2xl text-gray-900">
+                      (
+                      {product.variants &&
+                        product.variants.filter(
+                          (item: any) => item.id == variant
+                        )[0].name}
+                      )
+                    </span>
+                  )}
                   <div className="flex gap-5">
                     <s className="title-font font-medium text-2xl text-red-500">
-                      ₹{product.mrp}
+                      {variant
+                        ? product.variants &&
+                          "₹" +
+                            product.variants.filter(
+                              (item: any) => item.id == variant
+                            )[0].mrp
+                        : `₹${product.mrp}`}
                     </s>
                     <span className="title-font font-medium text-2xl text-gray-900">
-                      ₹{product.offer_price}
+                      {variant
+                        ? product.variants &&
+                          "₹" +
+                            product.variants.filter(
+                              (item: any) => item.id == variant
+                            )[0].offer_price
+                        : `₹${product.offer_price}`}
                     </span>
                   </div>
                   <Button
@@ -245,6 +269,30 @@ export default function Product() {
                   </button>
                 </div>
                 <div>
+                  {variant && (
+                    <section className="mt-6">
+                      <h2 className="text-2xl font-bold mb-4">Base</h2>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <Link
+                          href={`/product?id=${id}`}
+                          className="border rounded-lg p-4 shadow-md hover:shadow-lg transition-all ease-in"
+                        >
+                          <h3 className="text-lg font-semibold mb-2">
+                            Base Variant
+                          </h3>
+                          <div className="flex gap-3">
+                            {" "}
+                            <s className="text-sm text-red-500">
+                              ₹{product.mrp}
+                            </s>
+                            <p className="text-sm text-gray-600 mb-2">
+                              ₹{product.offer_price}
+                            </p>
+                          </div>
+                        </Link>
+                      </div>
+                    </section>
+                  )}
                   {product.variants &&
                     validTypes.map((type) =>
                       getVariantsByType(type).length === 0 ? (
@@ -253,25 +301,29 @@ export default function Product() {
                         <section key={type} className="mt-6">
                           <h2 className="text-2xl font-bold mb-4">{type}</h2>
                           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                            {getVariantsByType(type).map((variant: any) => (
-                              <div
-                                key={variant.id}
-                                className="border rounded-lg p-4 shadow-md"
-                              >
-                                <h3 className="text-lg font-semibold mb-2">
-                                  {variant.name}
-                                </h3>
-                                <div className="flex gap-3">
-                                  {" "}
-                                  <s className="text-sm text-red-500">
-                                    ₹{variant.mrp}
-                                  </s>
-                                  <p className="text-sm text-gray-600 mb-2">
-                                    ₹{variant.offer_price}
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
+                            {getVariantsByType(type).map(
+                              (item: any) =>
+                                item.id.toString() != variant && (
+                                  <Link
+                                    href={`/product?id=${id}&variant=${item.id}`}
+                                    key={item.id}
+                                    className="border rounded-lg p-4 shadow-md hover:shadow-lg transition-all ease-in"
+                                  >
+                                    <h3 className="text-lg font-semibold mb-2">
+                                      {item.name}
+                                    </h3>
+                                    <div className="flex gap-3">
+                                      {" "}
+                                      <s className="text-sm text-red-500">
+                                        ₹{item.mrp}
+                                      </s>
+                                      <p className="text-sm text-gray-600 mb-2">
+                                        ₹{item.offer_price}
+                                      </p>
+                                    </div>
+                                  </Link>
+                                )
+                            )}
                           </div>
                         </section>
                       )

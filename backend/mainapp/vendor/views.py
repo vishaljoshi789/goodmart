@@ -231,3 +231,16 @@ def getVendorDetails(request):
         return Response(serializer.data, status=200)
     return Response(status=400)
 
+@api_view(['PUT'])
+@permission_classes([isVendor])
+def updateVendorDetails(request):
+    if request.method == 'PUT':
+        data = request.data.dict() if isinstance(request.data, dict) else dict(request.data)
+        user = request.user
+        details =  Vendor_Detail.objects.get(user = user.id)
+        serializer = VendorDetailSerializer(details, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+    return Response(status=400)
+

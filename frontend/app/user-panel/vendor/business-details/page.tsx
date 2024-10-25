@@ -21,6 +21,7 @@ import { GMContext } from "@/app/(utils)/context/GMContext";
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   firm: z.string(),
@@ -37,8 +38,8 @@ const formSchema = z.object({
   aadhar_back_image: z.string(),
   address: z.any(),
   qr: z.string(),
-  vendor_visibility: z.boolean(),
-  admin_visibility: z.boolean(),
+  vendor_visiblity: z.boolean(),
+  admin_visiblity: z.boolean(),
   status: z.string(),
   cash_on_delivery: z.boolean(),
   image1: z.any(),
@@ -94,8 +95,8 @@ export default function BusinessDetials() {
       aadhar_back_image: "",
       address: {},
       qr: "",
-      vendor_visibility: true,
-      admin_visibility: true,
+      vendor_visiblity: false,
+      admin_visiblity: true,
       status: "",
       cash_on_delivery: false,
       image1: "",
@@ -106,11 +107,20 @@ export default function BusinessDetials() {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    let formData = new FormData();
+    logo && formData.append("logo", logo);
+    image1 && formData.append("image1", image1);
+    image2 && formData.append("image2", image2);
+    image3 && formData.append("image3", image3);
+    formData.append("cash_on_delivery", values.cash_on_delivery.toString());
+    formData.append("vendor_visiblity", values.vendor_visiblity.toString());
+    formData.append("free_shipping_above", values.free_shipping_above);
+
+    let response = await api.put("/vendor/updateVendorDetails/", formData);
+    if (response.status == 200) {
+      toast.success("Shop Detials Updated SuccessFully");
+    }
   }
   return (
     <Form {...form}>
@@ -118,14 +128,14 @@ export default function BusinessDetials() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full md:w-3/4 m-auto p-5 space-y-5 grid grid-cols-1 lg:grid-cols-4 gap-5 mt-10"
       >
-        <div className="col-span-1 lg:col-span-1 flex items-center">
+        <div className="col-span-1 lg:col-span-1 flex items-center justify-center">
           {detail.photograph && (
             <Image
               src={`${baseURL}${detail.photograph}`}
               width={0}
               height={0}
               sizes="100vw"
-              className="w-full"
+              className="w-48 h-48 rounded-full"
               alt="Vendor Image"
             />
           )}
@@ -304,7 +314,6 @@ export default function BusinessDetials() {
               <FormControl>
                 <Input
                   placeholder=""
-                  {...field}
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
@@ -334,7 +343,6 @@ export default function BusinessDetials() {
               <FormControl>
                 <Input
                   placeholder=""
-                  {...field}
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
@@ -364,7 +372,6 @@ export default function BusinessDetials() {
               <FormControl>
                 <Input
                   placeholder=""
-                  {...field}
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
@@ -395,7 +402,7 @@ export default function BusinessDetials() {
               <FormControl className="flex items-center">
                 <Checkbox
                   onCheckedChange={field.onChange}
-                  defaultChecked={field.value}
+                  checked={field.value}
                   className="w-5 h-5"
                 />
               </FormControl>
@@ -405,13 +412,13 @@ export default function BusinessDetials() {
         />
         <FormField
           control={form.control}
-          name="vendor_visibility"
+          name="vendor_visiblity"
           render={({ field }) => (
             <FormItem className="flex gap-3 items-center justify-between bg-gray-200 p-3 rounded-lg">
               <FormLabel>Visiblity</FormLabel>
               <FormControl className="flex items-center">
                 <Checkbox
-                  defaultChecked={field.value}
+                  checked={field.value}
                   onCheckedChange={field.onChange}
                   className="w-5 h-5"
                 />

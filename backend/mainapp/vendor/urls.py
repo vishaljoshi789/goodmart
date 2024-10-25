@@ -16,5 +16,6 @@ urlpatterns = [
     path('updateProductSpecs/<int:product_id>/', views.updateProductSpecifications),
     path('updateProductVariants/<int:product_id>/', views.updateProductVariants),
     path('addKYC/', views.addKYC),
-    path('getVendorDetails/', views.getVendorDetails)
+    path('getVendorDetails/', views.getVendorDetails),
+    path('updateVendorDetails/', views.updateVendorDetails),
 ]

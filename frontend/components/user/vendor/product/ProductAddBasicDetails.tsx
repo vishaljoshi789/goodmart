@@ -177,7 +177,6 @@ export default function ProductAddBasicDetails({
     formData.append("image", values.image);
     values.video && formData.append("video", values.video);
     formData.append("tags", values.tags ?? "");
-    // console.log(formData.values);
     let response = await api.post("/vendor/addProduct/", formData);
     toast.dismiss();
     if (response.status == 201) {
