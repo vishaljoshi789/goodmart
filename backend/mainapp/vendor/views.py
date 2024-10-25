@@ -239,8 +239,29 @@ def updateVendorDetails(request):
         user = request.user
         details =  Vendor_Detail.objects.get(user = user.id)
         serializer = VendorDetailSerializer(details, data=data, partial=True)
+        
+            
         if serializer.is_valid():
             serializer.save()
+            if not details.qr:
+                print("GENERATING QR CODE")
+                shop_url = f"{settings.FRONTEND_URL}/shop/{details.id}"
+                qr = qrcode.QRCode(
+                    version=1,
+                    error_correction=qrcode.constants.ERROR_CORRECT_L,
+                    box_size=10,
+                    border=4,
+                )
+                qr.add_data(shop_url)
+                qr.make(fit=True)
+                    
+                img = qr.make_image(fill="black", back_color="white")
+                    
+                buffer = BytesIO()
+                img.save(buffer, format="PNG")
+                buffer.seek(0)
+                    
+                details.qr.save(f"vendor_{details.user.user_id}_qr.png", File(buffer), save=True)
             return Response(serializer.data, status=200)
     return Response(status=400)
 

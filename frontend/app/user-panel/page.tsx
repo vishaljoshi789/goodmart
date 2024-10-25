@@ -11,6 +11,7 @@ import { MdError, MdPending } from "react-icons/md";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import DashboardContent from "@/components/user/DashboardContent";
+import Image from "next/image";
 
 interface User {
   name: string;
@@ -29,6 +30,7 @@ interface User {
 const Home: NextPage = () => {
   let { setUserInfo } = useContext(GMContext);
   let api = useAxios();
+  let { baseURL } = useContext(GMContext);
   let [user, setUser] = useState<User | null>(null);
   let [loading, setLoading] = useState(true);
   let getUserInfo = async () => {
@@ -153,7 +155,18 @@ const Home: NextPage = () => {
             verifyMail={verifyMail}
           />
           <div className="qr bg-gray-600 lg:w-1/3 w-full rounded-lg flex justify-center items-center text-white">
-            QR
+            {user.VendorInfo.qr ? (
+              <Image
+                width={0}
+                height={0}
+                sizes="100vw"
+                src={baseURL + user.VendorInfo.qr}
+                alt="qr code"
+                className="w-full h-full object-cover rounded-lg"
+              />
+            ) : (
+              `QR`
+            )}
           </div>
           <div className="qr bg-white w-full lg:w-1/3 flex justify-center items-center">
             Orders
