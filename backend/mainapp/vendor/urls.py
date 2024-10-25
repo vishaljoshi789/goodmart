@@ -18,4 +18,7 @@ urlpatterns = [
     path('addKYC/', views.addKYC),
     path('getVendorDetails/', views.getVendorDetails),
     path('updateVendorDetails/', views.updateVendorDetails),
+    path('getVendorShipping/', views.getVendorShipping),
+    path('addVendorShipping/', views.addVendorShipping),
+    path('deleteVendorShipping/<int:shipping_id>/', views.deleteVendorShipping),
 ]

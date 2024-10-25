@@ -1,5 +1,5 @@
-from ..models import Product, Vendor_Detail
-from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductVariantSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer, AddressSerializer, KYCDetailSerializer, GetVendorDetailSerializer
+from ..models import Product, Vendor_Detail, ShippingCharges
+from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductVariantSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer, AddressSerializer, KYCDetailSerializer, GetVendorDetailSerializer, ShippingChargesSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from ..permissions import isVendor
@@ -265,3 +265,33 @@ def updateVendorDetails(request):
             return Response(serializer.data, status=200)
     return Response(status=400)
 
+
+
+@api_view(['GET'])
+@permission_classes([isVendor])
+def getVendorShipping(request):
+    if request.method == 'GET':
+        user = request.user
+        shipping =  ShippingCharges.objects.filter(vendor = user.vendor.id)
+        serializer = ShippingChargesSerializer(shipping, many=True)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([isVendor])
+def addVendorShipping(request):
+    if request.method == 'POST':
+        data = request.data.copy()
+        data['vendor'] = request.user.vendor.id
+        serializer = ShippingChargesSerializer(data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+@permission_classes([isVendor])
+def deleteVendorShipping(request, shipping_id):
+    shipping = ShippingCharges.objects.get(id=shipping_id)
+    shipping.delete()
+    return Response(status=200)

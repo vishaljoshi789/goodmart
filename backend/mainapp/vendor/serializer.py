@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Product, Product_Image, Product_Specifications, Vendor_Detail, Address, Product_Variant
+from ..models import Product, Product_Image, Product_Specifications, Vendor_Detail, Address, Product_Variant, ShippingCharges
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,3 +66,7 @@ class KYCDetailSerializer(serializers.ModelSerializer):
         model = Vendor_Detail
         fields = '__all__'
 
+class ShippingChargesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShippingCharges
+        fields = '__all__'
