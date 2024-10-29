@@ -239,6 +239,7 @@ class Product_Specifications(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='cart')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
+    variant = models.ForeignKey(Product_Variant, on_delete=models.CASCADE, blank=True, null=True)
     quantity = models.IntegerField(blank=True, null=True)
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)

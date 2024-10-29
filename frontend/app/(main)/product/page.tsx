@@ -50,8 +50,10 @@ export default function Product() {
   };
 
   let addToCart = async () => {
+    console.log(variant);
     let response = await axios.post("/addToCart/", {
       id: id,
+      variant: variant,
     });
     if (response.status == 200) {
       toast.success("Product Added to Cart");

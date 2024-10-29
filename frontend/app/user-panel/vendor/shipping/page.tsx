@@ -132,12 +132,31 @@ export default function VendorShipping() {
               <TableCell>{item.pincode}</TableCell>
               <TableCell>{item.charges}</TableCell>
               <TableCell>
-                <Button
-                  className="bg-red-500 text-white hover:bg-red-700 hover:text-white"
-                  onClick={() => deleteShipping(item.id)}
-                >
-                  <MdDeleteForever className="rounded-md text-3xl shadow-md hover:shadow-sm transition-all ease-in cursor-pointer" />
-                </Button>
+                <Dialog>
+                  <DialogTrigger className="bg-red-500 text-white hover:bg-red-700 hover:text-white rounded-md p-1">
+                    <MdDeleteForever className="rounded-md text-3xl shadow-md hover:shadow-sm transition-all ease-in cursor-pointer" />
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Are you absolutely sure?</DialogTitle>
+                      <DialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete your account and remove your data from our
+                        servers.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <DialogClose>
+                        <Button
+                          className="bg-red-500 text-white hover:bg-red-700 hover:text-white"
+                          onClick={() => deleteShipping(item.id)}
+                        >
+                          Delete
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </TableCell>
             </TableRow>
           ))}

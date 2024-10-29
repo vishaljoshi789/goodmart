@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User, Product_Category, Product_Brand, Product, Cart
+from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant
 from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductSerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -142,7 +142,7 @@ def getSearchProducts(request, search):
             products.add(i)
         print(products)
 
-        serializer = ProductSerializer(products, many=True)
+        serializer = ProductDetailedSerializer(products, many=True)
         return Response(serializer.data, status=200)
     else:
         return Response(status=400)
@@ -165,14 +165,16 @@ def addToCart(request):
     if request.method == 'POST':
         product = Product.objects.get(id=request.data["id"])
         user = request.user
-        if Cart.objects.filter(user=user, product=product).exists():
-            cart = Cart.objects.get(user=user, product=product)
+        if Cart.objects.filter(user=user, product=product, variant=request.data["variant"]).exists():
+            cart = Cart.objects.get(user=user, product=product, variant=request.data["variant"])
             cart.quantity = cart.quantity+1
             cart.save()
             serializer = CartSerializer(cart)
             return Response(serializer.data, status=200)
         else:
-            cart = Cart.objects.create(user = user, product=product, quantity=1)
+            if request.data["variant"]:
+                variant = Product_Variant.objects.get(id=request.data["variant"])
+            cart = Cart.objects.create(user = user, product=product, quantity=1, variant=variant) if request.data["variant"] else Cart.objects.create(user = user, product=product, quantity=1)
             cart.save()
             serializer = CartSerializer(cart)
             return Response(serializer.data, status=200)

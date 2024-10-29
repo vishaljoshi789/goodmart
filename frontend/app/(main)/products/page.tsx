@@ -56,20 +56,24 @@ export default function ProductsPage() {
                 <div className="md:w-full h-full">
                   <CardHeader className="p-2 pb-0">
                     <CardTitle>{product.name}</CardTitle>
-                    <CardDescription>{product.description}</CardDescription>
+                    <CardDescription>
+                      {product.description.length > 30
+                        ? product.description.slice(0, 30)
+                        : product.description}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="p-2 pt-2">
-                    <div className="flex gap-3">
-                      <s>₹{product.mrp}</s>
+                    <div className="flex gap-3 items-center">
+                      <s className="text-xs text-gray-700">₹{product.mrp}</s>
                       <b>₹{product.offer_price}</b>
+                      <span className="text-red-500 text-sm whitespace-nowrap">
+                        -
+                        {`(${(
+                          ((product.mrp - product.offer_price) * 100) /
+                          product.mrp
+                        ).toFixed(2)}%)`}
+                      </span>
                     </div>
-                    <span className="text-red-500 text-lg">
-                      -
-                      {`(${(
-                        ((product.mrp - product.offer_price) * 100) /
-                        product.mrp
-                      ).toFixed(2)}%)`}
-                    </span>
                   </CardContent>
                   <CardFooter>
                     <p>{product.category}</p>
