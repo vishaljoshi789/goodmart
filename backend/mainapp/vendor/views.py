@@ -295,3 +295,14 @@ def deleteVendorShipping(request, shipping_id):
     shipping = ShippingCharges.objects.get(id=shipping_id)
     shipping.delete()
     return Response(status=200)
+
+@api_view(['PUT'])
+@permission_classes([isVendor])
+def updateVendorDefaultShipping(request):
+    if request.method == 'PUT':
+        vendor = request.user.vendor
+        vendor.shipping = request.data['shipping']
+        vendor.save()
+        return Response(status=200)
+    return Response(status=400)
+       

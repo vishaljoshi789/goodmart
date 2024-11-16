@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -25,12 +25,31 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { GMContext } from "@/app/(utils)/context/GMContext";
+import { CheckIcon } from "@radix-ui/react-icons";
 
 export default function VendorShipping() {
   let api = useAxios();
   let [shipping, setShipping] = useState([]);
   let [pincode, setPincode] = useState("");
   let [charges, setCharges] = useState("");
+  let { userInfo, setUserInfo } = useContext(GMContext);
+  let [defaultCharges, setDefaultCharges] = useState(
+    userInfo?.VendorInfo?.shipping
+  );
+  let updateDefaultCharges = async () => {
+    let response = await api.put("/vendor/updateVendorDefaultShipping/", {
+      shipping: defaultCharges,
+    });
+    if (response.status == 200) {
+      toast.success("Default Charges Updated");
+      let response = await api.get("/getUserInfo/");
+      if (response.status == 200) {
+        setUserInfo(response.data);
+        localStorage.setItem("userInfo", JSON.stringify(response.data));
+      }
+    }
+  };
   let getShipping = async () => {
     let response = await api.get("/vendor/getVendorShipping/");
     if (response.status == 200) {
@@ -113,6 +132,19 @@ export default function VendorShipping() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+      </div>
+      <div className="flex justify-center flex-col md:flex-row md:justify-start md:items-center md:gap-5">
+        <span className="">Default:</span>
+        <div className="flex gap-5">
+          <Input
+            className="w-[180px]"
+            value={defaultCharges}
+            onChange={(e) => setDefaultCharges(e.target.value)}
+          />
+          <Button onClick={updateDefaultCharges}>
+            <CheckIcon />
+          </Button>
+        </div>
       </div>
 
       <Table>

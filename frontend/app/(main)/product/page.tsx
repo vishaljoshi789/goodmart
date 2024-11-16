@@ -50,7 +50,6 @@ export default function Product() {
   };
 
   let addToCart = async () => {
-    console.log(variant);
     let response = await axios.post("/addToCart/", {
       id: id,
       variant: variant,
@@ -173,7 +172,17 @@ export default function Product() {
                   {product.brand}
                 </h2>
                 <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
-                  {product.name}
+                  {product.name}{" "}
+                  {variant && (
+                    <span className="title-font font-medium text-2xl text-gray-900">
+                      (
+                      {product.variants &&
+                        product.variants.filter(
+                          (item: any) => item.id == variant
+                        )[0].name}
+                      )
+                    </span>
+                  )}
                 </h1>
                 <div className="flex mb-4">
                   <span className="flex items-center">

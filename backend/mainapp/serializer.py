@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail, Product_Variant
+from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail, Product_Variant, Address, Order, OrderItem, SubOrder
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -23,6 +23,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                 setattr(instance, attr, value)
         instance.save()
         return instance
+    
+
 
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -59,29 +61,69 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         model = Product_Variant
         fields = '__all__'
 
+class VendorDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vendor_Detail
+        fields = '__all__'
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+class VendorDetailCartSerializer(serializers.ModelSerializer):
+    address = AddressSerializer()
+    class Meta:
+        model = Vendor_Detail
+        fields = ['id', 'firm', 'description', 'category', 'qr', 'vendor_visiblity', 'admin_visiblity', 'status', 'cash_on_delivery', 'featured', 'image1', 'image2', 'image3', 'logo', 'free_shipping_above', 'address']
+
+
 class ProductDetailedSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True)
     specifications = ProductSpecificationsSerializer(many=True)
     category = serializers.StringRelatedField()
     brand = serializers.StringRelatedField()
     variants = ProductVariantSerializer(many=True)
+    company_id = VendorDetailCartSerializer()
     class Meta:
         model = Product
-        fields = ['id', 'user', 'name', 'mrp', 'variants', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video']
+        fields = ['id', 'user', 'name', 'mrp', 'variants', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video', 'company_id', 'barcode_number', 'item_type', 'tax']
 
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = '__all__'
 
+
 class CartDetailedSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
+    product = ProductDetailedSerializer()
+    variant = ProductVariantSerializer()
     class Meta:
         model = Cart
-        fields = ['id', 'user', 'product', 'quantity']
+        fields = ['id', 'user', 'product', 'quantity', 'variant']
 
-class VendorDetailSerializer(serializers.ModelSerializer):
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = ProductDetailedSerializer()
+    variant = ProductVariantSerializer()
     class Meta:
-        model = Vendor_Detail
+        model = OrderItem
         fields = '__all__'
+
+class SubOrderItemSerializer(serializers.ModelSerializer):
+    vendor = VendorDetailSerializer()
+    items = OrderItemSerializer(many=True)
+    class Meta:
+        model = SubOrder
+        fields = '__all__'
+
+class OrderSerializer(serializers.ModelSerializer):
+    address = AddressSerializer()
+    sub_orders = SubOrderItemSerializer(many=True)
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+
+
 

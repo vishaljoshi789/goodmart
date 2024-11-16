@@ -90,8 +90,9 @@ class User(AbstractUser):
     def __str__(self):
         return "{}".format(self.email)
     
+    
 class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='address')
     name = models.CharField(max_length=100, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     landmark = models.CharField(max_length=100, blank=True, null=True)
@@ -105,7 +106,6 @@ class Address(models.Model):
     modify_on = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     
-
 class Product_Category(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -149,6 +149,7 @@ class Vendor_Detail(models.Model):
     image3 = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
     logo = models.ImageField(upload_to=vendor_directory_path, blank=True, null=True)
     free_shipping_above = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    shipping = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     
 
     
@@ -266,6 +267,34 @@ class ShippingCharges(models.Model):
     vendor = models.ForeignKey(Vendor_Detail, on_delete=models.CASCADE, null=True, blank=True, related_name='shipping_charges')
     pincode = models.CharField(max_length=6, null=True, blank=True)
     charges = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='orders')
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
+    subtotal = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    shipping = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
+    order_confirmed = models.BooleanField(default=False)
+    
+class SubOrder(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True, related_name='sub_orders')
+    vendor = models.ForeignKey(Vendor_Detail, on_delete=models.CASCADE, null=True, blank=True)
+    subtotal = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    shipping = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    status = models.CharField(max_length=20, null=True, blank=True, choices=(("Pending", "Pending"), ("Approved", "Approved"), ("Rejected", "Rejected"), ("Processing", "Processing"), ("Delivered", "Delivered"), ("Cancelled", "Cancelled")), default="Pending")
+    payment_mode = models.CharField(max_length=20, null=True, blank=True, choices=(("COD", "COD"), ("Online", "Online")))
+    payment_status = models.CharField(max_length=20, null=True, blank=True, choices=(("Pending", "Pending"), ("Approved", "Approved"), ("Rejected", "Rejected")), default="Pending")
+    payment_id = models.CharField(max_length=100, null=True, blank=True)
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(SubOrder, on_delete=models.CASCADE, null=True, blank=True, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
+    variant = models.ForeignKey(Product_Variant, on_delete=models.CASCADE, null=True, blank=True)
+    quantity = models.IntegerField(null=True, blank=True)
+    total = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant
-from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductSerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer
+from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder
+from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, OrderItemSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -13,7 +13,6 @@ from smtplib import SMTPException
 from django.core.mail import BadHeaderError
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-import json
 
 
 def index(request):
@@ -165,8 +164,8 @@ def addToCart(request):
     if request.method == 'POST':
         product = Product.objects.get(id=request.data["id"])
         user = request.user
-        if Cart.objects.filter(user=user, product=product, variant=request.data["variant"]).exists():
-            cart = Cart.objects.get(user=user, product=product, variant=request.data["variant"])
+        if Cart.objects.filter(user=user, product=product).exists():
+            cart = Cart.objects.get(user=user, product=product, variant=request.data["variant"]) if request.data["variant"] else Cart.objects.get(user=user, product=product, variant=None)
             cart.quantity = cart.quantity+1
             cart.save()
             serializer = CartSerializer(cart)
@@ -196,9 +195,13 @@ def getCart(request):
 def remove_cart(request):
     if request.method == "POST":
         product = Product.objects.get(id=request.data["id"])
+        if(request.data["variant"]!= ""):
+            variant = Product_Variant.objects.get(id=request.data["variant"])
+        else:
+            variant = None
         user = request.user
-        if Cart.objects.filter(user=user, product=product).exists():
-            cart = Cart.objects.get(user=user, product=product)
+        if Cart.objects.filter(user=user, product=product, variant=variant).exists():
+            cart = Cart.objects.get(user=user, product=product, variant=variant)
             if cart.quantity == 1:
                 cart.delete()
                 return Response(status=200)
@@ -237,4 +240,136 @@ def get_cart_count(request):
         cart = user.cart.all().count()
         return Response({'cartCount': cart}, status=200)
     return Response(status=400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getUserAddress(request):
+    if request.method == 'GET':
+        user = request.user
+        address = user.address.all()
+        serializer = AddressSerializer(address, many=True)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def addUserAddress(request):
+    if request.method == 'POST':
+        user = request.user
+        data = request.data
+        data['user'] = user.id
+        serializer = AddressSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    return Response(status=400)
     
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getAddress(request, id):
+    if request.method == 'GET':
+        user = request.user
+        address = user.address.get(id=id)
+        serializer = AddressSerializer(address)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@permission_classes([IsAuthenticated])
+def getShippingCharges(address_id, vendor_id):
+    address = Address.objects.get(id=address_id)
+    vendor = Vendor_Detail.objects.get(id=vendor_id)
+    shipping = ShippingCharges.objects.filter(vendor=vendor, pincode=address.pin)
+    if shipping.exists():
+        return shipping[0].charges
+    else:
+        return vendor.shipping
+
+
+@api_view(['GET'])
+def getBillingDetails(request):
+    if request.method == 'GET':
+        cart = request.user.cart.all()
+        vendor = []
+        billing = {'vendor': [], 'total': 0, 'shipping': 0}
+        for i in cart:
+            vendor.append(i.product.company_id)
+        vendor = list(set(vendor))
+        for i in vendor:
+            temp = {}
+            total = 0
+            for item in cart:
+                if item.product.company_id.id == i.id:
+                    total += item.variant.offer_price * item.quantity if item.variant else item.product.offer_price * item.quantity
+            temp['total'] = total
+            temp['id'] = i.id
+            temp['firm'] = i.firm
+            temp['shipping'] = getShippingCharges(request.GET.get('address_id'), i.id) if total < i.free_shipping_above else 0
+            temp['cash_on_delivery'] = i.cash_on_delivery
+            temp['payment_mode'] = ""
+            billing['vendor'].append(temp)
+            billing['total'] += total
+            billing['shipping'] += temp['shipping']
+        return Response(billing, status=200)
+    return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createOrder(request):
+    if request.method == 'POST':
+        cart = request.user.cart.all()
+        print(request.data)
+        address = Address.objects.get(id=request.data["address_id"])
+        vendor = request.data["vendor"]
+        order = Order.objects.create(user=request.user, address=address, order_confirmed=False, subtotal=request.data["total"], shipping=request.data["shipping"])
+        order.save()
+        for i in vendor:
+            suborder = SubOrder.objects.create(order=order, vendor=Vendor_Detail.objects.get(id=i['id']), subtotal=i['total'], shipping=i['shipping'], payment_mode=i['payment_mode'], status="Pending")
+            suborder.save()
+            for item in cart:
+                if item.product.company_id.id == i['id']:
+                    orderItem = OrderItem.objects.create(order=suborder, product=item.product, quantity=item.quantity, variant=item.variant, total=item.variant.offer_price * item.quantity if item.variant else item.product.offer_price * item.quantity)
+                    orderItem.save()
+                    item.delete()
+        
+        data = {
+            "order": order.id}       
+        return Response(data, status=201)
+    return Response(status=400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getOrderDetails(request, id):
+    if request.method == 'GET':
+        order = Order.objects.get(id=id)
+        serializer = OrderSerializer(order)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def placeOrder(request, id):
+    if request.method == 'POST':
+        order = Order.objects.get(id=id)
+        order.order_confirmed = True
+        order.save()
+        return Response(status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getOrders(request):
+    if request.method == 'GET':
+        orders = request.user.orders.all()
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getOrder(request, id):
+    if request.method == 'GET':
+        order = Order.objects.get(id=id)
+        serializer = OrderSerializer(order)
+        return Response(serializer.data, status=200)
+    return Response(status=400)

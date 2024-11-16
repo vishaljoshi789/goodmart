@@ -21,4 +21,5 @@ urlpatterns = [
     path('getVendorShipping/', views.getVendorShipping),
     path('addVendorShipping/', views.addVendorShipping),
     path('deleteVendorShipping/<int:shipping_id>/', views.deleteVendorShipping),
+    path('updateVendorDefaultShipping/', views.updateVendorDefaultShipping),
 ]

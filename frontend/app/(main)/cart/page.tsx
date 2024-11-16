@@ -15,14 +15,19 @@ export default function Cart() {
       console.log(response.data);
       setTotalAmt(0);
       response.data.forEach((e: any) => {
-        setTotalAmt((i) => i + e.product.offer_price * e.quantity);
+        e.variant
+          ? setTotalAmt((i) => i + e.variant.offer_price * e.quantity)
+          : setTotalAmt((i) => i + e.product.offer_price * e.quantity);
       });
       setCart(response.data);
     }
   };
 
   let addToCart = async (e: any) => {
-    let response = await api.post(`/addToCart/`, { id: e.target.name });
+    let response = await api.post(`/addToCart/`, {
+      id: e.target.name,
+      variant: e.target.id,
+    });
     if (response.status === 200) {
       console.log(response.data);
       getCart();
@@ -30,7 +35,11 @@ export default function Cart() {
   };
 
   let removeFromCart = async (e: any) => {
-    let response = await api.post(`/removeFromCart/`, { id: e.target.name });
+    console.log(e.target.id);
+    let response = await api.post(`/removeFromCart/`, {
+      id: e.target.name,
+      variant: e.target.id,
+    });
     if (response.status === 200) {
       console.log(response.data);
       getCart();
@@ -91,7 +100,8 @@ export default function Cart() {
                           </div>
                           <div>
                             <p className="text-md font-bold text-[#333]">
-                              {item.product.name}
+                              {item.product.name}{" "}
+                              {item.variant && `(${item.variant.name})`}
                             </p>
                             <button
                               type="button"
@@ -110,6 +120,7 @@ export default function Cart() {
                             type="button"
                             className="bg-gray-100 px-4 py-2 font-semibold"
                             name={item.product.id}
+                            id={item.variant ? item.variant.id : ""}
                             onClick={removeFromCart}
                           >
                             -
@@ -124,6 +135,7 @@ export default function Cart() {
                             type="button"
                             className="bg-gray-800 text-white px-4 py-2 font-semibold"
                             name={item.product.id}
+                            id={item.variant ? item.variant.id : ""}
                             onClick={addToCart}
                           >
                             +
@@ -132,7 +144,10 @@ export default function Cart() {
                       </td>
                       <td className="py-6 px-4">
                         <h4 className="text-md font-bold text-[#333]">
-                          ₹{item.product.offer_price * item.quantity}
+                          ₹
+                          {item.variant
+                            ? item.variant.offer_price * item.quantity
+                            : item.product.offer_price * item.quantity}
                         </h4>
                       </td>
                     </tr>
@@ -146,7 +161,7 @@ export default function Cart() {
               Order Summary
             </h3>
             <ul className="text-[#333] divide-y mt-6">
-              <li className="flex flex-wrap gap-4 text-md py-4">
+              {/* <li className="flex flex-wrap gap-4 text-md py-4">
                 Subtotal <span className="ml-auto font-bold">₹{totalAmt}</span>
               </li>
               <li className="flex flex-wrap gap-4 text-md py-4">
@@ -154,13 +169,13 @@ export default function Cart() {
               </li>
               <li className="flex flex-wrap gap-4 text-md py-4">
                 Tax {`(18%)`}
-                <span className="ml-auto font-bold">+₹{0.18 * totalAmt}</span>
-              </li>
-              <li className="flex flex-wrap gap-4 text-md py-4 font-bold">
-                Total{" "}
-                <span className="ml-auto">
-                  ₹{totalAmt + totalAmt * 0.18 + 50}
+                <span className="ml-auto font-bold">
+                  +₹{(0.18 * totalAmt).toFixed(2)}
                 </span>
+              </li> */}
+              <li className="flex flex-wrap gap-4 text-md py-4 font-bold">
+                Sub-Total{" "}
+                <span className="ml-auto">₹{totalAmt.toFixed(2)}</span>
               </li>
             </ul>
             <a
