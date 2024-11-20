@@ -1,5 +1,5 @@
-from ..models import Product, Vendor_Detail, ShippingCharges
-from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductVariantSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer, AddressSerializer, KYCDetailSerializer, GetVendorDetailSerializer, ShippingChargesSerializer
+from ..models import Product, Vendor_Detail, ShippingCharges, Order, SubOrder, OrderItem
+from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductVariantSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer, AddressSerializer, KYCDetailSerializer, GetVendorDetailSerializer, ShippingChargesSerializer, OrderAddressSerializer, SubOrderWithOrderAddressSerializer, OrderItemSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from ..permissions import isVendor
@@ -306,3 +306,30 @@ def updateVendorDefaultShipping(request):
         return Response(status=200)
     return Response(status=400)
        
+@api_view(['GET'])
+@permission_classes([isVendor])
+def getVendorOrders(request):
+    if request.method == 'GET':
+        user = request.user
+        # Filter sub_orders for the specific vendor
+        sub_orders = SubOrder.objects.filter(vendor=user.vendor)
+        
+        # Serialize sub_orders and include address from the related order
+        serializer = SubOrderWithOrderAddressSerializer(sub_orders, many=True)
+        return Response(serializer.data, status=200)
+    
+    return Response(status=400)
+
+@api_view(['GET'])
+@permission_classes([isVendor])
+def getOrderDetials(request, order_id):
+    if request.method == 'GET':
+        user = request.user
+        # Filter sub_orders for the specific vendor
+        sub_orders = SubOrder.objects.filter(vendor=user.vendor, id=order_id)
+        
+        # Serialize sub_orders and include address from the related order
+        serializer = SubOrderWithOrderAddressSerializer(sub_orders, many=True)
+        return Response(serializer.data, status=200)
+    
+    return Response(status=400)

@@ -4,6 +4,7 @@ import { Inter as FontSans } from "next/font/google";
 import HamburgerMenu from "@/components/user/MenuBar";
 import AuthRoute from "@/components/user/AuthRoute";
 import { cn } from "@/lib/utils";
+import BottomMenu from "@/components/web/BottomMenu";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ export default function UserPanelLayout({
       <div className={cn("flex", fontSans.className)}>
         <HamburgerMenu />
         {children}
+        <BottomMenu />
       </div>
     </AuthRoute>
   );

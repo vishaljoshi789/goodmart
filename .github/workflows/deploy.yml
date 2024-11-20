@@ -1,0 +1,50 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main # Trigger deployment on pushing to the main branch
+  pull_request:
+    branches:
+      - main # Optional: you can trigger deployment on pull requests as well
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Install Dependencies (Backend)
+        run: |
+          cd backend
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+          python manage.py migrate
+
+      - name: Install Dependencies (Frontend)
+        run: |
+          cd frontend
+          npm install
+          npm run dev
+
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no deploy@${{ secrets.DEPLOY_HOST }} << 'EOF'
+            cd /goodmart
+            git pull origin main
+            cd backend
+            source venv/bin/activate
+            python manage.py migrate
+            sudo systemctl restart gunicorn
+            cd ../frontend
+            npm run build
+            pm2 restart frontend
+          EOF

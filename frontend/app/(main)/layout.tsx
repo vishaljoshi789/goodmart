@@ -3,6 +3,7 @@ import "../globals.css";
 import { Inter as FontSans, Carter_One } from "next/font/google";
 import Navbar from "@/components/web/Navbar";
 import React from "react";
+import BottomMenu from "@/components/web/BottomMenu";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function MainLayout({
     <div className={`${fontSans.className} ${carterOne.variable}`}>
       <Navbar />
       {children}
+      <BottomMenu />
     </div>
   );
 }

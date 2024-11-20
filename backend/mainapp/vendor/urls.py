@@ -22,4 +22,6 @@ urlpatterns = [
     path('addVendorShipping/', views.addVendorShipping),
     path('deleteVendorShipping/<int:shipping_id>/', views.deleteVendorShipping),
     path('updateVendorDefaultShipping/', views.updateVendorDefaultShipping),
+    path('getVendorOrders/', views.getVendorOrders),
+    path('getOrderDetails/<int:order_id>/', views.getOrderDetials),
 ]

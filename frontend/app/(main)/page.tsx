@@ -21,6 +21,9 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { CiLocationOn } from "react-icons/ci";
+import { IoIosArrowDown } from "react-icons/io";
+import { TbCategoryFilled } from "react-icons/tb";
+import Link from "next/link";
 
 interface Location {
   lat: number | null;
@@ -107,20 +110,20 @@ export default function Home() {
           </AlertDescription>
         </Alert>
       ) : (
-        <Alert className="text-green-500 shadow-lg">
-          <CiLocationOn className="w-6 h-6 !text-green-500" />
-          <AlertTitle className="font-bold">
-            Viewing Products for Zipcode {location.zip}
+        <Alert className="text-green-500 shadow-lg p-1">
+          <AlertTitle className="text-xs flex items-center">
+            <CiLocationOn className="text-xl !text-green-500 my-auto" />
+            <span>Delivering to Zipcode {location.zip} </span>
+            <Button
+              className="w-fit text-xs text-black underline"
+              variant={"ghost"}
+              onClick={() => setEditZip(true)}
+            >
+              <IoIosArrowDown />
+            </Button>
           </AlertTitle>
           <AlertDescription>
-            <div>
-              <Button
-                className="bg-green-500 hover:bg-green-600"
-                onClick={() => setEditZip(true)}
-              >
-                Edit
-              </Button>
-            </div>
+            <div></div>
             {editZip && (
               <div>
                 <div>
@@ -153,7 +156,20 @@ export default function Home() {
         </Alert>
       )}
       <div>
-        <div className="lg:w-3/5 p-5">
+        <ul className="flex gap-5 w-full py-2 px-1">
+          <li className={`rounded-md hover:bg-gray-200`}>
+            <Link
+              href={"/"}
+              className="flex justify-center items-center flex-col"
+            >
+              <TbCategoryFilled className="text-4xl text-red-500" />
+              <span className="text-xs">Categories</span>
+            </Link>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div className="lg:w-3/5 w-full">
           <AspectRatio ratio={8 / 5} className="bg-gray-400">
             {/* <Image src="..." alt="Image" className="rounded-md object-cover" /> */}
           </AspectRatio>
