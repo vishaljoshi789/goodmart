@@ -159,7 +159,7 @@ export default function VendorShipping() {
         </TableHeader>
         <TableBody>
           {shipping.map((item: any, index) => (
-            <TableRow>
+            <TableRow key={item.id}>
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>{item.pincode}</TableCell>
               <TableCell>{item.charges}</TableCell>

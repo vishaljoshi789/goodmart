@@ -1,5 +1,5 @@
 "use client";
-import { useContext } from "react";
+import { Suspense, useContext } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -75,68 +75,72 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="md:w-96 m-auto mt-10">
-        <span className="font-bold text-red-500 text-2xl underline">LOGIN</span>
-        {source == "register" && (
-          <div className="flex gap-2 flex-col">
-            <span className="text-red-500 underline">
-              A Verification Mail is been sent on your Email, Please Verify the
-              Mail before Login.
-            </span>
-          </div>
-        )}
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 bg-white rounded-md shadow-md m-auto p-5"
-          >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email, Phone or User ID</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Your Emain, Phone or UserId"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Your Password"
-                      {...field}
-                      type="password"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit">Submit</Button>
-            <hr />
-            <div className="flex justify-center items-center gap-2">
-              <span>Create a account. </span>
-              <Link href="/auth/register">
-                <Button className="bg-blue-500 hover:bg-blue-600">
-                  Register
-                </Button>
-              </Link>
+    <Suspense>
+      <div className="flex items-center justify-center">
+        <div className="md:w-96 m-auto mt-10">
+          <span className="font-bold text-red-500 text-2xl underline">
+            LOGIN
+          </span>
+          {source == "register" && (
+            <div className="flex gap-2 flex-col">
+              <span className="text-red-500 underline">
+                A Verification Mail is been sent on your Email, Please Verify
+                the Mail before Login.
+              </span>
             </div>
-          </form>
-        </Form>
+          )}
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-8 bg-white rounded-md shadow-md m-auto p-5"
+            >
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email, Phone or User ID</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Your Emain, Phone or UserId"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Your Password"
+                        {...field}
+                        type="password"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">Submit</Button>
+              <hr />
+              <div className="flex justify-center items-center gap-2">
+                <span>Create a account. </span>
+                <Link href="/auth/register">
+                  <Button className="bg-blue-500 hover:bg-blue-600">
+                    Register
+                  </Button>
+                </Link>
+              </div>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 }

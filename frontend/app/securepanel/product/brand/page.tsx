@@ -16,6 +16,7 @@ import { GMContext } from "@/app/(utils)/context/GMContext";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Brand {
   id: number;
@@ -73,7 +74,7 @@ export default function ProductBrand() {
               <TableCell>{brand.description}</TableCell>
               <TableCell>
                 {brand.image ? (
-                  <img
+                  <Image
                     src={`${baseURL}${brand.image}`}
                     width={50}
                     height={50}

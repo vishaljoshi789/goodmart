@@ -33,7 +33,7 @@ jobs:
         run: |
           cd frontend
           npm install
-          npm run dev
+          npm run build
 
       - name: Deploy to Server
         run: |

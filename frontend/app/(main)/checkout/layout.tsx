@@ -1,6 +1,5 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { Progress } from "@/components/ui/progress";
 
 export default function CheckoutLayout({
   children,

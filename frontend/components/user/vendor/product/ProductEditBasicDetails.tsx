@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import Quagga from "quagga";
 import {
   Form,
   FormControl,
@@ -49,6 +48,8 @@ const formSchema = z.object({
   mrp: z.string(),
   offer_price: z.string(),
 });
+
+const Quagga = require("quagga");
 
 export default function ProductEditBasicDetails({
   category,
