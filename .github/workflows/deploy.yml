@@ -3,10 +3,10 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main # Trigger deployment on pushing to the main branch
+      - master # Trigger deployment on pushing to the main branch
   pull_request:
     branches:
-      - main # Optional: you can trigger deployment on pull requests as well
+      - master # Optional: you can trigger deployment on pull requests as well
 
 jobs:
   deploy:
@@ -38,7 +38,7 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no deploy@${{ secrets.DEPLOY_HOST }} << 'EOF'
-            cd /goodmart
+            cd /home/deply/goodmart
             git pull origin main
             cd backend
             source venv/bin/activate
