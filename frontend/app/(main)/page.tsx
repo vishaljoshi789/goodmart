@@ -4,16 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useContext, useEffect, useState } from "react";
 import { TbAlertTriangle } from "react-icons/tb";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import {
