@@ -10,65 +10,70 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
+      # Step 1: Checkout the code from GitHub
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Python environment for Django (backend)
+      # Step 2: Set up Python environment for Django (backend)
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
 
-      # Install backend dependencies
-      - name: Install backend dependencies
+      # Step 3: Create a virtual environment and install backend dependencies
+      - name: Set up Django virtual environment and install dependencies
         run: |
           cd backend
-          pip install -r requirements.txt
+          python3 -m venv venv  # Create a virtual environment
+          source venv/bin/activate  # Activate the virtual environment
+          pip install --upgrade pip  # Upgrade pip
+          pip install -r requirements.txt  # Install Django dependencies
 
-      # Set up Node.js environment for Next.js (frontend)
+      # Step 4: Set up Node.js environment for Next.js (frontend)
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "22"
 
-      # Install frontend dependencies
+      # Step 5: Install frontend dependencies
       - name: Install frontend dependencies
         run: |
           cd frontend
-          npm install
+          npm install  # Install Next.js dependencies
 
-      # Deploy to the server
+      # Step 8: Deploy to the server
       - name: Deploy to server
         uses: appleboy/ssh-action@v0.1.8
         with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
+          host: ${{ secrets.DEPLOY_HOST }} # Server IP or hostname
+          username: ${{ secrets.DEPLOY_USER }} # SSH username
+          key: ${{ secrets.DEPLOY_KEY }} # SSH private key secret
           script: |
             cd /home/goodmart
 
             # Pull the latest changes
             git pull origin master
 
-            # Install backend dependencies (if necessary)
+            # Step 9: Set up virtual environment and install dependencies (backend)
             cd backend
-            pip install -r requirements.txt
+            python3 -m venv venv  # Create the virtual environment if not already there
+            source venv/bin/activate  # Activate virtual environment
+            pip install --upgrade pip  # Upgrade pip
+            pip install -r requirements.txt  # Install or update backend dependencies
 
-            # Install frontend dependencies (if necessary)
+            # Step 10: Install frontend dependencies (if not already done)
             cd frontend
-            npm install
+            npm install  # Install or update frontend dependencies
 
-            # Build frontend (Next.js)
-            npm run build
+            # Step 11: Build the Next.js frontend
+            npm run build  # Build the Next.js app for production
 
-            # Restart backend (Gunicorn)
-            pkill -f gunicorn
-            gunicorn --bind 0.0.0.0:8000 goodmart.wsgi:application &
+            # Step 12: Restart backend (Gunicorn) and frontend (PM2)
+            # Restart the gunicorn service for Django
+            sudo systemctl restart gunicorn
 
-            # Restart frontend (Next.js)
-            pkill -f next
-            npm run start &
+            # Restart the pm2 service for Next.js (ensure pm2 is installed and running)
+            pm2 restart next  # Restart PM2 process for Next.js
 
-            # Restart Nginx to apply changes
+            # Step 13: Restart Nginx to apply any changes (optional)
             sudo systemctl restart nginx
