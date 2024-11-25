@@ -373,3 +373,11 @@ def getOrder(request, id):
         serializer = OrderSerializer(order)
         return Response(serializer.data, status=200)
     return Response(status=400)
+
+@api_view(['GET'])
+def getFearuredCategory(request):
+    if request.method == "GET":
+        category = Product_Category.objects.filter(featured=True)
+        serializer = ProductCategorySerializer(category, many=True)
+        return Response(serializer.data, status=200)
+    return Response(status=400)

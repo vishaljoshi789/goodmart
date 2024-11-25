@@ -1,7 +1,7 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TbAlertTriangle } from "react-icons/tb";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
@@ -24,6 +25,9 @@ import { CiLocationOn } from "react-icons/ci";
 import { IoIosArrowDown } from "react-icons/io";
 import { TbCategoryFilled } from "react-icons/tb";
 import Link from "next/link";
+import { GMContext } from "../(utils)/context/GMContext";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
 
 interface Location {
   lat: number | null;
@@ -32,6 +36,7 @@ interface Location {
 }
 
 export default function Home() {
+  let [featuredCategory, setFeaturedCategory] = useState([]);
   let [location, setLocation] = useState<Location>({
     lat: null,
     long: null,
@@ -39,6 +44,13 @@ export default function Home() {
   });
   let [zip, setZip] = useState<any>(null);
   let [editZip, setEditZip] = useState(false);
+  let { baseURL } = useContext(GMContext);
+
+  let getCategory = async () => {
+    let response = await fetch(`${baseURL}/getFeaturedCategory/`);
+    let data = await response.json();
+    setFeaturedCategory(data);
+  };
   let showPosition = (position: GeolocationPosition) => {
     let lat = position.coords.latitude;
     let long = position.coords.longitude;
@@ -75,10 +87,10 @@ export default function Home() {
   useEffect(() => {
     if (localStorage.getItem("location") != null) {
       let location = JSON.parse(localStorage.getItem("location") || "");
-      console.log(location);
       setLocation(location);
       setZip(location.zip);
     }
+    getCategory();
   }, []);
   return (
     <div>
@@ -117,7 +129,7 @@ export default function Home() {
             <Button
               className="w-fit text-xs text-black underline"
               variant={"ghost"}
-              onClick={() => setEditZip(true)}
+              onClick={() => setEditZip(!editZip)}
             >
               <IoIosArrowDown />
             </Button>
@@ -166,6 +178,26 @@ export default function Home() {
               <span className="text-xs">Categories</span>
             </Link>
           </li>
+          {featuredCategory.map((item: any) => (
+            <li className={`rounded-md hover:bg-gray-200`} key={item.id}>
+              <Link
+                href={`/products?category=${item.id}`}
+                className="flex justify-center items-center flex-col"
+              >
+                {item.image && (
+                  <Image
+                    src={baseURL + item.image}
+                    width={0}
+                    height={0}
+                    alt={item.name}
+                    sizes="100vw"
+                    className="w-9 h-9"
+                  />
+                )}
+                <span className="text-xs">{item.name}</span>
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
       <div>
@@ -189,504 +221,193 @@ export default function Home() {
 
       <Separator />
 
-      <div className="flex p-5">
-        <div className="flex gap-10 flex-wrap">
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 1
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 2
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 3
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 4
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 5
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 6
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 7
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 8
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 9
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 10
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 11
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 12
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 13
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
-          <Card className="w-24 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-            <div className="md:w-full h-20 flex items-center bg-gray-100"></div>
-            <div className="md:w-full h-full">
-              <CardHeader className="p-2 pb-0">
-                <CardTitle className="whitespace-nowrap py-2">
-                  Category 14
-                </CardTitle>
-                {/* <CardDescription>Category 1</CardDescription> */}
-              </CardHeader>
-            </div>
-          </Card>
+      <section className="mb-12 px-4 md:px-6 lg:px-8">
+        <div className="mb-6 md:mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">
+            Shop by Category
+          </h2>
+          <p className="text-gray-600">Explore our wide range of collections</p>
         </div>
-      </div>
 
-      <div className="py-5 px-10">
-        <h3 className="text-red-500 font-bold text-2xl font-serif">
-          Hot Selling Products
-        </h3>
-        <ScrollArea>
-          <div className="flex gap-3 py-5 justify-between">
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+          {featuredCategory.map((category: any, index) => (
+            <div
+              key={index}
+              className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-white shadow-sm hover:shadow-xl transition-all duration-300"
+            >
+              <div className="p-4 md:p-6">
+                <div className="flex flex-col md:flex-row items-start justify-between">
+                  <div className="w-full">
+                    <div
+                      className={`inline-flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl bg-gradient-to-r ${category.color} text-white shadow-lg`}
+                    >
+                      {/* <category.icon className="h-5 w-5 md:h-6 md:w-6" /> */}
+                      <Image
+                        alt={category.name}
+                        src={baseURL + category.image}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        className="w-6 h-6 md:w-8 md:h-8"
+                      />
+                    </div>
+                    <div className="flex justify-between items-center mt-3 md:mt-4">
+                      <h3 className="text-base md:text-lg font-semibold">
+                        {category.name}
+                      </h3>
+                      <span className="text-xs md:text-sm font-medium text-gray-400 md:hidden">
+                        {category.items}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs md:text-sm text-gray-500 line-clamp-2">
+                      {category.description}
+                    </p>
                   </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
-              </div>
-            </Card>
+                  <span className="hidden md:block text-sm font-medium text-gray-400">
+                    {category.items}
+                  </span>
+                </div>
 
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
+                <div className="mt-3 md:mt-4 flex items-center justify-between">
+                  <span className="text-xs md:text-sm font-medium text-gray-500 group-hover:text-gray-900 transition-colors">
+                    Explore Category
+                  </span>
+                  <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-all transform group-hover:translate-x-1" />
+                </div>
               </div>
-            </Card>
 
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
-              </div>
-            </Card>
+              <div
+                className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r opacity-0 transition-opacity group-hover:opacity-100"
+                style={{
+                  backgroundImage: `linear-gradient(to right, var(--tw-gradient-from) 0%, var(--tw-gradient-to) 100%)`,
+                }}
+              />
+            </div>
+          ))}
+        </div>
 
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
+        {/* Amazon-style Deal Cards */}
+        <div className="mt-8">
+          <h2 className="text-xl md:text-2xl font-bold mb-4">Today's Deals</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[1, 2, 3, 4].map((deal) => (
+              <div key={deal} className="bg-white rounded-lg shadow-sm p-4">
+                <div className="aspect-square bg-gray-100 rounded-lg mb-3" />
+                <div className="space-y-2">
+                  <span className="inline-block bg-red-100 text-red-600 text-xs font-medium px-2 py-1 rounded">
+                    Up to 40% off
+                  </span>
+                  <p className="text-sm font-medium line-clamp-2">
+                    Deal of the Day
+                  </p>
+                </div>
               </div>
-            </Card>
-
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
-              </div>
-            </Card>
-
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
-              </div>
-            </Card>
-
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
-              </div>
-            </Card>
-
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
-              </div>
-            </Card>
+            ))}
           </div>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
-      </div>
+        </div>
 
-      <div className="py-5 px-10">
-        <h3 className="text-red-500 font-bold text-2xl font-serif">
-          Deals of the Day
-        </h3>
-        <ScrollArea>
-          <div className="flex gap-3 py-5 justify-between">
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
-              </div>
-            </Card>
+        {/* Personalized Recommendations */}
+      </section>
 
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
-              </div>
-            </Card>
+      {/* Categories & Products */}
+      <section className="mb-8">
+        <Tabs defaultValue="All Products" className="space-y-6">
+          <ScrollArea className="w-full">
+            <TabsList className="inline-flex w-full justify-start bg-transparent border-b border-rose-100">
+              {featuredCategory.map((category: any) => (
+                <TabsTrigger
+                  key={category.id}
+                  value={category.id}
+                  className="flex-1 min-w-[100px] text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-500 data-[state=active]:to-orange-500 data-[state=active]:text-white rounded-t-lg"
+                >
+                  {category.name}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </ScrollArea>
 
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
+          {featuredCategory.map((category: any) => (
+            <TabsContent key={category.id} value={category.id}>
+              <div className="grid grid-cols-2 gap-2  sm:gap-4 md:grid-cols-3 lg:grid-cols-5">
+                {/* {products.map((product) => (
+                  <ProductCard key={product._id} item={product} />
+                ))} */}
               </div>
-            </Card>
+            </TabsContent>
+          ))}
+        </Tabs>
+      </section>
 
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
+      <section>
+        <div className="mt-8 bg-white rounded-xl p-4 md:p-6">
+          <h2 className="text-xl md:text-2xl font-bold mb-4">
+            Recommended for you
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <div key={item} className="space-y-2">
+                <div className="aspect-square bg-gray-100 rounded-lg" />
+                <p className="text-sm font-medium line-clamp-2">Product Name</p>
+                <p className="text-xs text-gray-500">₹999</p>
               </div>
-            </Card>
-
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
-              </div>
-            </Card>
-
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
-              </div>
-            </Card>
-
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
-              </div>
-            </Card>
-
-            <Card className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md h-fit">
-              <div className="md:w-full h-40 flex items-center bg-gray-100"></div>
-              <div className="md:w-full h-full">
-                <CardHeader className="p-2 pb-0">
-                  <CardTitle>Product Name</CardTitle>
-                  <CardDescription>Product Description</CardDescription>
-                </CardHeader>
-                <CardContent className="p-2 pt-2">
-                  <div className="flex gap-3">
-                    <s>₹2999</s>
-                    <b>₹1599</b>
-                  </div>
-                  <span className="text-red-500 text-lg">-50%</span>
-                </CardContent>
-                <CardFooter>
-                  <p>Product Category</p>
-                </CardFooter>
-              </div>
-            </Card>
+            ))}
           </div>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
-      </div>
+        </div>
+      </section>
+
+      {/* Featured Categories */}
+      <section className="mb-8">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-2">Featured Items</h2>
+          <p className="text-gray-600">Explore our wide range of collections</p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {featuredCategory.map((category: any, index) => (
+            <div
+              key={index}
+              className="relative aspect-[4/3] overflow-hidden rounded-xl"
+            >
+              <div className="relative w-full h-full">
+                <div className="absolute inset-0">
+                  <Image
+                    src={category.imageUrl}
+                    alt={category.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    priority={index === 0}
+                  />
+                </div>
+                <div className="absolute inset-0 bg-black/30" />
+              </div>
+              <div className="absolute inset-0 flex flex-col justify-end p-4 text-white">
+                <h3 className="text-lg font-bold">{category.title}</h3>
+                <p className="text-sm opacity-90">Shop Now →</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="my-12 rounded-2xl bg-gradient-to-r from-rose-500 to-orange-500 p-6 text-white">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-2">Join Our Newsletter</h2>
+          <p className="mb-4 opacity-90">
+            Get updates on new arrivals and special offers!
+          </p>
+          <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
+            <Input
+              placeholder="Enter your email"
+              className="bg-white/20 border-white/30 text-white placeholder:text-white/70"
+            />
+            <Button className="bg-white text-rose-500 hover:bg-white/90">
+              Subscribe
+            </Button>
+          </div>
+        </div>
+      </section>
       <footer className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
           <div className="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">

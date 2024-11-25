@@ -1,50 +1,85 @@
-name: Deploy to Server
+name: CI/CD for GoodMart
 
 on:
   push:
     branches:
-      - master # Trigger deployment on pushing to the main branch
-  pull_request:
-    branches:
-      - master # Optional: you can trigger deployment on pull requests as well
+      - main # Trigger deployment on changes to the 'main' branch
 
 jobs:
-  deploy:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      # Checkout the repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
+      # Set up Python environment for Django (backend)
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+          python-version: "3.11"
 
-      - name: Install Dependencies (Backend)
+      # Install backend dependencies
+      - name: Install backend dependencies
         run: |
           cd backend
-          python -m venv venv
-          source venv/bin/activate
           pip install -r requirements.txt
-          python manage.py migrate
 
-      - name: Install Dependencies (Frontend)
+      # Set up Node.js environment for Next.js (frontend)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      # Install frontend dependencies
+      - name: Install frontend dependencies
         run: |
           cd frontend
           npm install
-          npm run build
 
-      - name: Deploy to Server
+      # Run tests (if any)
+      - name: Run backend tests
         run: |
-          ssh -o StrictHostKeyChecking=no deploy@${{ secrets.DEPLOY_HOST }} << 'EOF'
-            cd /home/deply/goodmart
+          cd backend
+          python manage.py test
+
+      - name: Run frontend tests
+        run: |
+          cd frontend
+          npm run test
+
+      # Deploy to the server
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd /path/to/goodmart
+
+            # Pull the latest changes
             git pull origin main
+
+            # Install backend dependencies (if necessary)
             cd backend
-            source venv/bin/activate
-            python manage.py migrate
-            sudo systemctl restart gunicorn
-            cd ../frontend
+            pip install -r requirements.txt
+
+            # Install frontend dependencies (if necessary)
+            cd frontend
+            npm install
+
+            # Build frontend (Next.js)
             npm run build
-            pm2 restart frontend
-          EOF
+
+            # Restart backend (Gunicorn)
+            pkill -f gunicorn
+            gunicorn --bind 0.0.0.0:8000 goodmart.wsgi:application &
+
+            # Restart frontend (Next.js)
+            pkill -f next
+            npm run start &
+
+            # Restart Nginx to apply changes
+            sudo systemctl restart nginx

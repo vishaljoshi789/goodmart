@@ -25,4 +25,5 @@ urlpatterns = [
     path('placeOrder/<int:id>/', views.placeOrder),
     path('getOrders/', views.getOrders),
     path('getOrder/<int:id>/', views.getOrder),
+    path('getFeaturedCategory/', views.getFearuredCategory)
 ]
