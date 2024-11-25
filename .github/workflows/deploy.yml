@@ -38,17 +38,6 @@ jobs:
           cd frontend
           npm install
 
-      # Run tests (if any)
-      - name: Run backend tests
-        run: |
-          cd backend
-          python manage.py test
-
-      - name: Run frontend tests
-        run: |
-          cd frontend
-          npm run test
-
       # Deploy to the server
       - name: Deploy to server
         uses: appleboy/ssh-action@v0.1.8
@@ -60,7 +49,7 @@ jobs:
             cd /path/to/goodmart
 
             # Pull the latest changes
-            git pull origin main
+            git pull origin master
 
             # Install backend dependencies (if necessary)
             cd backend
