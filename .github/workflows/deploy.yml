@@ -3,7 +3,7 @@ name: CI/CD for GoodMart
 on:
   push:
     branches:
-      - main # Trigger deployment on changes to the 'main' branch
+      - master # Trigger deployment on changes to the 'main' branch
 
 jobs:
   build_and_deploy:
