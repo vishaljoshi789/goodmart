@@ -155,7 +155,7 @@ const Home: NextPage = () => {
             verifyMail={verifyMail}
           />
           <div className="qr bg-gray-600 lg:w-1/3 w-full rounded-lg flex justify-center items-center text-white">
-            {user.VendorInfo.qr ? (
+            {user.VendorInfo && user.VendorInfo.qr ? (
               <Image
                 width={0}
                 height={0}
