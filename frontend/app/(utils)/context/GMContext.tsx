@@ -54,8 +54,7 @@ const GMContext = createContext<GMContextType>({
 });
 
 const GMProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // let baseURL = "http://192.168.1.5:8000";
-  let baseURL = "http://127.0.0.1:8000";
+  const baseURL = process.env.NEXT_PUBLIC_API_URL || "";
 
   let router = useRouter();
   let [authToken, setAuthToken] = useState<AccessTokenType | null>(
