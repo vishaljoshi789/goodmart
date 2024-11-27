@@ -17,7 +17,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['103.186.184.54', 'locahost', '127.0.0.1', '192.168.1.5', '0.0.0.0']
+ALLOWED_HOSTS = ['locahost', '127.0.0.1', 'goodmart.in', 'www.goodmart.in']
 
 # FRONTEND_URL = "http://192.168.1.5:3000"
 FRONTEND_URL = "http://127.0.0.1:3000"
