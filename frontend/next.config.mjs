@@ -13,9 +13,8 @@ export const images = {
       pathname: "**",
     },
     {
-      protocol: "http",
-      hostname: "192.168.1.5",
-      port: "8000",
+      protocol: "https",
+      hostname: "api.goodmart.in",
       pathname: "**",
     },
     {
