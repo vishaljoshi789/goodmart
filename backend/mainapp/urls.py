@@ -9,7 +9,7 @@ urlpatterns = [
     path('verify-email/<uidb64>/<token>/', views.verify_email, name='verify-email'),
     path('getProductCategory/', views.getProductCategory),
     path('getProductBrand/', views.getProductBrand),
-    path('getSearchProducts/<str:search>/', views.getSearchProducts),
+    path('getSearchProducts/<str:search>/<str:category>/', views.getSearchProducts),
     path('getProduct/<int:id>/', views.getProduct),
     path('addToCart/', views.addToCart),
     path('getCart/', views.getCart),
@@ -25,5 +25,7 @@ urlpatterns = [
     path('placeOrder/<int:id>/', views.placeOrder),
     path('getOrders/', views.getOrders),
     path('getOrder/<int:id>/', views.getOrder),
-    path('getFeaturedCategory/', views.getFearuredCategory)
+    path('getFeaturedCategory/', views.getFearuredCategory),
+    path('getParentCategory/', views.getParentCategory),
+    path('getSubCategory/<int:id>/', views.getSubCategory),
 ]

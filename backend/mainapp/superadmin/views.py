@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer
-from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting
+from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer
+from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order
 import json
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
@@ -364,4 +364,12 @@ def updateSetting(request):
             return Response(serializer.data, status=200)
         return Response(serializer.errors, status=400)
 
-
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getOrders(request):
+    if request.method == 'GET':
+        orders = Order.objects.all()
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)

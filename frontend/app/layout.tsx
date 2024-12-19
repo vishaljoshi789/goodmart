@@ -4,6 +4,7 @@ import { Inter as FontSans, Carter_One } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { GMProvider } from "./(utils)/context/GMContext";
+import { NextUIProvider } from "@nextui-org/system";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -36,8 +37,10 @@ export default function RootLayout({
           carterOne.variable
         )}
       >
-        <GMProvider>{children}</GMProvider>
-        <Toaster richColors expand={true} />
+        <NextUIProvider>
+          <GMProvider>{children}</GMProvider>
+          <Toaster richColors expand={true} />
+        </NextUIProvider>
       </body>
     </html>
   );

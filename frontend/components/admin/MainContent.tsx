@@ -3,6 +3,7 @@ import React from "react";
 import { FaUsers } from "react-icons/fa";
 import { AiFillProduct, AiOutlineSafety } from "react-icons/ai";
 import { GoGear } from "react-icons/go";
+import { CiDeliveryTruck } from "react-icons/ci";
 
 const MainContent: React.FC = () => {
   return (
@@ -39,6 +40,13 @@ const MainContent: React.FC = () => {
           >
             <GoGear className="text-4xl" />
             <span className="text-xl font-bold">Settings</span>
+          </Link>
+          <Link
+            href={"/securepanel/orders"}
+            className="card flex flex-col hover:underline bg-white hover:text-gray-700 items-center justify-center p-5 rounded-md shadow-lg hover:shadow-sm transition duration-150 ease-in-out"
+          >
+            <CiDeliveryTruck className="text-4xl" />
+            <span className="text-xl font-bold">Orders</span>
           </Link>
         </div>
       </div>

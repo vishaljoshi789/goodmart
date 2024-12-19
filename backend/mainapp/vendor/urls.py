@@ -24,4 +24,5 @@ urlpatterns = [
     path('updateVendorDefaultShipping/', views.updateVendorDefaultShipping),
     path('getVendorOrders/', views.getVendorOrders),
     path('getOrderDetails/<int:order_id>/', views.getOrderDetials),
+    path('updateOrderStatus/<int:order_id>/', views.updateOrderStatus),
 ]

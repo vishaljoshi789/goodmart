@@ -127,7 +127,7 @@ def getProductBrand(request):
         return Response(status=400)
     
 @api_view(['GET'])
-def getSearchProducts(request, search):
+def getSearchProducts(request, search, category):
     if request.method == 'GET':
         products = set()
         byName = Product.objects.filter(name__contains=search)
@@ -139,8 +139,9 @@ def getSearchProducts(request, search):
         byDesc = Product.objects.filter(description__contains=search)
         for i in byDesc:
             products.add(i)
-        print(products)
-
+        byCategory = Product.objects.filter(category=category)
+        for i in byCategory:
+            products.add(i)
         serializer = ProductDetailedSerializer(products, many=True)
         return Response(serializer.data, status=200)
     else:
@@ -378,6 +379,22 @@ def getOrder(request, id):
 def getFearuredCategory(request):
     if request.method == "GET":
         category = Product_Category.objects.filter(featured=True)
+        serializer = ProductCategorySerializer(category, many=True)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+def getParentCategory(request):
+    if request.method == "GET":
+        category = Product_Category.objects.filter(parent=None)
+        serializer = ProductCategorySerializer(category, many=True)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+def getSubCategory(request, id):
+    if request.method == "GET":
+        category = Product_Category.objects.filter(parent=id)
         serializer = ProductCategorySerializer(category, many=True)
         return Response(serializer.data, status=200)
     return Response(status=400)

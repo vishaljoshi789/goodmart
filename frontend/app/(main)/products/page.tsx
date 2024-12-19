@@ -18,11 +18,12 @@ import Link from "next/link";
 export default function ProductsPage() {
   let path = useSearchParams();
   let q = path.get("q");
+  let category = path.get("category");
   let [products, setProducts] = useState([]);
   let { baseURL } = useContext(GMContext);
   let api = useAxios();
   let getProucts = async () => {
-    let res = await fetch(`${baseURL}/getSearchProducts/${q}/`);
+    let res = await fetch(`${baseURL}/getSearchProducts/${q}/${category}`);
     let data = await res.json();
     console.log(data);
     setProducts(data);

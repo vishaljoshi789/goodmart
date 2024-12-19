@@ -98,6 +98,12 @@ const Sidebar: React.FC = () => {
                 <span>KYC</span>
               </Link>
               <Link
+                href={"/securepanel/orders"}
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer font-bold"
+              >
+                <span>Orders</span>
+              </Link>
+              <Link
                 href={"/securepanel/setting"}
                 className="px-4 py-2 hover:bg-gray-700 cursor-pointer font-bold"
               >

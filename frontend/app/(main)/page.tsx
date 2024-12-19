@@ -93,7 +93,11 @@ export default function Home() {
           <AlertDescription>
             <div>
               <span>Provide Your Zipcode to access the shops near you</span>
-              <InputOTP maxLength={6} onChange={(e) => setZip(e)} value={zip}>
+              <InputOTP
+                maxLength={6}
+                onChange={(e: any) => setZip(e)}
+                value={zip}
+              >
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />
@@ -134,7 +138,7 @@ export default function Home() {
                   <span>Provide Your Zipcode to access the shops near you</span>
                   <InputOTP
                     maxLength={6}
-                    onChange={(e) => setZip(e)}
+                    onChange={(e: any) => setZip(e)}
                     value={zip}
                   >
                     <InputOTPGroup>
@@ -163,7 +167,7 @@ export default function Home() {
         <ul className="flex gap-5 w-full py-2 px-1">
           <li className={`rounded-md hover:bg-gray-200`}>
             <Link
-              href={"/"}
+              href={"/categories"}
               className="flex justify-center items-center flex-col"
             >
               <TbCategoryFilled className="text-4xl text-red-500" />

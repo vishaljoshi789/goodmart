@@ -16,7 +16,6 @@ def addProductInfo(request):
     data = request.data
     data['user'] = request.user.id
     data['company_id'] = request.user.vendor.id
-    print(data)
     serializer = ProductSerializer(data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
@@ -194,30 +193,6 @@ def addKYC(request):
         serializer = KYCDetailSerializer(data=data, partial=True)
         if serializer.is_valid():
             shop = serializer.save()
-            # shop_url = f"{settings.FRONTEND_URL}/shop/{shop.id}"
-            
-            # # Generate QR code
-            # qr = qrcode.QRCode(
-            #     version=1,
-            #     error_correction=qrcode.constants.ERROR_CORRECT_L,
-            #     box_size=10,
-            #     border=4,
-            # )
-            # qr.add_data(shop_url)
-            # qr.make(fit=True)
-            
-            # # Create an image from the QR code
-            # img = qr.make_image(fill="black", back_color="white")
-            
-            # # Save the image in memory as a PNG
-            # buffer = BytesIO()
-            # img.save(buffer, format="PNG")
-            # buffer.seek(0)
-            
-            # # Attach the QR code image to the vendor's model if needed
-            # shop.qr.save(f"vendor_{shop.id}_qr.png", File(buffer), save=True)
-            
-            # Return the serializer data and a success response
             return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400) 
 
@@ -244,7 +219,6 @@ def updateVendorDetails(request):
         if serializer.is_valid():
             serializer.save()
             if not details.qr:
-                print("GENERATING QR CODE")
                 shop_url = f"{settings.FRONTEND_URL}/shop/{details.id}"
                 qr = qrcode.QRCode(
                     version=1,
@@ -332,4 +306,14 @@ def getOrderDetials(request, order_id):
         serializer = SubOrderWithOrderAddressSerializer(sub_orders, many=True)
         return Response(serializer.data, status=200)
     
+    return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([isVendor])
+def updateOrderStatus(request, order_id):
+    if request.method == 'POST':
+        sub_order = SubOrder.objects.get(id=order_id)
+        sub_order.status = request.data['status']
+        sub_order.save()
+        return Response(status=200)
     return Response(status=400)
