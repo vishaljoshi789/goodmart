@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder
-from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, OrderItemSerializer
+from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder, Coupon, Setting, Wallet
+from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, CouponSerializer, WalletSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -13,10 +13,43 @@ from smtplib import SMTPException
 from django.core.mail import BadHeaderError
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-
+import random
+import string
+import time
+from datetime import datetime, timedelta
 
 def index(request):
-    return HttpResponse('HelloWorld')
+    return HttpResponse("hello World")
+
+def generate_time_based_alphanumeric_code(length=16):
+    timestamp = int(time.time())
+    base36_timestamp = base36_encode(timestamp)
+    
+    random_part_length = length - len(base36_timestamp)
+    characters = string.ascii_uppercase + string.digits
+    random_part = ''.join(random.choices(characters, k=random_part_length))
+    
+    return base36_timestamp + random_part
+
+def base36_encode(number):
+    if not isinstance(number, int):
+        raise TypeError("Number must be an integer")
+    if number < 0:
+        raise ValueError("Number must be non-negative")
+    
+    digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    result = ""
+    while number:
+        number, remainder = divmod(number, 36)
+        result = digits[remainder] + result
+    return result or "0"
+
+def addCoupons(user, amount, title, description, expire_days=100, type="REDEEMABLE", vendor=None):
+    code = generate_time_based_alphanumeric_code()
+    expire = datetime.now() + timedelta(days=expire_days)
+    coupon = Coupon.objects.create(user=user, code=code, type=type, vendor=vendor, amount=amount, expiry_date=expire, title=title, description=description)
+    coupon.save()
+    
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -99,13 +132,19 @@ def verify_email(request, uidb64, token):
         if email_verification_token.check_token(user, token):
             user.email_verified = True
             user.save()
+
+            expire = datetime.now() + timedelta(days=100)
+            points = Setting.objects.get(id=1).registration_points
+            title = "Register Bonus"
+            description = f"You have received the bonus of {points} points for successfully registering in GOODMART, this coupon can be redeemed and added on your wallet. Coupon will expire on {expire}"
+            addCoupons(user, points)
             print("Email verified")
             return Response({'status': 'Email verified'}, status=200)
         else:
             print("Invalid token")
             return Response({'status': 'Invalid token'}, status=400)
-    except:
-        print("Error occurred")
+    except Exception as e:
+        print(e)
         return Response({'status': 'Invalid token'}, status=400)
     
 @api_view(['GET'])
@@ -397,4 +436,73 @@ def getSubCategory(request, id):
         category = Product_Category.objects.filter(parent=id)
         serializer = ProductCategorySerializer(category, many=True)
         return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getCoupon(request):
+    if request.method == "GET":
+        user = request.user
+        Coupon = user.coupons.all().order_by('-expiry_date').order_by('is_used')
+        serializer = CouponSerializer(Coupon, many=True)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def redeemCoupon(request):
+    if request.method == "POST":
+        user = request.user
+        coupon = Coupon.objects.get(code=request.data["couponCode"])
+        if coupon.is_used:
+                    return Response(status=400, data={"error": "Coupon already used"})
+        if coupon.user == user:
+            if coupon.type == "REDEEMABLE":
+                try:
+                    user.wallet.add_balance(coupon.amount, coupon.title, coupon)
+                    user.save()
+                    coupon.is_used = True
+                    coupon.save()
+                    return Response(status=200)
+                except Exception as e:
+                    return Response(status=400, data={"error": "Wallet not created, create the wallet to proceed forward"})
+            else:
+                return Response(status=400)
+        else:
+            return Response(status=400)
+    return Response(status=400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getWallet(request):
+    if request.method == "GET":
+        try:
+            wallet = request.user.wallet
+        except:
+            return Response({"error": "Wallet Not Found"}, status=400)
+        serializer = WalletSerializer(wallet)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createWallet(request):
+    if request.method == "POST":
+        try:
+            wallet = Wallet.objects.create(user=request.user, passcode=request.data["passcode"])
+            wallet.save()
+            return Response(status=200)
+        except:
+            return Response(status=400)
+    return Response(status=400)
+
+@api_view(['POST']) 
+@permission_classes([IsAuthenticated])
+def verifyWalletPasscode(request):
+    if request.method == "POST":
+        wallet = Wallet.objects.get(user=request.user)
+        if wallet.passcode == request.data["passcode"]:
+            return Response(status=200)
+        else:
+            return Response(status=400)
     return Response(status=400)

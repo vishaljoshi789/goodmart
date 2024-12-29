@@ -154,23 +154,23 @@ const Home: NextPage = () => {
             phone_verified={user.phone_verified}
             verifyMail={verifyMail}
           />
-          <div className="qr bg-gray-600 lg:w-1/3 w-full rounded-lg flex justify-center items-center text-white">
-            {user.VendorInfo && user.VendorInfo.qr ? (
-              <Image
-                width={0}
-                height={0}
-                sizes="100vw"
-                src={baseURL + user.VendorInfo.qr}
-                alt="qr code"
-                className="w-full h-full object-cover rounded-lg"
-              />
-            ) : (
-              `QR`
-            )}
-          </div>
-          <div className="qr bg-white w-full lg:w-1/3 flex justify-center items-center">
-            Orders
-          </div>
+          {user.VendorInfo && user.VendorInfo.qr && (
+            <>
+              <div className="qr bg-gray-600 lg:w-1/3 w-full rounded-lg flex justify-center items-center text-white">
+                <Image
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  src={baseURL + user.VendorInfo.qr}
+                  alt="qr code"
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+              <div className="qr bg-white w-full lg:w-1/3 flex justify-center items-center">
+                Orders
+              </div>
+            </>
+          )}
         </div>
         <DashboardContent />
       </div>

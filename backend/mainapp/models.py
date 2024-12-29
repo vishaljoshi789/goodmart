@@ -249,24 +249,6 @@ class Cart(models.Model):
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
 
-class Coupon(models.Model):
-    code = models.CharField(max_length=20, null=True, blank=True)
-    amount = models.PositiveIntegerField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    redeem_at = models.DateField(null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    used_for = models.CharField(max_length=100, null=True, blank=True)
-    description = models.CharField(max_length=500, null=True, blank=True)
-
-class Points(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, null=True, blank=True)
-    added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
-
-class Setting(models.Model):
-    registration_points = models.PositiveIntegerField(null=True, blank=True, default=0)
-
 class ShippingCharges(models.Model):
     vendor = models.ForeignKey(Vendor_Detail, on_delete=models.CASCADE, null=True, blank=True, related_name='shipping_charges')
     pincode = models.CharField(max_length=6, null=True, blank=True)
@@ -301,4 +283,88 @@ class OrderItem(models.Model):
     total = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+class LevelPoints(models.Model):
+    points = models.IntegerField(null=True, blank=True)
+    added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+class Wallet(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="wallet")
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    passcode = models.CharField(max_length=6, blank=True, null=True)
+
+    def add_balance(self, amount, description="", related_coupon=None):
+        """Adds a specific amount to the wallet balance and logs a transaction."""
+        if amount > 0:
+            Transaction.objects.create(
+                wallet=self,
+                transaction_type='CREDIT',
+                amount=amount,
+                description=description,
+                related_coupon=related_coupon
+            )
+            self.balance += amount
+            self.save()
+            # Log the transaction
+        else:
+            raise ValueError("Amount to add must be positive.")
+
+    def deduct_balance(self, amount, description="", related_order=None):
+        """Deducts a specific amount from the wallet balance and logs a transaction."""
+        if amount > 0:
+            if amount <= self.balance:
+                self.balance -= amount
+                self.save()
+                # Log the transaction
+                Transaction.objects.create(
+                    wallet=self,
+                    transaction_type='DEBIT',
+                    amount=amount,
+                    description=description,
+                    related_order=related_order
+                )
+            else:
+                raise ValueError("Insufficient balance.")
+        else:
+            raise ValueError("Amount to deduct must be positive.")
+        
+class Coupon(models.Model):
+    COUPON_TYPE_CHOICES = [
+        ('REDEEMABLE', 'REDEEMABLE'),
+        ('DIRECT_USE', 'DIRECT_USE'),
+    ]
+    code = models.CharField(max_length=50, unique=True, default='000000')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="coupons", null=True, blank=True)
+    vendor = models.ForeignKey(Vendor_Detail, on_delete=models.CASCADE, blank=True, null=True)
+    description = models.TextField(null=True)
+    title = models.CharField(max_length=1000, null=True)
+    type = models.CharField(max_length=20, choices=COUPON_TYPE_CHOICES, default='REDEEMABLE')
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    is_used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expiry_date = models.DateTimeField(blank=True, null=True) 
+
+    def __str__(self):
+        return f"Coupon {self.code} - {self.type}"
+    
+class Transaction(models.Model):
+    TRANSACTION_TYPE_CHOICES = [
+        ('CREDIT', 'Credit'),  # Adding balance to the wallet
+        ('DEBIT', 'Debit'),    # Deducting balance from the wallet
+    ]
+
+    wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name="transactions")
+    transaction_type = models.CharField(max_length=10, choices=TRANSACTION_TYPE_CHOICES)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField(blank=True, null=True)  # Reason for the transaction
+    related_coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True, related_name="transactions")
+    related_order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True, related_name="transactions")
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.wallet.user.username} - {self.transaction_type} - {self.amount}"
+
+class Setting(models.Model):
+    registration_points = models.PositiveIntegerField(null=True, blank=True, default=0)
+    platform_fee = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
 

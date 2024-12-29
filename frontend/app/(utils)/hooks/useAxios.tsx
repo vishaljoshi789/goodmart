@@ -77,7 +77,7 @@ const useAxios = (): AxiosInstance => {
       // } else {
       //   toast.error("Something Went Wrong");
       // }
-      return error;
+      return error.response;
     }
   );
 

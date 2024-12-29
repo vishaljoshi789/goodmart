@@ -28,4 +28,9 @@ urlpatterns = [
     path('getFeaturedCategory/', views.getFearuredCategory),
     path('getParentCategory/', views.getParentCategory),
     path('getSubCategory/<int:id>/', views.getSubCategory),
+    path('getCoupon/', views.getCoupon),
+    path('redeemCoupon/', views.redeemCoupon),
+    path('getWallet/', views.getWallet),
+    path('createWallet/', views.createWallet),
+    path('verifyPasscode/', views.verifyWalletPasscode)
 ]

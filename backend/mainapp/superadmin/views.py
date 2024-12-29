@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer
-from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order
+from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer, LevelPointsSerializer
+from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints
 import json
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
@@ -371,5 +371,33 @@ def getOrders(request):
         orders = Order.objects.all()
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getLevelPoints(request):
+    if request.method == 'GET':
+        level_points = LevelPoints.objects.all()
+        serializer = LevelPointsSerializer(level_points, many=True)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def updateLevelPoints(request):
+    levels = LevelPoints.objects.all()
+    for level in levels:
+        level.delete()
+    if request.method == 'POST':
+        data = request.data
+        for level_point in data:
+            serializer = LevelPointsSerializer(data=level_point)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response(serializer.errors, status=400)
+        return Response(status=201)
     else:
         return Response(status=400)

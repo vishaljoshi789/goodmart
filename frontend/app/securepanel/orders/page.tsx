@@ -11,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { get } from "http";
 import { useEffect, useState } from "react";
 
 export default function Orders() {
@@ -29,14 +28,14 @@ export default function Orders() {
   };
 
   const [orders, setOrders] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  const [selectedDate, setSelectedDate] = useState();
 
   useEffect(() => {
-    const filteredOrders = allOrders.filter(
-      (order: any) => order.added_on.split("T")[0] === selectedDate
-    );
+    const filteredOrders = selectedDate
+      ? allOrders.filter(
+          (order: any) => order.added_on.split("T")[0] === selectedDate
+        )
+      : allOrders;
     setOrders(filteredOrders);
   }, [allOrders, selectedDate]);
 

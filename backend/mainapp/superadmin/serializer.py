@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail, Setting, Order
+from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail, Setting, Order, LevelPoints
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -91,4 +91,9 @@ class SettingSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
+        fields = '__all__'
+
+class LevelPointsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LevelPoints
         fields = '__all__'
