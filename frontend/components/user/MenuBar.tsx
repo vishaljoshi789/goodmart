@@ -9,9 +9,10 @@ import { CiShop } from "react-icons/ci";
 import { FaShippingFast } from "react-icons/fa";
 import { MdBusiness } from "react-icons/md";
 import { TbTicket } from "react-icons/tb";
+import { Button } from "../ui/button";
 const HamburgerMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  let { userInfo } = useContext<GMContextType>(GMContext);
+  let { userInfo, logout } = useContext<GMContextType>(GMContext);
   const options =
     userInfo && userInfo.user_type == "Customer"
       ? [
@@ -82,23 +83,30 @@ const HamburgerMenu = () => {
           isOpen ? "translate-x-0 block" : "translate-x-full hidden md:flex"
         } transition-transform duration-300 ease-in-out md:translate-x-0 md:relative z-20`}
       >
-        <div className="w-64 min-h-screen bg-gray-800 text-white">
-          <div className="p-4 font-bold text-xl">
-            <Link href="/user-panel">User Dashboard</Link>
+        <div className="w-64 min-h-screen bg-gray-800 text-white flex flex-col justify-between">
+          <div>
+            <div className="p-4 font-bold text-xl">
+              <Link href="/user-panel">User Dashboard</Link>
+            </div>
+            <div className="mt-6">
+              {options.map((option, index) => (
+                <Link
+                  href={Object.values(option)[0]}
+                  key={index}
+                  className="px-4 py-2 hover:bg-gray-700 cursor-pointer font-extrabold flex gap-2 items-center text-xl border-b"
+                >
+                  <>
+                    {Object.values(option)[1]}
+                    {Object.keys(option)[0]}
+                  </>
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="mt-6">
-            {options.map((option, index) => (
-              <Link
-                href={Object.values(option)[0]}
-                key={index}
-                className="px-4 py-2 hover:bg-gray-700 cursor-pointer font-extrabold flex gap-2 items-center text-xl border-b"
-              >
-                <>
-                  {Object.values(option)[1]}
-                  {Object.keys(option)[0]}
-                </>
-              </Link>
-            ))}
+          <div className="p-5">
+            <Button onClick={logout} className="bg-red-500 hover:bg-red-600">
+              Logout
+            </Button>
           </div>
         </div>
       </div>
