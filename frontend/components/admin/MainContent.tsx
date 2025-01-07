@@ -28,7 +28,7 @@ const MainContent: React.FC = () => {
             <span className="text-xl font-bold">Products</span>
           </Link>
           <Link
-            href={"/securepanel/kyc"}
+            href={"/securepanel/KYC"}
             className="card flex flex-col hover:underline bg-white hover:text-gray-700 items-center justify-center p-5 rounded-md shadow-lg hover:shadow-sm transition duration-150 ease-in-out"
           >
             <AiOutlineSafety className="text-4xl" />

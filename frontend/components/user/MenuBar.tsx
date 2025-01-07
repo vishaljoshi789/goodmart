@@ -103,7 +103,7 @@ const HamburgerMenu = () => {
               ))}
             </div>
           </div>
-          <div className="p-5">
+          <div className="p-5 mb-16">
             <Button onClick={logout} className="bg-red-500 hover:bg-red-600">
               Logout
             </Button>

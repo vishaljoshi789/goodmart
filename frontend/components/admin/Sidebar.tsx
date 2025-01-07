@@ -98,7 +98,7 @@ const Sidebar: React.FC = () => {
                 </AccordionItem>
               </Accordion>
               <Link
-                href={"/securepanel/kyc"}
+                href={"/securepanel/KYC"}
                 className="px-4 py-2 hover:bg-gray-700 cursor-pointer font-bold"
               >
                 <span>KYC</span>

@@ -36,6 +36,10 @@ export default function CreateWallet() {
   };
 
   const createWallet = async () => {
+    if (passcode.length !== 6) {
+      toast.error("Passcode must be 6 digits long");
+      return;
+    }
     let response = await api.post("/createWallet/", { passcode });
     if (response.status === 200) {
       router.push("/user-panel/wallet");
