@@ -20,7 +20,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useRouter, useSearchParams } from "next/navigation";
-import useAxios from "@/app/(utils)/hooks/useAxios";
 
 export default function Navbar() {
   let router = useRouter();

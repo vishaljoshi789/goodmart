@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import { Inter as FontSans } from "next/font/google";
+import { Inter } from "next/font/google";
 import HamburgerMenu from "@/components/user/MenuBar";
 import AuthRoute from "@/components/user/AuthRoute";
 import { cn } from "@/lib/utils";
 import BottomMenu from "@/components/web/BottomMenu";
 
-const fontSans = FontSans({
+const fontInter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -24,7 +24,7 @@ export default function UserPanelLayout({
 }>) {
   return (
     <AuthRoute>
-      <div className={cn("flex", fontSans.className)}>
+      <div className={cn("flex", fontInter.className)}>
         <HamburgerMenu />
         {children}
         <BottomMenu />

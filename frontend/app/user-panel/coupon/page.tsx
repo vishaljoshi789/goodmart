@@ -107,7 +107,7 @@ export default function Coupon() {
                 </span>
                 <TbTicket className="text-4xl md:text-9xl text-white" />
                 <Dialog>
-                  <DialogTrigger className="bg-gray-200 text-black shadow-black rounded-lg shadow-md p-2  duration-200 hover:shadow-sm hover:shadow-black">
+                  <DialogTrigger className="bg-white text-black rounded-lg shadow-xl p-2  duration-200 hover:shadow-md">
                     Details
                   </DialogTrigger>
                   <DialogContent>
@@ -115,15 +115,20 @@ export default function Coupon() {
                       <DialogTitle>{coupon.title}</DialogTitle>
                       <DialogDescription>
                         {coupon.description}
+
+                        <br />
                       </DialogDescription>
                       <br />
                       <div>
                         Valid Till:{" "}
                         {new Date(coupon.expiry_date).toLocaleDateString()}
                       </div>
+                      {coupon.is_used && (
+                        <div className="text-red-500">Coupon Used</div>
+                      )}
                       {coupon.type == "REDEEMABLE" && (
                         <DialogClose
-                          className="bg-green-500 hover:bg-green-700 focus:bg-green-700 mt-5 text-primary-foreground shadow h-9 px-4 py-2 w-fit inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                          className="bg-green-500 hover:bg-green-700 mt-5 text-primary-foreground shadow h-9 px-4 py-2 w-fit inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                           onClick={() => redeemCoupon(coupon.code)}
                         >
                           Redeem

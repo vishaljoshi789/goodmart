@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import { Inter as FontSans } from "next/font/google";
+import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Sidebar from "@/components/admin/Sidebar";
 import Header from "@/components/admin/Header";
 import { GMAdminProvider } from "../(utils)/context/GMAdminContext";
 import AdminRoute from "@/components/admin/AdminRoute";
 
-const fontSans = FontSans({
+const fontInter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <GMAdminProvider>
       <AdminRoute>
-        <div className={cn("flex", fontSans.className)}>
+        <div className={cn("flex", fontInter.className)}>
           <Sidebar />
           <div className="w-full">
             <Header />

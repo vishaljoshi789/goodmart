@@ -9,13 +9,13 @@ import { NextUIProvider } from "@nextui-org/system";
 const fontSans = FontSans({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-inter",
 });
 
 const carterOne = Carter_One({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-carter-one",
-  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -32,8 +32,8 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.className,
+          "min-h-screen bg-background font-inter antialiased",
+          fontSans.variable,
           carterOne.variable
         )}
       >
