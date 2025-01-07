@@ -8,11 +8,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "../ui/button";
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+  let logout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userInfo");
+    window.location.href = "/auth/login";
   };
 
   return (
@@ -113,12 +119,12 @@ const Sidebar: React.FC = () => {
           </div>
           <div>
             <div className="mt-6 flex m-5 mb-10">
-              <Link
-                href={"/securepanel/logout"}
+              <Button
+                onClick={logout}
                 className="px-4 py-2 hover:bg-gray-700 cursor-pointer font-bold bg-blue-500 w-fit rounded-sm"
               >
                 <span>Logout</span>
-              </Link>
+              </Button>
             </div>
           </div>
         </div>

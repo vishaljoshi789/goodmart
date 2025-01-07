@@ -76,6 +76,7 @@ export default function ProductCategoryEdit() {
       formData.append("name", values.name);
       formData.append("description", values.description);
       formData.append("featured", values.featured.toString());
+      values.parent && formData.append("parent", values.parent);
       let response = await api.put(
         `/admin/updateProductCategory/${id}/`,
         formData
