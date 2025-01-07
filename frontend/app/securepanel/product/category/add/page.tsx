@@ -58,7 +58,7 @@ export default function CategoryAdd() {
       formData.append("name", values.name);
       formData.append("description", values.description);
       formData.append("featured", values.featured.toString());
-      formData.append("parent", values.parent || "null");
+      values.parent && formData.append("parent", values.parent);
       let response = await api.post("/admin/createProductCategory/", formData);
       if (response.status === 201) {
         toast.success("Category Added Successfully");
