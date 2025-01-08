@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-inter antialiased",
+          "min-h-screen bg-background font-inter antialiased pb-24 lg:pb-0",
           fontSans.variable,
           carterOne.variable
         )}

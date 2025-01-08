@@ -60,8 +60,8 @@ export default function ProductAddProductVariants({
     //   return;
     // }
     if (variants.length == 0 || variants[0].name == "") {
-      toast.error("Please Add Variants");
-      return;
+      toast.error("No Variants Added");
+      router.push("/user-panel/vendor/products");
     }
     const formData = new FormData();
     formData.append("variants", JSON.stringify(variants));

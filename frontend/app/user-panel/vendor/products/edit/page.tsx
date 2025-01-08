@@ -80,6 +80,7 @@ export default function EditProduct() {
               category={category}
               brand={brand}
               productValues={product}
+              getBrand={getBrands}
               className="w-fit"
             />
             <ProductEditImages product={product} />

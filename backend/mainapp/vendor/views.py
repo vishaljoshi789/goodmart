@@ -1,5 +1,5 @@
 from ..models import Product, Vendor_Detail, ShippingCharges, Order, SubOrder, OrderItem
-from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductVariantSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer, AddressSerializer, KYCDetailSerializer, GetVendorDetailSerializer, ShippingChargesSerializer, OrderAddressSerializer, SubOrderWithOrderAddressSerializer, OrderItemSerializer
+from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductVariantSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer, AddressSerializer, KYCDetailSerializer, GetVendorDetailSerializer, ShippingChargesSerializer, OrderAddressSerializer, SubOrderWithOrderAddressSerializer, ProductBrandSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from ..permissions import isVendor
@@ -317,3 +317,15 @@ def updateOrderStatus(request, order_id):
         sub_order.save()
         return Response(status=200)
     return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([isVendor])
+def addProductBrand(request):
+    if request.method == 'POST':
+        data = request.data
+        data['user'] = request.user.id
+        serializer = ProductBrandSerializer(data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)

@@ -87,7 +87,7 @@ class ProductDetailedSerializer(serializers.ModelSerializer):
     company_id = VendorDetailCartSerializer()
     class Meta:
         model = Product
-        fields = ['id', 'user', 'name', 'mrp', 'variants', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video', 'company_id', 'barcode_number', 'item_type', 'tax']
+        fields = ['id', 'user', 'name', 'mrp', 'variants', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video', 'company_id', 'barcode_number', 'item_type', 'tax', 'hsn', 'stock']
 
 class CartSerializer(serializers.ModelSerializer):
     class Meta:

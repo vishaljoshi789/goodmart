@@ -26,7 +26,7 @@ const HamburgerMenu = () => {
       ? [
           { Profile: "/user-panel/", icon: <CgProfile /> },
           { Products: "/user-panel/vendor/products/", icon: <BsBox /> },
-          { Shop: "/", icon: <CiShop /> },
+          { Shop: "/user-panel/shop/", icon: <CiShop /> },
           { Coupon: "/user-panel/coupon/", icon: <TbTicket /> },
           {
             "Business Details": "/user-panel/vendor/business-details/",

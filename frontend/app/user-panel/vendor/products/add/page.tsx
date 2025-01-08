@@ -82,6 +82,7 @@ export default function AddProduct() {
             brand={brand}
             setActiveTab={setActiveTab}
             setProduct={setProduct}
+            getBrand={getBrand}
           />
         ) : (
           <></>

@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Check, ChevronsUpDown } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -11,6 +12,20 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import {
   Select,
@@ -31,6 +46,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -45,6 +61,8 @@ const formSchema = z.object({
   item_type: z.string().optional(),
   mrp: z.string(),
   offer_price: z.string(),
+  hsn: z.string().optional(),
+  stock: z.string().optional(),
 });
 
 const Quagga = require("quagga");
@@ -54,11 +72,13 @@ export default function ProductAddBasicDetails({
   brand,
   setActiveTab,
   setProduct,
+  getBrand,
 }: {
   category: any;
   brand: any;
   setActiveTab: any;
   setProduct: any;
+  getBrand: any;
 }) {
   let [image, setImage] = useState<File | null>(null);
   let [video, setVideo] = useState<File | null>(null);
@@ -67,6 +87,7 @@ export default function ProductAddBasicDetails({
   const [scannedCodes, setScannedCodes] = useState<string[]>([]);
   let [scanning, setScanning] = useState<any>(false);
   const [isQuaggaRunning, setIsQuaggaRunning] = useState(false);
+  const [brandSearch, setBrandSearch] = useState("");
 
   let formData = new FormData();
   let api = useAxios();
@@ -137,6 +158,8 @@ export default function ProductAddBasicDetails({
       item_type: "",
       mrp: "",
       offer_price: "",
+      hsn: "",
+      stock: "",
     },
   });
 
@@ -174,6 +197,8 @@ export default function ProductAddBasicDetails({
     formData.append("item_type", values.item_type ?? "");
     formData.append("brand", values.brand);
     formData.append("mrp", values.mrp);
+    formData.append("stock", values.stock ?? "");
+    formData.append("hsn", values.hsn ?? "");
     formData.append("offer_price", values.offer_price);
     formData.append("image", values.image);
     values.video && formData.append("video", values.video);
@@ -188,6 +213,18 @@ export default function ProductAddBasicDetails({
       toast.error("Error Creating Product");
     }
   }
+
+  const addProductBrand = async (name: string) => {
+    let response = await api.post("/vendor/addProductBrand/", { name });
+    if (response.status == 201) {
+      toast.success("Brand Added");
+      getBrand();
+      form.setValue("brand", `${response.data.id}`);
+    } else {
+      toast.error("Error Adding Brand");
+    }
+  };
+
   return (
     <div className="bg-gray-50 shadow-lg rounded-lg p-5 h-fit">
       <span className="text-blue-500 font-bold text-sm">
@@ -286,30 +323,106 @@ export default function ProductAddBasicDetails({
               name="brand"
               render={({ field }) => (
                 <FormItem className="w-1/2">
-                  <FormLabel>Brand</FormLabel>{" "}
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Brand" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {brand.map((brd: any) => (
-                        <SelectItem value={`${brd.id}`} key={brd.id}>
-                          {brd.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Brand</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            "flex justify-between w-full",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value
+                            ? brand.find((b: any) => `${b.id}` === field.value)
+                                ?.name
+                            : "Select brand"}
+                          <ChevronsUpDown className="opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput
+                          placeholder="Search brand..."
+                          className="h-9"
+                          value={brandSearch}
+                          onValueChange={(value) => setBrandSearch(value)}
+                        />
+                        <CommandList>
+                          <CommandEmpty>
+                            <Button
+                              variant={"outline"}
+                              onClick={() => {
+                                addProductBrand(brandSearch);
+                              }}
+                            >
+                              <p>
+                                Add <b> {brandSearch}</b>
+                              </p>
+                            </Button>
+                          </CommandEmpty>
+                          <CommandGroup>
+                            {brand.map((b: any) => (
+                              <CommandItem
+                                value={b.name}
+                                key={b.id}
+                                onSelect={() => {
+                                  form.setValue("brand", `${b.id}`);
+                                }}
+                              >
+                                {b.name}
+                                <Check
+                                  className={cn(
+                                    "ml-auto",
+                                    `${b.id}` === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <div className="flex w-full gap-5">
+          <div className="flex gap-2 w-full">
+            <FormField
+              control={form.control}
+              name="hsn"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>HSN Code</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="stock"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Stock</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex w-full gap-2">
             <FormField
               control={form.control}
               name="tax"
@@ -409,7 +522,7 @@ export default function ProductAddBasicDetails({
             />
             <FormField
               control={form.control}
-              name="brand"
+              name="video"
               render={({ field }) => (
                 <FormItem className="">
                   <FormLabel>Video (Optional)</FormLabel>{" "}

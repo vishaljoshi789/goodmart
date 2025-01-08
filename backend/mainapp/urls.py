@@ -32,5 +32,6 @@ urlpatterns = [
     path('redeemCoupon/', views.redeemCoupon),
     path('getWallet/', views.getWallet),
     path('createWallet/', views.createWallet),
-    path('verifyPasscode/', views.verifyWalletPasscode)
+    path('verifyPasscode/', views.verifyWalletPasscode),
+    path('getShops/', views.getShops),
 ]

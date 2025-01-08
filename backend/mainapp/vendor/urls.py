@@ -25,4 +25,5 @@ urlpatterns = [
     path('getVendorOrders/', views.getVendorOrders),
     path('getOrderDetails/<int:order_id>/', views.getOrderDetials),
     path('updateOrderStatus/<int:order_id>/', views.updateOrderStatus),
+    path('addProductBrand/', views.addProductBrand),
 ]

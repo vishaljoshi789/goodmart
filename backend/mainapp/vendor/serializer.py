@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from ..models import Product, Product_Image, Product_Specifications, Vendor_Detail, Address, Product_Variant, ShippingCharges, Order, OrderItem, SubOrder
+from ..models import Product, Product_Image, Product_Specifications, Vendor_Detail, Address, Product_Variant, ShippingCharges, Order, OrderItem, SubOrder, Product_Brand
+
+
+class ProductBrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product_Brand
+        fields = '__all__'
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,7 +44,7 @@ class ProductEditSerializer(serializers.ModelSerializer):
     variants = ProductVariantSerializer(many=True)
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'variants', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'tags', 'category', 'brand', 'image', 'video', 'barcode_number', 'item_type', 'tax', 'mrp', 'offer_price']
+        fields = ['id', 'name', 'description', 'variants', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'tags', 'category', 'brand', 'image', 'video', 'barcode_number', 'item_type', 'tax', 'mrp', 'offer_price', 'stock', 'hsn']
 
 
 class AddressSerializer(serializers.ModelSerializer):

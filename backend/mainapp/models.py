@@ -160,6 +160,7 @@ class Vendor_Detail(models.Model):
 class Product_Brand(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     image = models.ImageField(upload_to='brand_images/', blank=True, null=True)
     featured = models.BooleanField(default=False)
     added_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -189,9 +190,8 @@ class Product(models.Model):
     inventory_fee = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, default=10)
     offer_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     mrp = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
-    
+    stock = models.IntegerField(blank=True, null=True)
     # point = models.IntegerField(default=0, blank=True, null=True)
-    # stock = models.IntegerField(blank=True, null=True)
     # position = models.IntegerField(blank=True, null=True)
     # unit = models.CharField(max_length=100, blank=True, null=True)
     # rating = models.IntegerField(blank=True, null=True)

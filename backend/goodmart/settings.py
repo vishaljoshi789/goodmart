@@ -22,7 +22,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'goodmart.in', 'www.goodmart.in', 'api.goodmart.in', '103.186.184.54']
 
 # FRONTEND_URL = "http://192.168.1.5:3000"
-FRONTEND_URL = "http://127.0.0.1:3000"
+FRONTEND_URL = "https://goodmart.in" if LOGGING else "http://localhost:3000"
 # Application definition
 
 INSTALLED_APPS = [
