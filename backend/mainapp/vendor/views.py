@@ -219,7 +219,7 @@ def updateVendorDetails(request):
         if serializer.is_valid():
             serializer.save()
             if not details.qr:
-                shop_url = f"{settings.FRONTEND_URL}/shop/{details.id}"
+                shop_url = f"{settings.FRONTEND_URL}/shop?id={details.id}"
                 qr = qrcode.QRCode(
                     version=1,
                     error_correction=qrcode.constants.ERROR_CORRECT_L,
