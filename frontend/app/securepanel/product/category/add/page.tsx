@@ -158,7 +158,7 @@ export default function CategoryAdd() {
                   <select {...field} className="w-full">
                     <option value="null">None</option>
                     {category.map((cat, index) => (
-                      <option key={index} value={cat.name}>
+                      <option key={index} value={cat.id}>
                         {cat.name}
                       </option>
                     ))}
