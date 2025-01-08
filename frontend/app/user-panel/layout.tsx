@@ -5,6 +5,7 @@ import HamburgerMenu from "@/components/user/MenuBar";
 import AuthRoute from "@/components/user/AuthRoute";
 import { cn } from "@/lib/utils";
 import BottomMenu from "@/components/web/BottomMenu";
+import Navbar from "@/components/user/Navbar";
 
 const fontInter = Inter({
   subsets: ["latin"],
@@ -24,9 +25,13 @@ export default function UserPanelLayout({
 }>) {
   return (
     <AuthRoute>
-      <div className={cn("flex", fontInter.className)}>
-        <HamburgerMenu />
-        {children}
+      <div className={cn(fontInter.className)}>
+        <Navbar />
+        <div className="flex">
+          <HamburgerMenu />
+          {children}
+        </div>
+
         <BottomMenu />
       </div>
     </AuthRoute>

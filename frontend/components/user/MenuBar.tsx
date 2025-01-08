@@ -17,7 +17,7 @@ const HamburgerMenu = () => {
     userInfo && userInfo.user_type == "Customer"
       ? [
           { Profile: "/user-panel/", icon: <CgProfile /> },
-          { Shop: "/", icon: <CiShop /> },
+          { Shop: "/user-panel/shop/", icon: <CiShop /> },
           { Coupon: "/user-panel/coupon/", icon: <TbTicket /> },
           { Wallet: "/user-panel/wallet/", icon: <BsWallet /> },
           { Orders: "/user-panel/orders/", icon: <BsBox2 /> },
@@ -54,7 +54,7 @@ const HamburgerMenu = () => {
   };
 
   return (
-    <div className=" bg-gray-800">
+    <div className="w-fit bg-gray-800">
       <button
         className={`absolute md:relative top-5 right-5 z-50 flex flex-col h-10 w-10 border-2 ${
           isOpen ? "border-white" : "border-gray-900"
@@ -79,7 +79,7 @@ const HamburgerMenu = () => {
       </button>
 
       <div
-        className={`absolute right-0 a-10 w-64 min-h-screen bg-white flex flex-col items-center justify-center transform ${
+        className={`absolute top-0 right-0 a-10 w-64 min-h-screen bg-white flex flex-col items-center justify-center transform ${
           isOpen ? "translate-x-0 block" : "translate-x-full hidden md:flex"
         } transition-transform duration-300 ease-in-out md:translate-x-0 md:relative z-20`}
       >
@@ -102,11 +102,11 @@ const HamburgerMenu = () => {
                 </Link>
               ))}
             </div>
-          </div>
-          <div className="p-5 mb-16">
-            <Button onClick={logout} className="bg-red-500 hover:bg-red-600">
-              Logout
-            </Button>
+            <div className="p-5 mb-16">
+              <Button onClick={logout} className="bg-red-500 hover:bg-red-600">
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </div>

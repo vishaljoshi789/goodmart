@@ -32,7 +32,7 @@ export default function BottomMenu() {
           } rounded-md hover:bg-gray-200 w-24`}
         >
           <Link
-            href={"/shop"}
+            href={"/user-panel/shop"}
             className="flex justify-center items-center flex-col"
           >
             <GrLocation className="text-xl" />

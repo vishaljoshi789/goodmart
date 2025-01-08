@@ -78,7 +78,7 @@ const KycPage: NextPage = () => {
               </td>
 
               <td className="py-2 px-4 border-b flex justify-evenly">
-                <Link href={`/securepanel/kyc/view?id=${item.id}`}>
+                <Link href={`/securepanel/KYC/view?id=${item.id}`}>
                   <button className="px-4 py-2 bg-green-500 text-white">
                     <FaRegEye className="text-xl" />
                   </button>
