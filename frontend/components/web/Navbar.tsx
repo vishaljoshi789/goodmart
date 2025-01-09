@@ -163,7 +163,7 @@ export default function Navbar() {
               sizes="100vw"
               width={0}
               height={0}
-              className="bg-white rounded-full md:w-16 md:h-16 w-10 h-10"
+              className="bg-white md:w-16 md:h-16 w-10 h-10"
             />
           </Link>
         </div>

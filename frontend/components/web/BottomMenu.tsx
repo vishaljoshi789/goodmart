@@ -28,7 +28,9 @@ export default function BottomMenu() {
         </li>
         <li
           className={`border-2 ${
-            path == "/shop" ? `border-gray-500` : `border-transparent`
+            path == "/shop" || path == "/user-panel/shop"
+              ? `border-gray-500`
+              : `border-transparent`
           } rounded-md hover:bg-gray-200 w-24`}
         >
           <Link

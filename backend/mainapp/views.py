@@ -344,7 +344,7 @@ def getBillingDetails(request):
             temp['total'] = total
             temp['id'] = i.id
             temp['firm'] = i.firm
-            temp['shipping'] = getShippingCharges(request.GET.get('address_id'), i.id) if total < i.free_shipping_above else 0
+            temp['shipping'] = getShippingCharges(request.GET.get('address_id'), i.id) if i.free_shipping_above and total < i.free_shipping_above else 0
             temp['cash_on_delivery'] = i.cash_on_delivery
             temp['payment_mode'] = ""
             billing['vendor'].append(temp)
