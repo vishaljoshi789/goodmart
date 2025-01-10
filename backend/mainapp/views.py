@@ -178,9 +178,10 @@ def getSearchProducts(request, search, category):
         byDesc = Product.objects.filter(description__contains=search)
         for i in byDesc:
             products.add(i)
-        byCategory = Product.objects.filter(category=category)
-        for i in byCategory:
-            products.add(i)
+        if category != "null":
+            byCategory = Product.objects.filter(category=category)
+            for i in byCategory:
+                products.add(i)
         serializer = ProductDetailedSerializer(products, many=True)
         return Response(serializer.data, status=200)
     else:
