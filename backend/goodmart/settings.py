@@ -202,33 +202,44 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'uploads'
 
-if(LOGGING):
+if LOGGING:
+    from logging.handlers import TimedRotatingFileHandler
+
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
         'formatters': {
             'verbose': {
-                'format': '{levelname} {asctime} {module} {message}',
+                'format': '{asctime} | {levelname} | {name} | {message}',
                 'style': '{',
             },
             'simple': {
-                'format': '{levelname} {message}',
+                'format': '{levelname} | {message}',
                 'style': '{',
             },
         },
         'handlers': {
+            # Log file handler with rotation
             'file': {
-                'level': 'DEBUG',
-                'class': 'logging.FileHandler',
-                'filename': '/home/goodmart/logs/django.log',
+                'level': 'INFO',  # Minimum level of logs to capture
+                'class': 'logging.handlers.TimedRotatingFileHandler',
+                'filename': '/path/to/your/logs/django.log',  # Path to log file
+                'when': 'D',  # Rotate logs daily
+                'interval': 1,  # Rotate every 1 day
+                'backupCount': 3,  # Keep logs for the last 3 days
                 'formatter': 'verbose',
             },
         },
         'loggers': {
             'django': {
                 'handlers': ['file'],
-                'level': 'DEBUG',
-                'propagate': True,
+                'level': 'INFO',  # Set logging level (e.g., DEBUG, INFO, WARNING)
+                'propagate': False,
+            },
+            'django.db.backends': {
+                'handlers': ['file'],
+                'level': 'WARNING',  # Exclude SQL queries by raising the logging level
+                'propagate': False,
             },
         },
     }
