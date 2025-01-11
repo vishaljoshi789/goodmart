@@ -10,6 +10,7 @@ import { FaShippingFast } from "react-icons/fa";
 import { MdBusiness } from "react-icons/md";
 import { TbTicket } from "react-icons/tb";
 import { Button } from "../ui/button";
+import { Users } from "lucide-react";
 const HamburgerMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   let { userInfo, logout } = useContext<GMContextType>(GMContext);
@@ -21,6 +22,7 @@ const HamburgerMenu = () => {
           { Coupon: "/user-panel/coupon/", icon: <TbTicket /> },
           { Wallet: "/user-panel/wallet/", icon: <BsWallet /> },
           { Orders: "/user-panel/orders/", icon: <BsBox2 /> },
+          { Referral: "/user-panel/referral/", icon: <Users /> },
         ]
       : userInfo && userInfo.user_type == "Product Vendor"
       ? [
@@ -38,6 +40,7 @@ const HamburgerMenu = () => {
           },
           { Wallet: "/user-panel/wallet/", icon: <BsWallet /> },
           { Orders: "/user-panel/orders/", icon: <BsBox2 /> },
+          { Referral: "/user-panel/referral/", icon: <Users /> },
         ]
       : [];
   const [isMounted, setIsMounted] = useState(false);

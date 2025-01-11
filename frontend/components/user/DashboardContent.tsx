@@ -1,4 +1,5 @@
 import { GMContext, GMContextType } from "@/app/(utils)/context/GMContext";
+import { Users } from "lucide-react";
 import Link from "next/link";
 import { useContext } from "react";
 import { BsBox, BsBox2, BsShop, BsWallet } from "react-icons/bs";
@@ -18,6 +19,7 @@ export default function DashboardContent() {
           { Coupon: "/user-panel/coupon/", icon: <TbTicket /> },
           { Wallet: "/user-panel/wallet/", icon: <BsWallet /> },
           { Orders: "/user-panel/orders/", icon: <BsBox2 /> },
+          { Referral: "/user-panel/referral/", icon: <Users /> },
         ]
       : userInfo && userInfo.user_type == "Product Vendor"
       ? [
@@ -35,6 +37,7 @@ export default function DashboardContent() {
           },
           { Wallet: "/user-panel/wallet/", icon: <BsWallet /> },
           { Orders: "/user-panel/orders/", icon: <BsBox2 /> },
+          { Referral: "/user-panel/referral/", icon: <Users /> },
         ]
       : [];
   return (

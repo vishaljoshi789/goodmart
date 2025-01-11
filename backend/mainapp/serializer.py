@@ -25,11 +25,17 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return instance
     
 
+class ReferralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'user_id', 'name']
+
 
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'user_id', 'name', 'phone_no', 'date_joined', "last_login", 'email_verified', 'phone_verified', 'user_type', 'status']
+        fields = ['id', 'email', 'user_id', 'name', 'phone_no', 'date_joined', "last_login", 'email_verified', 'phone_verified', 'user_type', 'status', 'referral']
+
 
 class ProductBrandSerializer(serializers.ModelSerializer):
     class Meta:

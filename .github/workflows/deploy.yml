@@ -52,6 +52,8 @@ jobs:
             source venv/bin/activate  # Activate virtual environment
             pip install --upgrade pip  # Upgrade pip
             pip install -r requirements.txt  # Install or update backend dependencies
+	    python3 manage.py makemigrations
+	    python3 manage.py migrate
             deactivate  # Deactivate the virtual environment
 
             if ! command -v node &> /dev/null; then

@@ -34,4 +34,5 @@ urlpatterns = [
     path('createWallet/', views.createWallet),
     path('verifyPasscode/', views.verifyWalletPasscode),
     path('getShops/', views.getShops),
+    path('addReferral/', views.addReferral),
 ]

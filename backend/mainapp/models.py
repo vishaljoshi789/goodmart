@@ -22,6 +22,7 @@ class User(AbstractUser):
     email_verified = models.BooleanField(default=False)
     phone_verified = models.BooleanField(default=False)
     passcode = models.IntegerField(blank=True, null=True)
+    referral = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)
     # dob = models.DateField(blank=True, null=True)
     # gender = models.CharField(max_length=6, choices=(("Male", "Male"), ("Female", "Female")), blank=True, null=True)
     # mother = models.CharField(max_length=50, blank=True, null=True)

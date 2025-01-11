@@ -516,3 +516,16 @@ def getShops(request):
         serializer = VendorDetailCartSerializer(shops, many=True)
         return Response(serializer.data, status=200)
     return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def addReferral(request):
+    if request.method == "POST":
+        user = request.user
+        try:
+            user.referral = User.objects.get(user_id=request.data["referral"])
+            user.save()
+            return Response(status=200)
+        except Exception as e:
+            print(e)
+            return Response(status=400)
