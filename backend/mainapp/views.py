@@ -512,7 +512,10 @@ def verifyWalletPasscode(request):
 @permission_classes([IsAuthenticated])
 def getShops(request):
     if request.method == "GET":
-        shops = Vendor_Detail.objects.all().filter(status="Approved").filter(admin_visiblity=True).filter(vendor_visiblity=True).filter(address__pin=request.user.address.all()[0].pin)
+        if request.GET.get('pin')!="null":
+            shops = Vendor_Detail.objects.all().filter(status="Approved").filter(admin_visiblity=True).filter(vendor_visiblity=True).filter(address__pin=request.GET.get('pin'))
+        else:
+            shops = Vendor_Detail.objects.all().filter(status="Approved").filter(admin_visiblity=True).filter(vendor_visiblity=True).filter(address__pin=request.user.address.all()[0].pin)
         serializer = VendorDetailCartSerializer(shops, many=True)
         return Response(serializer.data, status=200)
     return Response(status=400)
@@ -534,7 +537,7 @@ def addReferral(request):
 @permission_classes([IsAuthenticated])
 def getMyReferral(request):
     if request.method == "GET":
-        if request.GET.get('id'):
+        if request.GET.get('id')!="null":
             user = User.objects.get(user_id=request.GET.get('id'))
             referral = user.referral_user.all()
             serializer = ReferralSerializer(referral, many=True)
