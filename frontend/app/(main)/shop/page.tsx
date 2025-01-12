@@ -78,7 +78,7 @@ export default function Shop() {
               alt={shop?.firm}
               width={720}
               height={720}
-              className="w-full h-full md:w-36 md:h-36 object-cover"
+              className="w-full h-full md:w-36 md:h-36 object-contain"
             />
             <div className="w-full text-left md:ml-20 flex flex-col md:gap-5">
               <h2 className="font-bold text-blue-800 text-2xl">{shop?.firm}</h2>
