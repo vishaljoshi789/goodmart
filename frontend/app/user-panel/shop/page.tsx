@@ -28,7 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CgAdd } from "react-icons/cg";
 import { GrAdd } from "react-icons/gr";
 
 export default function Shop() {

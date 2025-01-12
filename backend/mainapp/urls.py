@@ -12,6 +12,7 @@ urlpatterns = [
     path('getSearchProducts/<str:search>/<str:category>/', views.getSearchProducts),
     path('getProduct/<int:id>/', views.getProduct),
     path('addToCart/', views.addToCart),
+    path('addMultipleToCart/', views.addMultipleToCart),
     path('getCart/', views.getCart),
     path('removeFromCart/', views.remove_cart),
     path('removeCart/', views.remove_all_cart),
@@ -34,6 +35,8 @@ urlpatterns = [
     path('createWallet/', views.createWallet),
     path('verifyPasscode/', views.verifyWalletPasscode),
     path('getShops/', views.getShops),
+    path('getShop/<int:id>/', views.getShop),
+    path('getShopProducts/<int:id>/', views.getShopProducts),
     path('addReferral/', views.addReferral),
     path('getMyReferral/', views.getMyReferral),
 ]

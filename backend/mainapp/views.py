@@ -220,7 +220,30 @@ def addToCart(request):
             return Response(serializer.data, status=200)
     return Response(serializer.errors, status=400)
 
-    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def addMultipleToCart(request):
+    if request.method == 'POST':
+        items = request.data["cart"]
+        user = request.user
+        for i in items:
+            product = Product.objects.get(id=i["id"])
+            if Cart.objects.filter(user=user, product=product).exists():
+                # cart = Cart.objects.get(user=user, product=product, variant=request.data["variant"]) if request.data["variant"] else Cart.objects.get(user=user, product=product, variant=None)
+                cart = Cart.objects.get(user=user, product=product, variant=None)
+                cart.quantity = cart.quantity+i["quantity"]
+                cart.save()
+                serializer = CartSerializer(cart)
+            else:
+                # if request.data["variant"]:
+                #     variant = Product_Variant.objects.get(id=request.data["variant"])
+                # cart = Cart.objects.create(user = user, product=product, quantity=i["quantity"], variant=variant) if request.data["variant"] else Cart.objects.create(user = user, product=product, quantity=i["quantity"])
+                cart = Cart.objects.create(user = user, product=product, quantity=i["quantity"])
+                cart.save()
+                serializer = CartSerializer(cart)
+        return Response(serializer.data, status=200)
+    return Response(serializer.errors, status=400)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getCart(request):
@@ -517,6 +540,22 @@ def getShops(request):
         else:
             shops = Vendor_Detail.objects.all().filter(status="Approved").filter(admin_visiblity=True).filter(vendor_visiblity=True).filter(address__pin=request.user.address.all()[0].pin)
         serializer = VendorDetailCartSerializer(shops, many=True)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+def getShop(request, id):
+    if request.method == "GET":
+        shop = Vendor_Detail.objects.get(id=id)
+        serializer = VendorDetailCartSerializer(shop)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+def getShopProducts(request, id):
+    if request.method == "GET":
+        products = Product.objects.filter(company_id=id)
+        serializer = ProductDetailedSerializer(products, many=True)
         return Response(serializer.data, status=200)
     return Response(status=400)
 
