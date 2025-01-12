@@ -101,10 +101,12 @@ export default function Shop() {
                   key={index}
                   className="bg-white shadow-md p-5 hover:scale-105 ease-in-out transition-all"
                 >
-                  <img
+                  <Image
                     src={baseURL + product.image}
                     alt={product.name}
-                    className="w-full h-40 object-cover"
+                    width={720}
+                    height={720}
+                    className="w-full h-40 object-contain"
                   />
                   <h3 className="font-bold">{product.name}</h3>
                   <p className="text-sm text-gray-500">{product.description}</p>
