@@ -89,7 +89,7 @@ export default function Shop() {
                 ))}
               </SelectContent>
             </Select>
-            <Dialog>
+            {/* <Dialog>
               <DialogTrigger asChild>
                 <Button className="rounded-full bg-green-500 p-3">
                   <GrAdd />
@@ -132,7 +132,7 @@ export default function Shop() {
                   </DialogClose>
                 </form>
               </DialogContent>
-            </Dialog>
+            </Dialog> */}
           </div>
           {shops.map((shop: any) => (
             <div
