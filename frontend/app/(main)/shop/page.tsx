@@ -2,8 +2,17 @@
 import { GMContext } from "@/app/(utils)/context/GMContext";
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useEffect } from "react";
 import { BiCartAdd } from "react-icons/bi";
@@ -97,46 +106,79 @@ export default function Shop() {
             <h2 className="font-bold text-lg">Products</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {products.map((product: any, index: number) => (
-                <div
-                  key={index}
-                  className="bg-white shadow-md p-5 hover:scale-105 ease-in-out transition-all"
+                <Card
+                  key={product.id}
+                  className="flex md:flex-col rounded-sm md:rounded-md shadow-lg hover:shadow-sm transition-all ease-in-out hover:scale-105"
                 >
-                  <Image
-                    src={baseURL + product.image}
-                    alt={product.name}
-                    width={720}
-                    height={720}
-                    className="w-full h-40 object-contain"
-                  />
-                  <h3 className="font-bold">{product.name}</h3>
-                  <p className="text-sm text-gray-500">{product.description}</p>
-                  <p className="text-sm text-red-500">
-                    Price: {product.offer_price}
-                  </p>
-                  <div className="flex bg-gray-200 p-2 items-center justify-evenly">
-                    <Button
-                      className="bg-red-500 hover:bg-red-700"
-                      onClick={() => {
-                        removeItemFromCart(product);
-                      }}
-                    >
-                      <FaMinus />
-                    </Button>
-                    <Input
-                      className="w-16 border-black bg-white"
-                      value={
-                        cart.find((item: any) => item.id === product.id)
-                          ?.quantity || 0
-                      }
-                    />
-                    <Button
-                      className="bg-blue-500 hover:bg-blue-700"
-                      onClick={() => addItemToCart(product)}
-                    >
-                      <FaPlus />
-                    </Button>
+                  <div className="w-1/3 bg-white md:w-full">
+                    {product.image ? (
+                      <Image
+                        src={`${baseURL}${product.image}`}
+                        alt={product.name}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <div className="flex w-full h-full bg-gray-200"></div>
+                    )}
                   </div>
-                </div>
+                  <div className="w-2/3 md:w-full">
+                    <CardHeader className="p-2 pb-0">
+                      <CardTitle>{product.name}</CardTitle>
+                      <CardDescription>
+                        {product.description.length > 30
+                          ? product.description.slice(0, 30)
+                          : product.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-2 pt-2">
+                      <div className="flex flex-col">
+                        <div className="flex gap-5 items-center">
+                          <s className="text-xs text-gray-700">
+                            ₹{product.mrp}
+                          </s>
+                          <b>₹{product.offer_price}</b>
+                        </div>
+
+                        <span className="text-red-500 text-sm whitespace-nowrap">
+                          -
+                          {`(${(
+                            ((product.mrp - product.offer_price) * 100) /
+                            product.mrp
+                          ).toFixed(2)}%)`}
+                        </span>
+                      </div>
+                    </CardContent>
+                    <CardFooter className="flex flex-col">
+                      <p className="text-gray-500">{product.category}</p>
+                    </CardFooter>
+                    <div className="flex bg-gray-200 items-center justify-evenly">
+                      <Button
+                        className="bg-red-500 hover:bg-red-700"
+                        onClick={() => {
+                          removeItemFromCart(product);
+                        }}
+                      >
+                        <FaMinus />
+                      </Button>
+                      <Input
+                        className="w-16 border-black bg-white"
+                        value={
+                          cart.find((item: any) => item.id === product.id)
+                            ?.quantity || 0
+                        }
+                      />
+                      <Button
+                        className="bg-blue-500 hover:bg-blue-700"
+                        onClick={() => addItemToCart(product)}
+                      >
+                        <FaPlus />
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
               ))}
             </div>
           </div>
