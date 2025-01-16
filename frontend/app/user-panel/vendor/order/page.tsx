@@ -54,10 +54,13 @@ export default function Orders() {
               </p>
               <p className="text-sm"> Phone: {`${order.address?.phone}`}</p>
             </div>
-            <div>
+            <div className="flex md:flex-col gap-5 items-center">
               <Link href={`order/view?id=${order.id}`}>
                 <Button>View Order</Button>
               </Link>
+              <p className="text-blue-500 font-bold text-lg">
+                Status: {order.status}
+              </p>
             </div>
           </div>
         </div>
