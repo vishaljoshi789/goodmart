@@ -13,7 +13,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import Link from "next/link";
 import { BsFillCartPlusFill } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -101,8 +100,14 @@ export default function ProductsPage() {
                     <Button
                       className="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
                       onClick={(e) => {
+                        console.log("hello");
                         e.stopPropagation(); // Prevent event propagation to Link
                         addToCart(product.id);
+                        const button = e.currentTarget as HTMLButtonElement; // Use currentTarget instead of target
+                        button.innerHTML = "Added";
+                        button.style.background = "none";
+                        button.style.color = "green";
+                        button.disabled = true;
                       }}
                     >
                       <BsFillCartPlusFill />
