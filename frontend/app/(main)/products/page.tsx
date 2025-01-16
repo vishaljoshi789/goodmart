@@ -14,6 +14,9 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
+import { BsFillCartPlusFill } from "react-icons/bs";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function ProductsPage() {
   let path = useSearchParams();
@@ -22,6 +25,19 @@ export default function ProductsPage() {
   let [products, setProducts] = useState([]);
   let { baseURL } = useContext(GMContext);
   let api = useAxios();
+  let addToCart = async (id: any, variant = null, quantity = 1) => {
+    let response = await api.post("/addToCart/", {
+      id: id,
+      variant: variant,
+      quantity: quantity,
+    });
+    if (response.status == 200) {
+      toast.success("Product Added to Cart");
+    } else {
+      toast.error("Something Went Wrong");
+    }
+  };
+
   let getProucts = async () => {
     let res = await fetch(`${baseURL}/getSearchProducts/${q}/${category}`);
     let data = await res.json();
@@ -68,7 +84,9 @@ export default function ProductsPage() {
                       <div className="flex gap-3 items-center">
                         <s className="text-xs text-gray-700">₹{product.mrp}</s>
                         <b>₹{product.offer_price}</b>
-                        <span className="text-red-500 text-sm whitespace-nowrap">
+                      </div>
+                      <div>
+                        <span className="text-red-500 text-sm whitespace-nowrap font-bold">
                           -
                           {`(${(
                             ((product.mrp - product.offer_price) * 100) /
@@ -77,8 +95,17 @@ export default function ProductsPage() {
                         </span>
                       </div>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="flex justify-evenly items-center">
                       <p>{product.category}</p>
+                      <Button
+                        className="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent event propagation to Link
+                          addToCart(product.id);
+                        }}
+                      >
+                        <BsFillCartPlusFill />
+                      </Button>
                     </CardFooter>
                   </div>
                 </Card>
