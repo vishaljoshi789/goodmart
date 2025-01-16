@@ -26,6 +26,7 @@ export default function DashboardContent() {
           { Profile: "/user-panel/", icon: <CgProfile /> },
           { Products: "/user-panel/vendor/products/", icon: <BsBox /> },
           { Shop: "/", icon: <CiShop /> },
+          { "Customer Orders": "/user-panel/vendor/order/", icon: <BsBox2 /> },
           { Coupon: "/user-panel/coupon/", icon: <TbTicket /> },
           {
             "Business Details": "/user-panel/vendor/business-details/",
@@ -36,7 +37,7 @@ export default function DashboardContent() {
             icon: <FaShippingFast />,
           },
           { Wallet: "/user-panel/wallet/", icon: <BsWallet /> },
-          { "Customer Orders": "/user-panel/vendor/order/", icon: <BsBox2 /> },
+
           { "My Orders": "/user-panel/orders/", icon: <BsBox2 /> },
           { Referral: "/user-panel/referral/", icon: <Users /> },
         ]
