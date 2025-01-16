@@ -39,7 +39,8 @@ const HamburgerMenu = () => {
             icon: <FaShippingFast />,
           },
           { Wallet: "/user-panel/wallet/", icon: <BsWallet /> },
-          { Orders: "/user-panel/orders/", icon: <BsBox2 /> },
+          { "Customer Orders": "/user-panel/vendor/order/", icon: <BsBox2 /> },
+          { "My Orders": "/user-panel/orders/", icon: <BsBox2 /> },
           { Referral: "/user-panel/referral/", icon: <Users /> },
         ]
       : [];
