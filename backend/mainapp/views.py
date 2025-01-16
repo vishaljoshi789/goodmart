@@ -207,14 +207,14 @@ def addToCart(request):
         user = request.user
         if Cart.objects.filter(user=user, product=product).exists():
             cart = Cart.objects.get(user=user, product=product, variant=request.data["variant"]) if request.data["variant"] else Cart.objects.get(user=user, product=product, variant=None)
-            cart.quantity = cart.quantity+1
+            cart.quantity = cart.quantity+request.data["quantity"]
             cart.save()
             serializer = CartSerializer(cart)
             return Response(serializer.data, status=200)
         else:
             if request.data["variant"]:
                 variant = Product_Variant.objects.get(id=request.data["variant"])
-            cart = Cart.objects.create(user = user, product=product, quantity=1, variant=variant) if request.data["variant"] else Cart.objects.create(user = user, product=product, quantity=1)
+            cart = Cart.objects.create(user = user, product=product, quantity=request.data['quantity'], variant=variant) if request.data["variant"] else Cart.objects.create(user = user, product=product, quantity=request.data['quantity'])
             cart.save()
             serializer = CartSerializer(cart)
             return Response(serializer.data, status=200)

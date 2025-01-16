@@ -15,11 +15,12 @@ import { type CarouselApi } from "@/components/ui/carousel";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { ScrollBar } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
-import { FaShare } from "react-icons/fa";
+import { FaMinus, FaPlus, FaShare } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { BsFillCartPlusFill } from "react-icons/bs";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
 
 export default function Product() {
   let id = useSearchParams().get("id");
@@ -27,6 +28,7 @@ export default function Product() {
   const [api, setApi] = useState<CarouselApi>();
   let axios = useAxios();
   let { baseURL } = useContext(GMContext);
+  let [cartQuantity, setCartQuantity] = useState(1);
   let [product, setProduct] = useState<any>({});
   let [activeImage, setActiveImage] = useState(0);
 
@@ -53,12 +55,24 @@ export default function Product() {
     let response = await axios.post("/addToCart/", {
       id: id,
       variant: variant,
+      quantity: cartQuantity,
     });
     if (response.status == 200) {
       toast.success("Product Added to Cart");
     } else {
       toast.error("Something Went Wrong");
     }
+  };
+
+  const addItemToCart = () => {
+    setCartQuantity(cartQuantity + 1);
+  };
+
+  const removeItemFromCart = () => {
+    if (cartQuantity == 1) {
+      return;
+    }
+    setCartQuantity(cartQuantity - 1);
   };
 
   let handleShare = async () => {
@@ -104,6 +118,22 @@ export default function Product() {
                     }}
                   >
                     <CarouselContent>
+                      {product.image && (
+                        <CarouselItem>
+                          <Card>
+                            <CardContent className="flex items-center justify-center p-5 aspect-square">
+                              <Image
+                                alt={product.name}
+                                height={0}
+                                width={0}
+                                sizes="100vw"
+                                className="w-full h-full object-contain object-center"
+                                src={`${baseURL}${product["image"]}`}
+                              />
+                            </CardContent>
+                          </Card>
+                        </CarouselItem>
+                      )}
                       {product.images &&
                         product.images.map((image: any, index: any) => (
                           <CarouselItem key={index}>
@@ -138,16 +168,30 @@ export default function Product() {
                   </Carousel>
                   <ScrollArea className="bg-white">
                     <div className="flex items-center justify-evenly gap-2 p-3">
+                      {product.image && (
+                        <Image
+                          onClick={() => api?.scrollTo(0)}
+                          alt="product-img"
+                          height={0}
+                          width={0}
+                          sizes="100vw"
+                          className={`w-16 h-16 object-contain object-center rounded ${
+                            0 == activeImage && `border-black border-2`
+                          } `}
+                          src={`${baseURL}${product["image"]}`}
+                        />
+                      )}
                       {product.images &&
                         product.images.map((item: any, index: number) => (
                           <Image
-                            onClick={() => api?.scrollTo(index)}
+                            onClick={() => api?.scrollTo(index + 1)}
                             alt="product-img"
                             height={0}
                             width={0}
                             sizes="100vw"
                             className={`w-16 h-16 object-contain object-center rounded ${
-                              index == activeImage && `border-black border-2`
+                              index + 1 == activeImage &&
+                              `border-black border-2`
                             } `}
                             src={`${baseURL}${item["image"]}`}
                             key={item.id}
@@ -230,7 +274,7 @@ export default function Product() {
                     </Table>
                   </div>
                   <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5"></div>
-                  <div className="flex gap-5">
+                  <div className="flex gap-5 flex-col">
                     {variant && (
                       <span className="title-font font-medium text-2xl text-gray-900">
                         (
@@ -261,24 +305,51 @@ export default function Product() {
                           : `₹${product.offer_price}`}
                       </span>
                     </div>
-                    <Button
-                      className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
-                      onClick={addToCart}
-                    >
-                      <BsFillCartPlusFill />
-                    </Button>
-                    <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
-                      <svg
-                        fill="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        className="w-5 h-5"
-                        viewBox="0 0 24 24"
+
+                    <div className="flex items-center justify-evenly w-fit gap-5">
+                      <Button
+                        className="bg-red-500 hover:bg-red-700"
+                        onClick={() => {
+                          removeItemFromCart();
+                        }}
                       >
-                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
-                      </svg>
-                    </button>
+                        <FaMinus />
+                      </Button>
+                      <Input
+                        className="w-16 border-black bg-white"
+                        value={cartQuantity}
+                        type="number"
+                        onChange={(e) =>
+                          setCartQuantity(parseInt(e.target.value))
+                        }
+                      />
+                      <Button
+                        className="bg-blue-500 hover:bg-blue-700"
+                        onClick={() => addItemToCart()}
+                      >
+                        <FaPlus />
+                      </Button>
+                      <div className="ml-5 flex gap-2 items-ceter">
+                        <Button
+                          className="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                          onClick={addToCart}
+                        >
+                          <BsFillCartPlusFill />
+                        </Button>
+                        <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500">
+                          <svg
+                            fill="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            className="w-5 h-5"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                   <div>
                     {variant && (
