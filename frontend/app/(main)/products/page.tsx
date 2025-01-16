@@ -1,7 +1,7 @@
 "use client";
 import { GMContext } from "@/app/(utils)/context/GMContext";
 import useAxios from "@/app/(utils)/hooks/useAxios";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useContext, useEffect, useState } from "react";
 
 import {
@@ -21,6 +21,7 @@ import { toast } from "sonner";
 export default function ProductsPage() {
   let path = useSearchParams();
   let q = path.get("q");
+  let router = useRouter();
   let category = path.get("category");
   let [products, setProducts] = useState([]);
   let { baseURL } = useContext(GMContext);
@@ -56,60 +57,59 @@ export default function ProductsPage() {
         {products && (
           <div className="flex flex-wrap justify-evenly gap-2">
             {products.map((product: any) => (
-              <Link href={`/product?id=${product.id}`} key={product.id}>
-                <Card
-                  key={product.id}
-                  className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md"
-                >
-                  <div className="md:w-full h-full flex items-center bg-gray-100">
-                    <Image
-                      src={`${baseURL}${product.image}`}
-                      alt={product.name}
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      className="h-36 w-36 md:w-full md:h-48"
-                    />
-                  </div>
-                  <div className="md:w-full h-full">
-                    <CardHeader className="p-2 pb-0">
-                      <CardTitle>{product.name}</CardTitle>
-                      <CardDescription>
-                        {product.description.length > 30
-                          ? product.description.slice(0, 30)
-                          : product.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-2 pt-2">
-                      <div className="flex gap-3 items-center">
-                        <s className="text-xs text-gray-700">₹{product.mrp}</s>
-                        <b>₹{product.offer_price}</b>
-                      </div>
-                      <div>
-                        <span className="text-red-500 text-sm whitespace-nowrap font-bold">
-                          -
-                          {`(${(
-                            ((product.mrp - product.offer_price) * 100) /
-                            product.mrp
-                          ).toFixed(2)}%)`}
-                        </span>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-evenly items-center">
-                      <p>{product.category}</p>
-                      <Button
-                        className="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent event propagation to Link
-                          addToCart(product.id);
-                        }}
-                      >
-                        <BsFillCartPlusFill />
-                      </Button>
-                    </CardFooter>
-                  </div>
-                </Card>
-              </Link>
+              <Card
+                key={product.id}
+                className="w-full md:w-56 flex md:flex-col items-center rounded-sm md:rounded-md"
+                onClick={() => router.push(`/product?id=${product.id}`)}
+              >
+                <div className="md:w-full h-full flex items-center">
+                  <Image
+                    src={`${baseURL}${product.image}`}
+                    alt={product.name}
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    className="h-36 w-36 md:w-full md:h-48"
+                  />
+                </div>
+                <div className="md:w-full h-full">
+                  <CardHeader className="p-2 pb-0">
+                    <CardTitle>{product.name}</CardTitle>
+                    <CardDescription>
+                      {product.description.length > 30
+                        ? product.description.slice(0, 30)
+                        : product.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-2 pt-2">
+                    <div className="flex gap-3 items-center">
+                      <s className="text-xs text-gray-700">₹{product.mrp}</s>
+                      <b>₹{product.offer_price}</b>
+                    </div>
+                    <div>
+                      <span className="text-red-500 text-sm whitespace-nowrap font-bold">
+                        -
+                        {`(${(
+                          ((product.mrp - product.offer_price) * 100) /
+                          product.mrp
+                        ).toFixed(2)}%)`}
+                      </span>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex justify-evenly items-center gap-5">
+                    <p>{product.category}</p>
+                    <Button
+                      className="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent event propagation to Link
+                        addToCart(product.id);
+                      }}
+                    >
+                      <BsFillCartPlusFill />
+                    </Button>
+                  </CardFooter>
+                </div>
+              </Card>
             ))}
           </div>
         )}
