@@ -110,7 +110,10 @@ export default function Shop() {
                   key={product.id}
                   className="flex md:flex-col rounded-sm md:rounded-md shadow-lg hover:shadow-sm transition-all ease-in-out hover:scale-105"
                 >
-                  <div className="w-1/3 bg-white md:w-full">
+                  <Link
+                    href={`/product?id=${product.id}`}
+                    className="w-1/3 bg-white md:w-full"
+                  >
                     {product.image ? (
                       <Image
                         src={`${baseURL}${product.image}`}
@@ -123,7 +126,7 @@ export default function Shop() {
                     ) : (
                       <div className="flex w-full h-full bg-gray-200"></div>
                     )}
-                  </div>
+                  </Link>
                   <div className="w-2/3 md:w-full">
                     <CardHeader className="p-2 pb-0">
                       <CardTitle>{product.name}</CardTitle>
