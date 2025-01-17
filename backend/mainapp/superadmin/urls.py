@@ -33,6 +33,9 @@ urlpatterns = [
     path('getSetting/', views.getSetting),
     path('updateSetting/', views.updateSetting),
     path('getOrders/', views.getOrders),
+    path('getOrderDetails/<int:order_id>/', views.getOrderDetials),
+    path('updateOrderStatus/<int:order_id>/', views.updateOrderStatus),
     path('getLevels/', views.getLevelPoints),
     path('updateLevels/', views.updateLevelPoints),
+
 ]

@@ -191,12 +191,12 @@ const AdminPage: NextPage = () => {
                 />
               </td>
               <td className="py-2 px-4 border-b flex justify-evenly">
-                <button
+                <Link
+                  href={`/securepanel/users/edit?id=${user.id}`}
                   className="px-4 py-2 bg-blue-500 text-white"
-                  onClick={() => handleEdit(user.id)}
                 >
                   <FaEdit className="text-xl" />
-                </button>
+                </Link>
                 <AlertDialog>
                   <AlertDialogTrigger className="px-4 py-2 bg-red-500 text-white">
                     <MdDeleteForever className="text-xl" />

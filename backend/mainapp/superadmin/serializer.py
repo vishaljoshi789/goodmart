@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail, Setting, Order, LevelPoints
+from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail, Setting, Order, LevelPoints, OrderItem, SubOrder, Product_Variant, Address
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -97,3 +97,34 @@ class LevelPointsSerializer(serializers.ModelSerializer):
     class Meta:
         model = LevelPoints
         fields = '__all__'
+
+class ProductVariantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product_Variant
+        fields = '__all__'
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = ProductDetailedSerializer()
+    variant = ProductVariantSerializer()
+    class Meta:
+        model = OrderItem
+        fields = '__all__'
+
+class OrderAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['address']  # Include only the address or other required fields
+
+class SubOrderWithOrderAddressSerializer(serializers.ModelSerializer):
+    address = AddressSerializer(source='order.address')
+    items = OrderItemSerializer(many=True)
+    added_on = serializers.DateTimeField(source='order.added_on')
+    class Meta:
+        model = SubOrder
+        fields = '__all__'  # Include all SubOrder fields or specify required fields
+        extra_fields = ['address', 'added_on']

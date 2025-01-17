@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Orders() {
@@ -82,7 +83,11 @@ export default function Orders() {
                 <TableCell>₹{parseInt(order.subtotal)}</TableCell>
                 <TableCell>₹{parseInt(order.shipping)}</TableCell>
                 <TableCell>
-                  <Button>View</Button>
+                  <Button>
+                    <Link href={`/securepanel/orders/view?id=${order.id}`}>
+                      View
+                    </Link>
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
