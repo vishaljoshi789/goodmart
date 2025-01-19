@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder, Coupon, Setting, Wallet
-from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, CouponSerializer, WalletSerializer, VendorDetailCartSerializer, ReferralSerializer
+from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, SubOrderItemSerializer, CouponSerializer, WalletSerializer, VendorDetailCartSerializer, ReferralSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -435,6 +435,15 @@ def getOrder(request, id):
     if request.method == 'GET':
         order = Order.objects.get(id=id)
         serializer = OrderSerializer(order)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getSubOrderWithOrder(request, id):
+    if request.method == 'GET':
+        sub_order = SubOrder.objects.get(id=id)
+        serializer = SubOrderItemSerializer(sub_order)
         return Response(serializer.data, status=200)
     return Response(status=400)
 

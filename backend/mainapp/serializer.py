@@ -67,15 +67,19 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         model = Product_Variant
         fields = '__all__'
 
-class VendorDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Vendor_Detail
-        fields = '__all__'
 
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = '__all__'
+
+class VendorDetailSerializer(serializers.ModelSerializer):
+    user = UserInfoSerializer()
+    address = AddressSerializer()
+    class Meta:
+        model = Vendor_Detail
+        fields = '__all__'
+
 
 class VendorDetailCartSerializer(serializers.ModelSerializer):
     address = AddressSerializer()
@@ -116,9 +120,17 @@ class OrderItemSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = '__all__'
 
+class OrderSerializerWithAddressAndUser(serializers.ModelSerializer):
+    address = AddressSerializer()
+    user = UserInfoSerializer()
+    class Meta:
+        model = Order
+        fields = '__all__'
+
 class SubOrderItemSerializer(serializers.ModelSerializer):
     vendor = VendorDetailSerializer()
     items = OrderItemSerializer(many=True)
+    order = OrderSerializerWithAddressAndUser()
     class Meta:
         model = SubOrder
         fields = '__all__'

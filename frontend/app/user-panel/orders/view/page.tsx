@@ -1,6 +1,7 @@
 "use client";
 import { GMContext } from "@/app/(utils)/context/GMContext";
 import useAxios from "@/app/(utils)/hooks/useAxios";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -54,7 +55,9 @@ const Orderdetail = () => {
 
   return (
     <div className="w-full mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Order Details</h1>
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold mb-6">Order Details</h1>
+      </div>
       {order.id && (
         <div key={order.id} className="border rounded-lg p-4 mb-4">
           <h2 className="text-xl font-semibold">Order ID: {order.id}</h2>
@@ -85,9 +88,16 @@ const Orderdetail = () => {
           </div>
           {order.sub_orders.map((suborder: any) => (
             <div key={suborder.id} className="mt-4 border-t pt-4">
-              <h3 className="text-lg font-medium">
-                Suborder ID: {suborder.id}
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium">
+                  Suborder ID: {suborder.id}
+                </h3>
+                <Button variant="secondary">
+                  <Link href={`/user-panel/orders/invoice?id=${suborder.id}`}>
+                    View Invoice
+                  </Link>
+                </Button>
+              </div>
               <p className="text-gray-600">
                 Assigned Vendor: {suborder.vendor.firm}
               </p>

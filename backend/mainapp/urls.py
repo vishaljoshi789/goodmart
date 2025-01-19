@@ -26,6 +26,7 @@ urlpatterns = [
     path('placeOrder/<int:id>/', views.placeOrder),
     path('getOrders/', views.getOrders),
     path('getOrder/<int:id>/', views.getOrder),
+    path('getSubOrder/<int:id>/', views.getSubOrderWithOrder),
     path('getFeaturedCategory/', views.getFearuredCategory),
     path('getParentCategory/', views.getParentCategory),
     path('getSubCategory/<int:id>/', views.getSubCategory),
