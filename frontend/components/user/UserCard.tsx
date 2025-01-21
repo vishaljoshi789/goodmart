@@ -18,7 +18,6 @@ type UserCardProps = {
   last_login: string;
   email_verified: boolean;
   phone_verified: boolean;
-  verifyMail: () => void;
 };
 
 const UserCard: React.FC<UserCardProps> = ({
@@ -31,7 +30,6 @@ const UserCard: React.FC<UserCardProps> = ({
   last_login,
   email_verified,
   phone_verified,
-  verifyMail,
 }) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-10 lg:w-1/4 flex flex-col gap-2">
@@ -64,9 +62,6 @@ const UserCard: React.FC<UserCardProps> = ({
               className="text-xs font-extrabold text-red-500 cursor-pointer w-fit flex gap-2 items-center"
             >
               <span>Not Verified</span>
-              <Button className="bg-green-500 p-1" onClick={verifyMail}>
-                Verify Now
-              </Button>
             </HoverCardContent>
           </HoverCard>
         )}

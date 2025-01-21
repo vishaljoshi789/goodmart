@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .UserManager import CustomUserManager
+from django.utils.timezone import now, timedelta
 # Create your models here.
 
 def user_directory_path(instance, filename):
@@ -29,11 +30,6 @@ class User(AbstractUser):
     # father = models.CharField(max_length=50, blank=True, null=True)
     # pan_certificate = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
     # aadhar_certificate = models.ImageField(upload_to=user_directory_path, blank=True, null=True) 
-    # bank_certificate = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
-    # bank_account = models.CharField(max_length=20, blank=True, null=True)
-    # bank = models.CharField(max_length=50, blank=True, null=True)
-    # ifsc = models.CharField(max_length=15, blank=True, null=True)
-    # account_holder = models.CharField(max_length=150, blank=True, null=True)
     # payment = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     # payment_mode = models.CharField(max_length=100, blank=True, null=True)
     # payment_detail = models.CharField(max_length=100, blank=True, null=True)
@@ -91,6 +87,24 @@ class User(AbstractUser):
     def __str__(self):
         return "{}".format(self.email)
     
+class OTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='otps')
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+    def is_valid(self):
+        return now() < self.created_at + timedelta(minutes=15)  # 10-minute validity
+    
+class User_Detail(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='user_detail')
+    photograph = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    dob = models.DateField(blank=True, null=True)
+    passbook_image = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    bank_account_number = models.CharField(max_length=20, blank=True, null=True)
+    bank = models.CharField(max_length=50, blank=True, null=True)
+    ifsc = models.CharField(max_length=15, blank=True, null=True)
+    account_holder = models.CharField(max_length=150, blank=True, null=True)
+
     
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='address')

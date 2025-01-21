@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder, Coupon, Setting, Wallet
+from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder, Coupon, Setting, Wallet, OTP
 from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, SubOrderItemSerializer, CouponSerializer, WalletSerializer, VendorDetailCartSerializer, ReferralSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -20,6 +20,13 @@ from datetime import datetime, timedelta
 
 def index(request):
     return HttpResponse("hello World")
+
+import random
+
+def generate_otp(user):
+    otp_code = str(random.randint(100000, 999999))
+    OTP.objects.create(user=user, code=otp_code).save()
+    return otp_code
 
 def generate_time_based_alphanumeric_code(length=16):
     timestamp = int(time.time())
@@ -59,12 +66,9 @@ def registerUser(request):
     serializer = UserRegisterSerializer(data=data, partial=True)
     if serializer.is_valid():
         user = serializer.save()
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = email_verification_token.make_token(user)
-        verification_link = f"{settings.FRONTEND_URL}/user-panel/verify-email?uid={uid}&token={token}"
         try:
             subject = 'Registered to GoodMart'
-            html_message = render_to_string('registerMail.html', {'url': verification_link, 'name': user.name, 'email': user.email, 'phone': user.phone_no, 'user_id': user.user_id})
+            html_message = render_to_string('registerMail.html', {'otp': generate_otp(user=user), 'name': user.name, 'email': user.email, 'phone': user.phone_no, 'user_id': user.user_id})
             email_from = settings.DEFAULT_FROM_EMAIL
             recipient_list = [user.email]
 
@@ -98,47 +102,16 @@ def getUserInfo(request):
     else:
         return Response(status=400)
     
-    
-@api_view(['GET'])
-def sendVerificationEmail(request):
-    user = request.user
-    uid = urlsafe_base64_encode(force_bytes(user.pk))
-    token = email_verification_token.make_token(user)
-    verification_link = f"{settings.FRONTEND_URL}/user-panel/verify-email/{uid}/{token}/"
-    try:
-        subject = 'Registered to GoodMart'
-        html_message = render_to_string('registerMail.html', {'url': verification_link, 'name': user.name, 'email': user.email, 'phone': user.phone_no, 'user_id': user.user_id})
-        email_from = settings.DEFAULT_FROM_EMAIL
-        recipient_list = [user.email]
-
-        email = EmailMessage(subject, html_message, email_from, recipient_list)
-        email.content_subtype = 'html'  # Set the email content type to HTML
-        email.send()
-        return Response({'status': 'Verification email sent.'}, status=200)
-    except BadHeaderError:
-        return Response({'status': 'Invalid header found.'}, status=400)
-    except SMTPException as e:
-        # Log the exception or handle it as needed
-        return Response({'status': 'Failed to send email. Please try again later.'}, status=500)
-    except Exception as e:
-        # Log the exception or handle it as needed
-        return Response({'status': 'An unexpected error occurred. Please try again later.'}, status=500)
 
 @api_view(['GET'])
-def verify_email(request, uidb64, token):
+def verify_email(request, user_id, otp_code):
+    user = User.objects.get(user_id=user_id)
     try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-        if email_verification_token.check_token(user, token):
+        otp = OTP.objects.filter(user=user, code=otp_code).latest('created_at')
+        if otp.is_valid():
             user.email_verified = True
             user.save()
-
-            expire = datetime.now() + timedelta(days=100)
-            points = Setting.objects.get(id=1).registration_points
-            title = "Register Bonus"
-            description = f"You have received the bonus of {points} points for successfully registering in GOODMART, this coupon can be redeemed and added on your wallet. Coupon will expire on {expire}"
-            addCoupons(user, points)
-            print("Email verified")
+            otp.delete()  # Remove OTP after successful verification
             return Response({'status': 'Email verified'}, status=200)
         else:
             print("Invalid token")

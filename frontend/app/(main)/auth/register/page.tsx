@@ -145,7 +145,7 @@ export default function Register() {
       let data = await response.json();
       if (response.status == 201) {
         toast.success("Registration Successful");
-        router.push("/auth/login?source=register");
+        router.push("/register-verification?user_id=" + values.user_id);
       } else {
         if (data.email) {
           toast.error("Email already in use");

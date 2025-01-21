@@ -45,16 +45,6 @@ const Home: NextPage = () => {
       toast.error("Error getting user info");
     }
   };
-  let verifyMail = async () => {
-    toast.loading("Sending Verification Email");
-    let response = await api.get("/sendVerificationEmail/");
-    if (response.status === 200) {
-      toast.success("Verification Email Sent");
-    } else {
-      toast.error("Error sending verification email");
-    }
-    toast.dismiss();
-  };
 
   useEffect(() => {
     getUserInfo();
@@ -152,7 +142,6 @@ const Home: NextPage = () => {
             last_login={user.last_login}
             email_verified={user.email_verified}
             phone_verified={user.phone_verified}
-            verifyMail={verifyMail}
           />
           {user.VendorInfo && user.VendorInfo.qr && (
             <>
