@@ -6,6 +6,7 @@ urlpatterns = [
     path("registerUser/", views.registerUser),
     path("getUserInfo/", views.getUserInfo),
     path('verify-email/<str:user_id>/<str:otp_code>/', views.verify_email, name='verify-email'),
+    path('resend-verfication-mail/<str:user_id>/', views.resend_verification_mail, name='resend-otp'),
     path('getProductCategory/', views.getProductCategory),
     path('getProductBrand/', views.getProductBrand),
     path('getSearchProducts/<str:search>/<str:category>/', views.getSearchProducts),

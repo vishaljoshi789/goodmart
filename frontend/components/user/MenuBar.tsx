@@ -17,7 +17,7 @@ const HamburgerMenu = () => {
   const options =
     userInfo && userInfo.user_type == "Customer"
       ? [
-          { Profile: "/user-panel/", icon: <CgProfile /> },
+          { Profile: "/user-panel/profile", icon: <CgProfile /> },
           { Shop: "/user-panel/shop/", icon: <CiShop /> },
           { Coupon: "/user-panel/coupon/", icon: <TbTicket /> },
           { Wallet: "/user-panel/wallet/", icon: <BsWallet /> },
@@ -26,7 +26,7 @@ const HamburgerMenu = () => {
         ]
       : userInfo && userInfo.user_type == "Product Vendor"
       ? [
-          { Profile: "/user-panel/", icon: <CgProfile /> },
+          { Profile: "/user-panel/profile", icon: <CgProfile /> },
           { Products: "/user-panel/vendor/products/", icon: <BsBox /> },
           { "Customer Orders": "/user-panel/vendor/order/", icon: <BsBox2 /> },
           { Shop: "/user-panel/shop/", icon: <CiShop /> },

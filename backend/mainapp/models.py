@@ -95,15 +95,6 @@ class OTP(models.Model):
     def is_valid(self):
         return now() < self.created_at + timedelta(minutes=15)  # 10-minute validity
     
-class User_Detail(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='user_detail')
-    photograph = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
-    dob = models.DateField(blank=True, null=True)
-    passbook_image = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
-    bank_account_number = models.CharField(max_length=20, blank=True, null=True)
-    bank = models.CharField(max_length=50, blank=True, null=True)
-    ifsc = models.CharField(max_length=15, blank=True, null=True)
-    account_holder = models.CharField(max_length=150, blank=True, null=True)
 
     
 class Address(models.Model):
@@ -119,6 +110,17 @@ class Address(models.Model):
     alternate_phone = models.CharField(max_length=15, blank=True, null=True)
     added_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     modify_on = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+class User_Detail(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='user_detail')
+    photograph = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    dob = models.DateField(blank=True, null=True)
+    passbook_image = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    bank_account_number = models.CharField(max_length=20, blank=True, null=True)
+    bank = models.CharField(max_length=50, blank=True, null=True)
+    ifsc = models.CharField(max_length=15, blank=True, null=True)
+    account_holder = models.CharField(max_length=150, blank=True, null=True)
+    billing_address = models.ForeignKey(Address, on_delete=models.CASCADE, blank=True, null=True, related_name='billing_address')
 
     
 class Product_Category(models.Model):

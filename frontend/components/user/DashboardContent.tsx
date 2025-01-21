@@ -14,7 +14,7 @@ export default function DashboardContent() {
   const options =
     userInfo && userInfo.user_type == "Customer"
       ? [
-          { Profile: "/user-panel/", icon: <CgProfile /> },
+          { Profile: "/user-panel/profile", icon: <CgProfile /> },
           { Shop: "/", icon: <CiShop /> },
           { Coupon: "/user-panel/coupon/", icon: <TbTicket /> },
           { Wallet: "/user-panel/wallet/", icon: <BsWallet /> },
@@ -23,7 +23,7 @@ export default function DashboardContent() {
         ]
       : userInfo && userInfo.user_type == "Product Vendor"
       ? [
-          { Profile: "/user-panel/", icon: <CgProfile /> },
+          { Profile: "/user-panel/profile", icon: <CgProfile /> },
           { Products: "/user-panel/vendor/products/", icon: <BsBox /> },
           { Shop: "/", icon: <CiShop /> },
           { "Customer Orders": "/user-panel/vendor/order/", icon: <BsBox2 /> },

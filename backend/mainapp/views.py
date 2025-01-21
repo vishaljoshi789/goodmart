@@ -56,7 +56,36 @@ def addCoupons(user, amount, title, description, expire_days=100, type="REDEEMAB
     expire = datetime.now() + timedelta(days=expire_days)
     coupon = Coupon.objects.create(user=user, code=code, type=type, vendor=vendor, amount=amount, expiry_date=expire, title=title, description=description)
     coupon.save()
-    
+
+
+def sendVerificationEmail(user):
+    try:
+        subject = 'Registered to GoodMart'
+        html_message = render_to_string('registerMail.html', {'otp': generate_otp(user), 'name': user.name, 'email': user.email, 'phone': user.phone_no, 'user_id': user.user_id})
+        email_from = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [user.email]
+
+        email = EmailMessage(subject, html_message, email_from, recipient_list)
+        email.content_subtype = 'html'  # Set the email content type to HTML
+        email.send()
+        return True
+    except BadHeaderError:
+        return False
+    except SMTPException as e:
+        # Log the exception or handle it as needed
+        return False
+    except Exception as e:
+        # Log the exception or handle it as needed
+        return False
+
+@api_view(['POST'])
+def resend_verification_mail(request, user_id):
+    user = User.objects.get(user_id=user_id)
+    if sendVerificationEmail(user):
+        return Response(status=200)
+    else:
+        return Response(status=400)
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -66,24 +95,11 @@ def registerUser(request):
     serializer = UserRegisterSerializer(data=data, partial=True)
     if serializer.is_valid():
         user = serializer.save()
-        try:
-            subject = 'Registered to GoodMart'
-            html_message = render_to_string('registerMail.html', {'otp': generate_otp(user=user), 'name': user.name, 'email': user.email, 'phone': user.phone_no, 'user_id': user.user_id})
-            email_from = settings.DEFAULT_FROM_EMAIL
-            recipient_list = [user.email]
-
-            email = EmailMessage(subject, html_message, email_from, recipient_list)
-            email.content_subtype = 'html'  # Set the email content type to HTML
-            email.send()
-            return Response({'status': 'Verification email sent.'}, status=201)
-        except BadHeaderError:
-            return Response({'status': 'Invalid header found.'}, status=400)
-        except SMTPException as e:
-            # Log the exception or handle it as needed
-            return Response({'status': 'Failed to send email. Please try again later.'}, status=500)
-        except Exception as e:
-            # Log the exception or handle it as needed
-            return Response({'status': 'An unexpected error occurred. Please try again later.'}, status=500)
+        if sendVerificationEmail(user):
+            return Response(serializer.data, status=201)
+        else:
+            return Response(status=400)
+        
     return Response(serializer.errors, status=400)
 
 @api_view(['GET'])
