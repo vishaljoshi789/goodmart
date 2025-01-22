@@ -25,8 +25,9 @@ export default function VerifyEmail() {
   let router = useRouter();
   const user_id = path.get("user_id");
   const [otp, setOtp] = useState<string>("");
+  const [resetOTPTimer, setResetOTPTimer] = useState<number>(60);
 
-  let verifyEmail = async () => {
+  const verifyEmail = async () => {
     try {
       let res = await fetch(`${baseURL}/verify-email/${user_id}/${otp}/`);
       let data = await res.json();
@@ -41,11 +42,34 @@ export default function VerifyEmail() {
     }
   };
 
+  const resendOTP = async () => {
+    const res = await fetch(`${baseURL}/resend-verfication-mail/${user_id}/`);
+    if (res.status === 200) {
+      toast.success("OTP Sent Successfully");
+      setResetOTPTimer(60);
+      resetOTPTimerFunc();
+    } else {
+      toast.error("Something went wrong");
+    }
+  };
+
+  const resetOTPTimerFunc = () => {
+    let interval = setInterval(() => {
+      setResetOTPTimer((prev) => prev - 1);
+    }, 1000);
+    setTimeout(() => {
+      clearInterval(interval);
+    }, 60000);
+  };
+
   useEffect(() => {
     if (!user_id) {
       toast.error("Invalid Link");
       router.push(`/`);
     }
+  }, []);
+  useEffect(() => {
+    resetOTPTimerFunc();
   }, []);
   return (
     <div className="flex items-center justify-center w-full h-[90vh] flex-col gap-5">
@@ -72,8 +96,21 @@ export default function VerifyEmail() {
           </InputOTP>
         </CardContent>
         <CardFooter className="flex flex-col items-start gap-5">
-          <Button onClick={verifyEmail}>Verify Email</Button>
-
+          <div className="flex justify-between w-full">
+            <Button onClick={verifyEmail}>Verify Email</Button>
+            <div className="flex gap-2 items-center">
+              <Button
+                variant={"link"}
+                disabled={resetOTPTimer != 0}
+                onClick={resendOTP}
+              >
+                Resend OTP
+              </Button>
+              <span className="font-bold text-sm text-red-500">
+                {resetOTPTimer}
+              </span>{" "}
+            </div>
+          </div>
           <p>The verification code is only valid for 15 minutes</p>
         </CardFooter>
       </Card>

@@ -61,7 +61,9 @@ def addCoupons(user, amount, title, description, expire_days=100, type="REDEEMAB
 def sendVerificationEmail(user):
     try:
         subject = 'Registered to GoodMart'
-        html_message = render_to_string('registerMail.html', {'otp': generate_otp(user), 'name': user.name, 'email': user.email, 'phone': user.phone_no, 'user_id': user.user_id})
+        frontend_end = settings.FRONTEND_URL
+        link = frontend_end + '/register-verification?user_id=' + user.user_id
+        html_message = render_to_string('registerMail.html', {'otp': generate_otp(user), 'name': user.name, 'email': user.email, 'phone': user.phone_no, 'user_id': user.user_id, 'link': link})
         email_from = settings.DEFAULT_FROM_EMAIL
         recipient_list = [user.email]
 
@@ -78,7 +80,7 @@ def sendVerificationEmail(user):
         # Log the exception or handle it as needed
         return False
 
-@api_view(['POST'])
+@api_view(['GET'])
 def resend_verification_mail(request, user_id):
     user = User.objects.get(user_id=user_id)
     if sendVerificationEmail(user):
