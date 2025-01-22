@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail, Address, Product_Variant, ShippingCharges, Order, OrderItem, SubOrder, LevelPoints, Coupon, Setting, Wallet, Transaction
+from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail, Address, Product_Variant, ShippingCharges, Order, OrderItem, SubOrder, LevelPoints, Coupon, Setting, Wallet, Transaction, User_Detail
 # Register your models here.
 admin.site.register(User)
 admin.site.register(Product_Category)
@@ -20,3 +20,4 @@ admin.site.register(Coupon)
 admin.site.register(Setting)
 admin.site.register(Wallet)
 admin.site.register(Transaction)
+admin.site.register(User_Detail)

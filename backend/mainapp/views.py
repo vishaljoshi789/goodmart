@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder, Coupon, Setting, Wallet, OTP
-from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, SubOrderItemSerializer, CouponSerializer, WalletSerializer, VendorDetailCartSerializer, ReferralSerializer
+from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder, Coupon, Setting, Wallet, OTP, User_Detail
+from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, SubOrderItemSerializer, CouponSerializer, WalletSerializer, VendorDetailCartSerializer, ReferralSerializer, UserDetailSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -137,6 +137,51 @@ def verify_email(request, user_id, otp_code):
     except Exception as e:
         print(e)
         return Response({'status': 'Invalid token'}, status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getUserDetails(request):
+    if request.method == 'GET':
+        user = request.user
+        try:
+            user_detail = User_Detail.objects.get(user=user)
+            serializer = UserDetailSerializer(user_detail)
+            return Response(serializer.data, status=200)
+        except Exception as e:
+            # print(e)
+            return Response(status=404)
+    return Response(status=400)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updateOrAddUserDetails(request):
+    if request.method == 'POST':
+        user = request.user
+        detail = {"user": user.id, "dob": request.data["dob"], "bank_account_number": request.data["bank_account_number"], "ifsc": request.data["ifsc"], "bank": request.data["bank"], "account_holder": request.data["account_holder"]}
+
+        if request.data["photograph"]!="null":
+            detail["photograph"] = request.data["photograph"]
+        if request.data["passbook_image"]!="null":
+            detail["passbook_image"] = request.data["passbook_image"]   
+
+        req_address = {"user": user.id, "address": request.data["address"], "city": request.data["city"], "state": request.data["state"], "pin": request.data["pin"], "landmark": request.data["landmark"]}
+        try:
+            user_detail = User_Detail.objects.get(user=user)
+            detail["billing_address"] = req_address
+            serializer = UserDetailSerializer(user_detail, data=detail, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=200)
+            return Response(serializer.errors, status=400)
+        except Exception as e:
+            print(e)
+            detail["billing_address"] = req_address
+            serializer = UserDetailSerializer(data=detail, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=201)
+            return Response(serializer.errors, status=400)
+    return Response(status=400)
     
 @api_view(['GET'])
 def getProductCategory(request):

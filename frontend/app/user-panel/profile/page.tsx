@@ -1,13 +1,14 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import React from "react";
+import { set, useForm } from "react-hook-form";
+import React, { useContext, useEffect, useState } from "react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,6 +16,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import useAxios from "@/app/(utils)/hooks/useAxios";
+import { toast } from "sonner";
+import { GMContext } from "@/app/(utils)/context/GMContext";
+import Link from "next/link";
 
 const formSchema = z.object({
   dob: z.string(),
@@ -23,7 +28,7 @@ const formSchema = z.object({
   bank_account_number: z.string(),
   bank: z.string(),
   ifsc: z.string(),
-  account_holder_name: z.string(),
+  account_holder: z.string(),
   address: z.string(),
   landmark: z.string(),
   city: z.string(),
@@ -36,11 +41,59 @@ export default function Profile() {
     resolver: zodResolver(formSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  const { baseURL } = useContext(GMContext);
+
+  const [profilePicture, setProfilePicture] = useState<any>(null);
+  const [passbookImage, setPassbookImage] = useState<any>(null);
+  const [userDetails, setUserDetails] = useState<any>(null);
+
+  const api = useAxios();
+
+  const getUserDetails = async () => {
+    const res = await api.get("/getUserDetails/");
+    if (res.status === 200) {
+      form.reset({
+        account_holder: res.data.account_holder,
+        bank: res.data.bank,
+        bank_account_number: res.data.bank_account_number,
+        ifsc: res.data.ifsc,
+        address: res.data.billing_address.address,
+        landmark: res.data.billing_address.landmark,
+        city: res.data.billing_address.city,
+        state: res.data.billing_address.state,
+        pin: res.data.billing_address.pin,
+        dob: res.data.dob,
+      });
+      console.log(res.data);
+      setUserDetails(res.data);
+    }
+  };
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const formData = new FormData();
+    formData.append("dob", values.dob);
+    formData.append("photograph", profilePicture || null);
+    formData.append("passbook_image", passbookImage || null);
+    formData.append("bank_account_number", values.bank_account_number);
+    formData.append("bank", values.bank);
+    formData.append("ifsc", values.ifsc);
+    formData.append("account_holder", values.account_holder);
+    formData.append("address", values.address);
+    formData.append("landmark", values.landmark);
+    formData.append("city", values.city);
+    formData.append("state", values.state);
+    formData.append("pin", values.pin);
+    const res = await api.post("/updateUserDetails/", formData);
+    if (res.status === 201 || res.status === 200) {
+      toast.success("Profile Updated Successfully");
+    } else {
+      toast.error("Profile Update Failed");
+    }
     console.log(values);
   }
+  useEffect(() => {
+    getUserDetails();
+  }, []);
 
   return (
     <div className="p-5 flex flex-col gap-5 w-full">
@@ -59,8 +112,23 @@ export default function Profile() {
                   Your Profile Picture
                 </FormLabel>
                 <FormControl>
-                  <Input type="file" accept="image/*" {...field} />
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    {...field}
+                    onChange={(e: any) => setProfilePicture(e.target.files[0])}
+                  />
                 </FormControl>
+                <FormDescription>
+                  {userDetails?.photograph && (
+                    <a
+                      href={`${baseURL}${userDetails.photograph}`}
+                      target="_blank"
+                    >
+                      View Image
+                    </a>
+                  )}
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -84,7 +152,7 @@ export default function Profile() {
           <p className=" text-red-500 font-bold">Bank Details </p>
           <FormField
             control={form.control}
-            name="account_holder_name"
+            name="account_holder"
             render={({ field }) => (
               <FormItem className="">
                 <FormLabel>Account Holder Name</FormLabel>
@@ -102,7 +170,7 @@ export default function Profile() {
               <FormItem className="">
                 <FormLabel>Bank Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="HDFC or SBI" {...field} />
+                  <Input placeholder="HDFC, SBI, etc." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -141,8 +209,23 @@ export default function Profile() {
               <FormItem className="">
                 <FormLabel>Passbook Image</FormLabel>
                 <FormControl>
-                  <Input type="file" accept="image/*" {...field} />
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    {...field}
+                    onChange={(e: any) => setPassbookImage(e.target.files[0])}
+                  />
                 </FormControl>
+                <FormDescription>
+                  {userDetails?.passbook_image && (
+                    <a
+                      href={`${baseURL}${userDetails.passbook_image}`}
+                      target="_blank"
+                    >
+                      View Image
+                    </a>
+                  )}
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -156,7 +239,7 @@ export default function Profile() {
               <FormItem className="">
                 <FormLabel>Address Line</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Your Address here" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -169,7 +252,7 @@ export default function Profile() {
               <FormItem className="">
                 <FormLabel>Landmark</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Your Landmark here" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -182,7 +265,7 @@ export default function Profile() {
               <FormItem className="">
                 <FormLabel>City</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Your City here" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -195,7 +278,7 @@ export default function Profile() {
               <FormItem className="">
                 <FormLabel>State</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Your State here" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -208,7 +291,7 @@ export default function Profile() {
               <FormItem className="">
                 <FormLabel>Pincode</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Your Pincode here" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -7,6 +7,9 @@ from django.utils.timezone import now, timedelta
 def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.username, filename)
 
+def user_detail_directory_path(instance, filename):
+    return 'user_{0}/{1}'.format(instance.user.username, filename)
+
 def vendor_directory_path(instance, filename):
     return 'vendor_{0}/{1}'.format(instance.user, filename)
 
@@ -113,9 +116,9 @@ class Address(models.Model):
 
 class User_Detail(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='user_detail')
-    photograph = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    photograph = models.ImageField(upload_to=user_detail_directory_path, blank=True, null=True)
     dob = models.DateField(blank=True, null=True)
-    passbook_image = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    passbook_image = models.ImageField(upload_to=user_detail_directory_path, blank=True, null=True)
     bank_account_number = models.CharField(max_length=20, blank=True, null=True)
     bank = models.CharField(max_length=50, blank=True, null=True)
     ifsc = models.CharField(max_length=15, blank=True, null=True)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail, Product_Variant, Address, Order, OrderItem, SubOrder, Coupon, Wallet, Transaction
+from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail, Product_Variant, Address, Order, OrderItem, SubOrder, Coupon, Wallet, Transaction, User_Detail
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -36,6 +36,41 @@ class UserInfoSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'email', 'user_id', 'name', 'phone_no', 'date_joined', "last_login", 'email_verified', 'phone_verified', 'user_type', 'status', 'referral']
 
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    billing_address = AddressSerializer()
+    class Meta:
+        model = User_Detail
+        fields = '__all__'
+    def create(self, validated_data):
+        billing_address = validated_data.pop('billing_address', None)
+        instance = self.Meta.model(**validated_data)
+        if billing_address is not None:
+            address = Address.objects.create(**billing_address)
+            address.save()
+            instance.billing_address = address
+        instance.save()
+        return instance
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            if attr == 'billing_address':
+                address = instance.billing_address
+                address.address = value['address']
+                address.city = value['city']
+                address.state = value['state']
+                address.pin = value['pin']
+                address.save()
+                instance.billing_address = address
+            else:
+                setattr(instance, attr, value)
+        instance.save()
+        return instance
+
 
 class ProductBrandSerializer(serializers.ModelSerializer):
     class Meta:
@@ -68,10 +103,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class AddressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Address
-        fields = '__all__'
+
 
 class VendorDetailSerializer(serializers.ModelSerializer):
     user = UserInfoSerializer()
