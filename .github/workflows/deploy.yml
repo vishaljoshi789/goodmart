@@ -38,6 +38,11 @@ jobs:
           cd frontend
           npm install  # Install Next.js dependencies
 
+      - name: Configure Git
+        run: |
+          git config --global user.name "Your CI/CD Bot"
+          git config --global user.email "bot@gmail.com"
+
       - name: Deploy to server
         uses: appleboy/ssh-action@v0.1.8
         with:
@@ -48,10 +53,8 @@ jobs:
             cd /home/goodmart
 
             git pull origin master
-            git reset --hard
-            git clean -fd
-            git fetch --all
-            git reset --hard origin/master
+            git fetch origin master
+            git merge --no-ff --no-edit HEAD
 
             cd backend
             python3 -m venv venv  # Create the virtual environment if not already there
