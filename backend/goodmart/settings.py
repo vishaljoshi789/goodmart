@@ -137,7 +137,6 @@ CORS_ALLOWED_ORIGINS = [
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 if LOGGING:
-    from decouple import config
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
