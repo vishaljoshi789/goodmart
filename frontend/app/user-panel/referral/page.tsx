@@ -63,7 +63,7 @@ export default function Referral() {
         <Button
           onClick={() => {
             navigator.clipboard.writeText(
-              `${window.location.origin}/user-panel/referral/share?id=${userInfo?.user_id}`
+              `${window.location.origin}/referral-share?id=${userInfo?.user_id}`
             );
             toast.success("Link Copied");
           }}

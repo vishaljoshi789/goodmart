@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { use, useContext, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,7 +24,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { GMContext, GMContextType } from "@/app/(utils)/context/GMContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,7 @@ import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
 export default function Register() {
   let router = useRouter();
+  const referral = useSearchParams().get("referral");
   let [type, setType] = useState<any>(null);
   let [vendorType, setVendorType] = useState<any>(null);
   let { baseURL } = useContext<GMContextType>(GMContext);
@@ -73,6 +74,7 @@ export default function Register() {
       user_type: z.any(),
       user_id: z.string().optional().or(z.literal("")),
       co_ordinates: z.string().optional().or(z.literal("")),
+      referral: z.string().optional().or(z.literal("")),
     })
     .superRefine(({ confirmPassword, password }, ctx) => {
       if (confirmPassword !== password) {
@@ -91,6 +93,7 @@ export default function Register() {
       name: "",
       password: "",
       confirmPassword: "",
+      referral: referral || "",
     },
   });
   let showPosition = (position: GeolocationPosition) => {
@@ -274,6 +277,19 @@ export default function Register() {
                   </FormItem>
                 )}
               />{" "}
+              <FormField
+                control={form.control}
+                name="referral"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sponsor ID</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Referral ID" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />{" "}
               <AlertDialog>
                 <AlertDialogTrigger
                   type="submit"
@@ -404,6 +420,19 @@ export default function Register() {
                     </FormItem>
                   )}
                 />{" "}
+                <FormField
+                  control={form.control}
+                  name="referral"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Sponsor ID</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Referral ID" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <AlertDialog>
                   <AlertDialogTrigger
                     className="bg-gray-800 text-white p-2 rounded-md font-bold"

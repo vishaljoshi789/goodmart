@@ -614,7 +614,7 @@ def addReferral(request):
             user.save()
             return Response(status=200)
         except Exception as e:
-            print(e)
+            # print(e)
             return Response(status=400)
         
 @api_view(['GET'])
