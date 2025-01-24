@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { LinkIcon, Share } from "lucide-react";
+import { Share1Icon } from "@radix-ui/react-icons";
 
 export default function Referral() {
   const api = useAxios();
@@ -56,7 +58,20 @@ export default function Referral() {
 
   return (
     <div className="p-5 w-full">
-      <h1 className="font-extrabold text-2xl text-red-500">Referral</h1>
+      <div className="flex gap-5 my-2">
+        <h1 className="font-extrabold text-2xl text-red-500">Referral</h1>
+        <Button
+          onClick={() => {
+            navigator.clipboard.writeText(
+              `${window.location.origin}/user-panel/referral/share?id=${userInfo?.user_id}`
+            );
+            toast.success("Link Copied");
+          }}
+        >
+          <LinkIcon />
+        </Button>
+      </div>
+
       <div>
         {!userInfo?.referral && (
           <Alert className="bg-yellow-300">
