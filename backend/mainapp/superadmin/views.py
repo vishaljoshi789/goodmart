@@ -215,7 +215,7 @@ def updateProductBrand(request, id):
 @permission_classes([IsAdminUser])
 def getProducts(request):
     if request.method == 'GET':
-        products = Product.objects.all()
+        products = Product.objects.all().order_by("user")
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=200)
     else:

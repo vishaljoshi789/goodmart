@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
                 setattr(instance, attr, value)
         instance.save()
         return instance
-
+    
 class ProductCategoryUploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product_Category
@@ -50,6 +50,7 @@ class ProductSpecificationsSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
     class Meta:
         model = Product
         fields = '__all__'
