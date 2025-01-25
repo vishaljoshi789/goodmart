@@ -27,6 +27,7 @@ export default function Cart() {
     let response = await api.post(`/addToCart/`, {
       id: e.target.name,
       variant: e.target.id,
+      quantity: 1,
     });
     if (response.status === 200) {
       console.log(response.data);
