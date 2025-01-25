@@ -5,7 +5,7 @@ from .models import User, Product_Category, Product_Brand, Product, Product_Imag
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'user_id', 'name', 'phone_no', 'password', 'username', 'user_type']
+        fields = ['id', 'email', 'user_id', 'name', 'phone_no', 'password', 'username', 'user_type', 'referral']
         extra_kwargs = {'password': {'write_only': True}}
     def create(self, validated_data):
         password = validated_data.pop('password', None)

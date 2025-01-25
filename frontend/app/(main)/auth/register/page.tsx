@@ -150,6 +150,7 @@ export default function Register() {
         toast.success("Registration Successful");
         router.push("/register-verification?user_id=" + values.user_id);
       } else {
+        console.log(response);
         if (data.email) {
           toast.error("Email already in use");
         }

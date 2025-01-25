@@ -72,12 +72,13 @@ def sendVerificationEmail(user):
         email.send()
         return True
     except BadHeaderError:
+        # print(BadHeaderError)
         return False
     except SMTPException as e:
-        # Log the exception or handle it as needed
+        # print(e)
         return False
     except Exception as e:
-        # Log the exception or handle it as needed
+        # print(e)
         return False
 
 @api_view(['GET'])
@@ -94,14 +95,17 @@ def resend_verification_mail(request, user_id):
 def registerUser(request):
     data = request.data
     data['username'] = data['email']
+    try:
+        data['referral'] = User.objects.get(user_id=data['referral']).id 
+    except:
+        pass
     serializer = UserRegisterSerializer(data=data, partial=True)
     if serializer.is_valid():
         user = serializer.save()
         if sendVerificationEmail(user):
             return Response(serializer.data, status=201)
         else:
-            return Response(status=400)
-        
+            return Response(serializer.errors, status=400)  
     return Response(serializer.errors, status=400)
 
 @api_view(['GET'])
