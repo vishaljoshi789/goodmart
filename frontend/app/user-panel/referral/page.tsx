@@ -61,56 +61,31 @@ export default function Referral() {
       <div className="flex gap-5 my-2">
         <h1 className="font-extrabold text-2xl text-red-500">Referral</h1>
         <Button
-          onClick={() => {
+          onClick={async () => {
             navigator.clipboard.writeText(
-              `${window.location.origin}/referral-share?id=${userInfo?.user_id}`
+              window.location.origin +
+                "/auth/register?referral=" +
+                userInfo?.user_id
             );
-            toast.success("Link Copied");
+            toast.success("Link Copied Successfully");
+            try {
+              await navigator.share({
+                title: "GOODMART",
+                text: "Add to GOODMART Family",
+                url:
+                  window.location.origin +
+                  "/auth/register?referral=" +
+                  userInfo?.user_id,
+              });
+            } catch (err) {
+              console.log(err);
+            }
           }}
         >
           <LinkIcon />
         </Button>
       </div>
 
-      <div>
-        {!userInfo?.referral && (
-          <Alert className="bg-yellow-300">
-            <AlertTitle>Referral Pending</AlertTitle>
-            <AlertDescription>
-              Press the button below add your referral.
-            </AlertDescription>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="my-2" variant={"secondary"}>
-                  Add Referral
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle className="text-left">Add Referral</DialogTitle>
-                  <DialogDescription className="font-light text-xs text-left">
-                    Enter the User ID of the user
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="flex flex-col gap-2">
-                  <Input
-                    type="text"
-                    value={referral}
-                    onChange={(e) => setReferral(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-lg"
-                  />
-                  <Button
-                    className="w-fit bg-green-500 hover:bg-green-600"
-                    onClick={addReferral}
-                  >
-                    Add
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </Alert>
-        )}
-      </div>
       <div className="space-y-2 w-full">
         {userID && userID != userInfo?.user_id && (
           <span>Showing Referral for {userID}</span>
