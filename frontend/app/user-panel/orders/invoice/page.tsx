@@ -1,9 +1,7 @@
 "use client";
-
 import { useEffect, useRef, useState } from "react";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableHeader,
@@ -22,6 +20,7 @@ export default function Component() {
   const invoiceRef = useRef<HTMLDivElement>(null);
   const api = useAxios();
   const [order, setOrder] = useState<any>(null);
+  const [userData, setUserData] = useState<any>(null);
   let order_id = useSearchParams().get("id");
 
   const getOrder = async () => {
@@ -32,88 +31,89 @@ export default function Component() {
     }
   };
 
-  useEffect(() => {
-    getOrder();
-  }, []);
+  const getUserDetails = async () => {
+    let response = await api.get(`/getUserDetails/`);
+    if (response.status === 200) {
+      setUserData(response.data);
+      console.log(response.data);
+    }
+  };
 
   const downloadPDF = async () => {
     const element = invoiceRef.current;
 
-    if (!element) return;
+    if (!element) {
+      console.error("Element not found!");
+      return;
+    }
 
-    // Clone the element to apply desktop-specific styles for PDF generation
-    const clonedElement = element.cloneNode(true) as HTMLElement;
+    // Set scale factor for higher resolution
+    const scale = 2;
 
-    // Create a container for fixed desktop styles
-    const pdfContainer = document.createElement("div");
-    pdfContainer.style.width = "794px"; // A4 width in pixels at 96 DPI
-    pdfContainer.style.margin = "0 auto"; // Center the content
-    pdfContainer.style.background = "white";
-    pdfContainer.style.padding = "20px";
-
-    pdfContainer.appendChild(clonedElement);
-
-    document.body.appendChild(pdfContainer);
-
-    // Generate canvas
-    const canvas = await html2canvas(pdfContainer, {
-      scale: 2, // Higher scale for better quality
-      useCORS: true, // Allow cross-origin images
+    // Generate high-quality canvas
+    const canvas = await html2canvas(element, {
+      scale,
+      useCORS: true, // Handle cross-origin images
+      allowTaint: true,
+      scrollX: -window.scrollX,
+      scrollY: -window.scrollY,
+      width: element.scrollWidth,
+      height: element.scrollHeight,
     });
 
-    document.body.removeChild(pdfContainer); // Clean up temporary container
-
     const imgData = canvas.toDataURL("image/png");
+
+    // PDF dimensions (A4 size in mm)
+    const pdfWidth = 210; // A4 width
+    const pdfHeight = 297; // A4 height
+
+    const imgWidth = pdfWidth - 20; // 10mm margin on each side
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
     const pdf = new jsPDF({
       orientation: "portrait",
       unit: "mm",
-      format: "a4",
+      format: [pdfWidth, pdfHeight],
     });
 
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
+    let yOffset = 10; // Start content 10mm from the top
 
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * pageWidth) / canvas.width;
+    if (imgHeight <= pdfHeight - 20) {
+      // Single page
+      pdf.addImage(imgData, "PNG", 10, yOffset, imgWidth, imgHeight);
+    } else {
+      // Multi-page handling
+      let position = 0;
 
-    let position = 0;
-
-    // Split content into pages
-    while (position < canvas.height) {
-      const canvasSlice = document.createElement("canvas");
-      canvasSlice.width = canvas.width;
-      canvasSlice.height = Math.min(
-        canvas.height - position,
-        canvas.height / (pageHeight / imgHeight)
-      );
-
-      const context = canvasSlice.getContext("2d");
-      if (context) {
-        context.drawImage(
-          canvas,
-          0,
-          position,
-          canvas.width,
-          canvasSlice.height,
-          0,
-          0,
-          canvas.width,
-          canvasSlice.height
+      while (position < canvas.height) {
+        const canvasSlice = document.createElement("canvas");
+        canvasSlice.width = canvas.width;
+        canvasSlice.height = Math.min(
+          canvas.height - position,
+          (canvas.width * (pdfHeight - 20)) / imgWidth
         );
 
-        const sliceImgData = canvasSlice.toDataURL("image/png");
-        pdf.addImage(
-          sliceImgData,
-          "PNG",
-          0,
-          0,
-          imgWidth,
-          (canvasSlice.height * pageWidth) / canvas.width
-        );
-        position += canvasSlice.height;
+        const context = canvasSlice.getContext("2d");
+        if (context) {
+          context.drawImage(
+            canvas,
+            0,
+            position,
+            canvas.width,
+            canvasSlice.height,
+            0,
+            0,
+            canvas.width,
+            canvasSlice.height
+          );
 
-        if (position < canvas.height) {
-          pdf.addPage();
+          const sliceImgData = canvasSlice.toDataURL("image/png");
+          pdf.addImage(sliceImgData, "PNG", 10, yOffset, imgWidth, imgHeight);
+          position += canvasSlice.height;
+
+          if (position < canvas.height) {
+            pdf.addPage();
+          }
         }
       }
     }
@@ -121,26 +121,41 @@ export default function Component() {
     pdf.save("invoice.pdf");
   };
 
+  useEffect(() => {
+    getOrder();
+    getUserDetails();
+  }, []);
+
   return (
     order && (
       <div className="w-full">
-        <div className="w-full" ref={invoiceRef}>
-          <header className="flex items-center justify-between p-6">
-            <div className="flex items-center space-x-4">
-              <Image
-                alt={"invoice"}
-                src={`/images/logo2.png`}
-                width={0}
-                height={0}
-                sizes="100vw"
-                className="w-64 object-contain"
+        <div
+          className="w-full p-2"
+          ref={invoiceRef}
+          style={{
+            padding: "10px", // Add padding around the content
+            margin: "0 auto", // Center the content
+            backgroundColor: "#fff", // Set a white background
+            width: "794px", // A4 width for consistency
+          }}
+        >
+          <div className="flex flex-col md:flex-row justify-between items-start p-6 space-y-4 md:space-y-0 md:space-x-4">
+            <div className="flex items-center w-full">
+              <img
+                alt="Invoice Logo"
+                src="/images/logo2.png"
+                style={{
+                  width: "250px",
+                  height: "54px",
+                  objectFit: "cover", // Prevent cropping
+                }}
               />
             </div>
-            <div>
-              <h2 className="text-xl font-semibold">
+            <div className="w-fit">
+              <h2 className="text-xl font-semibold whitespace-nowrap">
                 Invoice #INV00{order.id}
               </h2>
-              <p className="text-gray-500">
+              <p className="text-gray-500 whitespace-nowrap">
                 Date:{" "}
                 {new Date(order.order.added_on).toLocaleDateString("en-US", {
                   year: "numeric",
@@ -149,9 +164,9 @@ export default function Component() {
                 })}
               </p>
             </div>
-          </header>
+          </div>
           <main className="border-2 border-black">
-            <div className="h-60 flex border-b-2 border-b-black">
+            <div className="flex border-b-2 border-b-black">
               <div className="w-1/2 border-r-2 border-r-black p-2">
                 <p className="text-xl font-extrabold">Vendor Details :</p>
 
@@ -173,29 +188,49 @@ export default function Component() {
                   </p>
                 </div>
               </div>
-              <div className="w-1/2 p-2">
-                <p className="text-xl font-extrabold">
-                  Consignee (Ship to) / (Bill to)
-                </p>
-                <div className="h-full p-2">
-                  <p className="font-bold">{order.order.address.name}</p>
-                  <p>User ID : {order.order.user.user_id}</p>
-                  <p className="font-light text-sm">
-                    {order.order.address.address}
-                  </p>
-                  <p className="font-light text-sm">
-                    City : {order.order.address.city}{" "}
-                    {`(${order.order.address.pin})`}
-                  </p>
-                  <p className="font-light text-sm">
-                    State : {order.order.address.state}{" "}
-                  </p>
+              <div className="w-1/2">
+                <div className="h-1/2 p-1">
+                  <p className="font-extrabold">Billing To</p>
+                  <div className="h-full">
+                    <p className="font-bold text-sm">{order.order.user.name}</p>
+                    <p className="text-sm">
+                      User ID : {order.order.user.user_id}
+                    </p>
+                    <p className="font-light text-sm">
+                      {userData.billing_address.address}
+                    </p>
+                    <p className="font-light text-sm">
+                      City : {userData.billing_address.city}{" "}
+                      {`(${userData.billing_address.pin})`}
+                    </p>
+                    <p className="font-light text-sm">
+                      State : {userData.billing_address.state}{" "}
+                    </p>
+                  </div>
+                </div>
+                <div className="h-1/2 border-t-2 border-black p-1 mt-2">
+                  <p className="font-extrabold">Shipping To</p>
+                  <div className="h-full">
+                    <p className="font-bold text-sm">
+                      {order.order.address.name}
+                    </p>
+                    <p className="font-light text-sm">
+                      {order.order.address.address}
+                    </p>
+                    <p className="font-light text-sm">
+                      City : {order.order.address.city}{" "}
+                      {`(${order.order.address.pin})`}
+                    </p>
+                    <p className="font-light text-sm">
+                      State : {order.order.address.state}{" "}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="h-96 border-b-2 border-b-black">
+            <div className="">
               <Table className="border">
-                <TableCaption>A list of your Invoice Items.</TableCaption>
+                {/* <TableCaption>A list of your Invoice Items.</TableCaption> */}
                 <TableHeader>
                   <TableRow>
                     <TableHead className="border">S. No.</TableHead>
@@ -203,10 +238,11 @@ export default function Component() {
                       Description Of Goods
                     </TableHead>
                     <TableHead className="border">HSN</TableHead>
-                    <TableHead className="border">GST % Rate</TableHead>
-                    <TableHead className="border">Quantity</TableHead>
+                    <TableHead className="border">MRP</TableHead>
+                    <TableHead className="border">GST</TableHead>
+                    <TableHead className="border">Qty</TableHead>
                     <TableHead className="border">Rate</TableHead>
-                    <TableHead className="border">Per</TableHead>
+                    {/* <TableHead className="border">Quantity</TableHead> */}
                     <TableHead className="border">Disc%</TableHead>
                     <TableHead className="border">Amount</TableHead>
                   </TableRow>
@@ -222,17 +258,22 @@ export default function Component() {
                         {item.product.hsn}
                       </TableCell>
                       <TableCell className="border">
+                        {item.product.mrp}
+                      </TableCell>
+                      <TableCell className="border">
                         {item.product.gst}
                       </TableCell>
                       <TableCell className="border">{item.quantity}</TableCell>
                       <TableCell className="border">
                         ₹{item.product.offer_price}
                       </TableCell>
+                      {/* <TableCell className="border">{item.quantity}</TableCell> */}
                       <TableCell className="border">
-                        Per {item.product.unit}
-                      </TableCell>
-                      <TableCell className="border">
-                        {item.product.discount}
+                        {(
+                          ((item.product.mrp - item.product.offer_price) /
+                            item.product.mrp) *
+                          100
+                        ).toFixed(2)}
                       </TableCell>
                       <TableCell className="border">
                         ₹{item.product.offer_price * item.quantity}
@@ -270,7 +311,7 @@ export default function Component() {
                 </TableFooter>
               </Table>
             </div>
-            <div className="h-96"></div>
+            {/* <div className="h-96"></div> */}
           </main>
         </div>
         <button
