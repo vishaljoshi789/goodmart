@@ -41,7 +41,7 @@ export default function Profile() {
     resolver: zodResolver(formSchema),
   });
 
-  const { baseURL } = useContext(GMContext);
+  const { baseURL, userInfo } = useContext(GMContext);
 
   const [profilePicture, setProfilePicture] = useState<any>(null);
   const [passbookImage, setPassbookImage] = useState<any>(null);
@@ -239,7 +239,11 @@ export default function Profile() {
               <FormItem className="">
                 <FormLabel>Address Line</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Your Address here" />
+                  <Input
+                    {...field}
+                    placeholder="Your Address here"
+                    readOnly={userInfo?.user_type !== "Customer"}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -252,7 +256,11 @@ export default function Profile() {
               <FormItem className="">
                 <FormLabel>Landmark</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Your Landmark here" />
+                  <Input
+                    {...field}
+                    placeholder="Your Landmark here"
+                    readOnly={userInfo?.user_type !== "Customer"}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -265,7 +273,11 @@ export default function Profile() {
               <FormItem className="">
                 <FormLabel>City</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Your City here" />
+                  <Input
+                    {...field}
+                    placeholder="Your City here"
+                    readOnly={userInfo?.user_type !== "Customer"}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -278,7 +290,11 @@ export default function Profile() {
               <FormItem className="">
                 <FormLabel>State</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Your State here" />
+                  <Input
+                    {...field}
+                    placeholder="Your State here"
+                    readOnly={userInfo?.user_type !== "Customer"}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -291,7 +307,11 @@ export default function Profile() {
               <FormItem className="">
                 <FormLabel>Pincode</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Your Pincode here" />
+                  <Input
+                    {...field}
+                    placeholder="Your Pincode here"
+                    readOnly={userInfo?.user_type !== "Customer"}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
