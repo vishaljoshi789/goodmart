@@ -12,6 +12,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import DashboardContent from "@/components/user/DashboardContent";
 import Image from "next/image";
+import { set } from "react-hook-form";
+import { userInfo } from "os";
 
 interface User {
   name: string;
@@ -33,6 +35,7 @@ const Home: NextPage = () => {
   let { baseURL } = useContext(GMContext);
   let [user, setUser] = useState<User | null>(null);
   let [loading, setLoading] = useState(true);
+  let [profileFound, setProfileFound] = useState(true);
   let getUserInfo = async () => {
     let response = await api.get("/getUserInfo/");
     if (response.status === 200) {
@@ -46,8 +49,18 @@ const Home: NextPage = () => {
     }
   };
 
+  let getUserDetails = async () => {
+    let response = await api.get("/getUserDetails/");
+    if (response.status === 200) {
+      setProfileFound(true);
+    } else {
+      setProfileFound(false);
+    }
+  };
+
   useEffect(() => {
     getUserInfo();
+    getUserDetails();
   }, []);
 
   useEffect(() => {
@@ -128,6 +141,21 @@ const Home: NextPage = () => {
             </AlertDescription>
           </Alert>
         )
+      )}
+
+      {!profileFound && user.user_type == "Customer" && (
+        <Alert className="bg-red-500 text-white">
+          <MdError className="!text-red-900 text-2xl" />
+          <AlertTitle className="font-bold">Profile Not Completed</AlertTitle>
+          <AlertDescription>
+            Complete your Profile to place your orders
+            <Link className=" ml-10" href="/user-panel/profile">
+              <Button className="bg-white text-red-500 hover:bg-gray-200">
+                Complete Your Profile
+              </Button>
+            </Link>
+          </AlertDescription>
+        </Alert>
       )}
       <div className="flex-1 p-6 bg-gray-100">
         <h1 className="lg:text-3xl text-xl font-bold mb-6">User Profile</h1>

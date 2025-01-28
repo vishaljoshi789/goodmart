@@ -1,4 +1,4 @@
-from ..models import Product, Vendor_Detail, ShippingCharges, Order, SubOrder, OrderItem
+from ..models import Product, Vendor_Detail, ShippingCharges, Order, SubOrder, OrderItem, User_Detail
 from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductVariantSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer, AddressSerializer, KYCDetailSerializer, GetVendorDetailSerializer, ShippingChargesSerializer, OrderAddressSerializer, SubOrderWithOrderAddressSerializer, ProductBrandSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -190,6 +190,12 @@ def addKYC(request):
         if serializer.is_valid():
             instance = serializer.save()
         data['address'] = instance.id
+        user_detail = User_Detail.objects.create(
+            user = request.user,
+            billing_address = instance
+        )
+        user_detail.save()
+        
         serializer = KYCDetailSerializer(data=data, partial=True)
         if serializer.is_valid():
             shop = serializer.save()
