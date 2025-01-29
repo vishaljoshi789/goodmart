@@ -110,7 +110,7 @@ export default function ProductsPage() {
                         button.disabled = true;
                       }}
                     >
-                      <BsFillCartPlusFill />
+                      <BsFillCartPlusFill /> ADD
                     </Button>
                   </CardFooter>
                 </div>

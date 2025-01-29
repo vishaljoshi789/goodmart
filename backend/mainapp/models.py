@@ -211,7 +211,7 @@ class Product(models.Model):
     offer_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     mrp = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     stock = models.IntegerField(blank=True, null=True)
-    # point = models.IntegerField(default=0, blank=True, null=True)
+    point = models.IntegerField(default=0, blank=True, null=True)
     # position = models.IntegerField(blank=True, null=True)
     # unit = models.CharField(max_length=100, blank=True, null=True)
     # rating = models.IntegerField(blank=True, null=True)
@@ -231,7 +231,7 @@ class Product(models.Model):
 class Product_Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variants')
     name = models.CharField(max_length=100, blank=True, null=True)
-    type = models.CharField(max_length=100, blank=True, null=True, choices=(("Size", "Size"), ("Color", "Color"), ("Weight", "Weight"), ("Material", "Material")))
+    type = models.CharField(max_length=100, blank=True, null=True, choices=(("Quantity", "Quantity"), ("Size", "Size"), ("Color", "Color"), ("Weight", "Weight"), ("Material", "Material")))
     offer_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     mrp = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     stock = models.IntegerField(blank=True, null=True)

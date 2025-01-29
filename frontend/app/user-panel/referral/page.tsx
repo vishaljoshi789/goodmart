@@ -99,6 +99,14 @@ export default function Referral() {
             <span className="md:font-medium">{ref.name}</span>
 
             <span className="text-gray-600">{ref.user_id}</span>
+
+            <span className="text-gray-600">
+              {new Date(ref.added_on).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
           </Link>
         ))}
       </div>

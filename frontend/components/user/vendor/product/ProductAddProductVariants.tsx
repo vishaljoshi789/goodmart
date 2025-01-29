@@ -116,6 +116,7 @@ export default function ProductAddProductVariants({
                     <SelectItem value="Color">Color</SelectItem>
                     <SelectItem value="Weight">Weight</SelectItem>
                     <SelectItem value="Material">Material</SelectItem>
+                    <SelectItem value="Quantity">Quantity</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

@@ -8,6 +8,7 @@ urlpatterns = [
     path('toggleUserStatus/<int:id>/', views.toggle_user_status),
     path('deleteUser/<int:id>/', views.delete_user),
     path('getUser/<int:id>', views.getUserInfo),
+    path('getVendors/', views.get_vendor),
     path('createProductCategory/', views.createProductCategory),
     path('getProductCategories/', views.getProductCategories),
     path('getProductCategory/<int:id>/', views.getProductCategory),
@@ -20,6 +21,8 @@ urlpatterns = [
     path('getProductBrand/<int:id>/', views.getProductBrand),
     path('updateProductBrand/<int:id>/', views.updateProductBrand),
     path('getProducts/', views.getProducts),
+    path('getProductByVendor/<int:id>/', views.getProductByVendor),
+    path('changeProductPoint/<int:id>/', views.changeProductPoint),
     path('changeProductStatus/<int:id>/', views.changeProductStatus),
     path('deleteProduct/<int:id>/', views.deleteProduct),
     path('getProduct/<int:id>/', views.getProduct),
@@ -37,5 +40,4 @@ urlpatterns = [
     path('updateOrderStatus/<int:order_id>/', views.updateOrderStatus),
     path('getLevels/', views.getLevelPoints),
     path('updateLevels/', views.updateLevelPoints),
-
 ]

@@ -27,6 +27,16 @@ def get_users(request):
     
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
+def get_vendor(request):
+    if request.method == "GET":
+        vendors = Vendor_Detail.objects.all()
+        serializer = VendorDetailSerializerForDetailedView(vendors, many=True)
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors, status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
 def login_user(request, id):
     if request.method == "GET":
         try:
@@ -218,6 +228,27 @@ def getProducts(request):
         products = Product.objects.all().order_by("user")
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getProductByVendor(request, id):
+    if request.method == 'GET':
+        products = Product.objects.filter(company_id=id)
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def changeProductPoint(request, id):
+    if request.method == 'POST':
+        product = Product.objects.get(id=id)
+        product.point = request.data['point']
+        product.save()
+        return Response({"status": "Product point changed."}, status=200)
     else:
         return Response(status=400)
     

@@ -7,6 +7,9 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Button } from "../ui/button";
+import Link from "next/link";
+import { toast } from "sonner";
+import { UserPlus } from "lucide-react";
 
 type UserCardProps = {
   name: string;
@@ -33,6 +36,28 @@ const UserCard: React.FC<UserCardProps> = ({
 }) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-10 lg:w-1/4 flex flex-col gap-2">
+      <Button
+        variant={"secondary"}
+        onClick={async () => {
+          navigator.clipboard.writeText(
+            window.location.origin + "/auth/register?referral=" + username
+          );
+          toast.success("Referral Link Copied");
+          try {
+            await navigator.share({
+              title: "GOODMART",
+              text: "Add to GOODMART Family",
+              url:
+                window.location.origin + "/auth/register?referral=" + username,
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        }}
+        className="absolute w-fit translate-x-44"
+      >
+        <UserPlus />
+      </Button>
       <CgProfile className="text-9xl text-yellow-300 text-center w-full" />
       <h3 className="text-2xl font-bold mb-2 underline text-center my-2">
         {name}

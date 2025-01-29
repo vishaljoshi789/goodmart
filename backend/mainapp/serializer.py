@@ -28,7 +28,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class ReferralSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'user_id', 'name']
+        fields = ['id', 'email', 'user_id', 'name', 'added_on']
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
