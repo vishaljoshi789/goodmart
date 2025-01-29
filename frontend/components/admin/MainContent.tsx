@@ -4,6 +4,7 @@ import { FaUsers } from "react-icons/fa";
 import { AiFillProduct, AiOutlineSafety } from "react-icons/ai";
 import { GoGear } from "react-icons/go";
 import { CiDeliveryTruck } from "react-icons/ci";
+import { Coins } from "lucide-react";
 
 const MainContent: React.FC = () => {
   return (
@@ -47,6 +48,13 @@ const MainContent: React.FC = () => {
           >
             <CiDeliveryTruck className="text-4xl" />
             <span className="text-xl font-bold">Orders</span>
+          </Link>
+          <Link
+            href={"/securepanel/generate-cashback"}
+            className="card flex flex-col hover:underline bg-white hover:text-gray-700 items-center justify-center p-5 rounded-md shadow-lg hover:shadow-sm transition duration-150 ease-in-out"
+          >
+            <Coins className="text-4xl" />
+            <span className="text-xl font-bold">Product Cashback</span>
           </Link>
         </div>
       </div>
