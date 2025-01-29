@@ -42,7 +42,7 @@ export default function Product() {
     let response = await fetch(`${baseURL}/getProduct/${id}/`);
     if (response.status == 200) {
       let data = await response.json();
-      // console.log(data);
+      console.log(data);
       setProduct(data);
     }
     if (response.status == 404) {
@@ -122,6 +122,19 @@ export default function Product() {
                         <CarouselItem>
                           <Card>
                             <CardContent className="flex items-center justify-center p-5 aspect-square">
+                              <div
+                                className="w-20 h-20 bg-yellow-500 absolute translate-x-32 -translate-y-32 flex justify-center items-center text-cneter text-white font-bold"
+                                style={{
+                                  clipPath: `polygon(
+                                              50% 0%, 61% 35%, 98% 35%, 
+                                              68% 57%, 79% 91%, 50% 70%, 
+                                              21% 91%, 32% 57%, 2% 35%, 
+                                              39% 35%
+                                            )`,
+                                }}
+                              >
+                                {product.point}
+                              </div>
                               <Image
                                 alt={product.name}
                                 height={0}
