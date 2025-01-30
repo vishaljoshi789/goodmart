@@ -32,7 +32,7 @@ export default function Product() {
   let [product, setProduct] = useState<any>({});
   let [activeImage, setActiveImage] = useState(0);
 
-  const validTypes = ["Size", "Color", "Weight", "Material"];
+  const validTypes = ["Size", "Color", "Weight", "Material", "Quantity"];
 
   // Function to filter variants by type
   const getVariantsByType = (type: string) => {
