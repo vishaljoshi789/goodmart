@@ -189,9 +189,9 @@ export default function Component() {
                 </div>
               </div>
               <div className="w-1/2">
-                <div className="h-1/2 p-1">
+                <div className="p-1">
                   <p className="font-extrabold">Billing To</p>
-                  <div className="h-full">
+                  <div className="">
                     <p className="font-bold text-sm">{order.order.user.name}</p>
                     <p className="text-sm">
                       User ID : {order.order.user.user_id}
@@ -208,11 +208,14 @@ export default function Component() {
                     </p>
                   </div>
                 </div>
-                <div className="h-1/2 border-t-2 border-black p-1 mt-2">
+                <div className="border-t-2 border-black p-1">
                   <p className="font-extrabold">Shipping To</p>
-                  <div className="h-full">
+                  <div className="">
                     <p className="font-bold text-sm">
                       {order.order.address.name}
+                    </p>
+                    <p className="font-light text-sm">
+                      {order.order.address.phone}
                     </p>
                     <p className="font-light text-sm">
                       {order.order.address.address}
