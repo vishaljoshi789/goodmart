@@ -63,7 +63,7 @@ const formSchema = z.object({
   item_type: z.string().optional(),
   mrp: z.string(),
   offer_price: z.string(),
-  hsn: z.string().optional(),
+  hsn: z.any().optional(),
   stock: z.string().optional(),
 });
 

@@ -92,7 +92,7 @@ export default function UserView() {
   let [loading, setLoading] = useState(true);
   let getUser = async () => {
     toast.loading("Loading User Details...");
-    let response = await api.get(`/admin/getUser/${id}`);
+    let response = await api.get(`/admin/getUser/${id}/`);
     if (response.status === 200) {
       setUser(response.data);
       toast.success("User Details Loaded Successfully");

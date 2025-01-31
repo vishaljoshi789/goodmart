@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail, Setting, Order, LevelPoints, OrderItem, SubOrder, Product_Variant, Address
+from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail, Setting, Order, LevelPoints, OrderItem, SubOrder, Product_Variant, Address, User_Detail
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,6 +21,11 @@ class UserSerializer(serializers.ModelSerializer):
                 setattr(instance, attr, value)
         instance.save()
         return instance
+    
+class UserDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User_Detail
+        fields = '__all__'
     
 class ProductCategoryUploadSerializer(serializers.ModelSerializer):
     class Meta:
