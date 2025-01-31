@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   user_id: z.string(),
@@ -35,7 +36,6 @@ const formSchema = z.object({
   status: z.boolean(),
   email_verified: z.boolean(),
   phone_verified: z.boolean(),
-  referral: z.string().optional(),
 });
 
 const userDetailFormSchema = z.object({
@@ -71,7 +71,6 @@ const EditUserPage = () => {
       status: true,
       email_verified: false,
       phone_verified: false,
-      referral: "",
     },
   });
   const userDetailForm = useForm<z.infer<typeof userDetailFormSchema>>({
@@ -99,28 +98,36 @@ const EditUserPage = () => {
   }, [id]);
 
   useEffect(() => {
-    api.get(`/admin/getAddress/${billingAddressId}/`).then((res) => {
-      console.log(res.data);
-      userBillingAddressForm.reset(res.data);
-    });
+    if (billingAddressId) {
+      api.get(`/admin/getAddress/${billingAddressId}/`).then((res) => {
+        console.log(res.data);
+        userBillingAddressForm.reset(res.data);
+      });
+    }
   }, [billingAddressId]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    api.put(`/admin/updateUser/${id}/`, values).then((res) => {
+      if (res.status == 200) {
+        toast.success("User Updated Successfully");
+      }
+    });
   }
   function onUserDetailSubmit(values: z.infer<typeof userDetailFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    api.put(`/admin/updateUserDetail/${id}/`, values).then((res) => {
+      if (res.status == 200) {
+        toast.success("User Detail Updated Successfully");
+      }
+    });
   }
   function onUserBillingSubmit(
     values: z.infer<typeof userBillingAddressFormSchema>
   ) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    api.put(`/admin/updateAddress/${billingAddressId}/`, values).then((res) => {
+      if (res.status == 200) {
+        toast.success("Billing Address Updated Successfully");
+      }
+    });
   }
 
   return (
@@ -270,19 +277,7 @@ const EditUserPage = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="referral"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Referral</FormLabel>
-                <FormControl>
-                  <Input placeholder="co_ordinates" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
           <Button type="submit">Submit</Button>
         </form>
       </Form>

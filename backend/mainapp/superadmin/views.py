@@ -102,6 +102,46 @@ def getAddress(request, id):
         return Response(status=400)
     
 
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateUserInfo(request, id):
+    if request.method == 'PUT':
+        user = User.objects.get(id=id)
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+    else:
+        return Response(status=400)
+
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateUserDetails(request, id):
+    if request.method == 'PUT':
+        user = User.objects.get(id=id)
+        serializer = UserDetailsSerializer(user.user_detail, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+    else:
+        return Response(status=400)
+
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateAddress(request, id):
+    if request.method == 'PUT':
+        address = Address.objects.get(id=id)
+        serializer = AddressSerializer(address, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+    else:
+        return Response(status=400)
+    
+
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def createProductCategory(request):
