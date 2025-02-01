@@ -20,6 +20,12 @@ import Link from "next/link";
 import { GMContext } from "../(utils)/context/GMContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 interface Location {
   lat: number | null;
@@ -37,6 +43,15 @@ export default function Home() {
   let [zip, setZip] = useState<any>(null);
   let [editZip, setEditZip] = useState(false);
   let { baseURL } = useContext(GMContext);
+
+  let [homepageBanners, setHomepageBanners] = useState([]);
+
+  let getHomepageBanners = async () => {
+    let response = await fetch(`${baseURL}/getHomepageBanners/`);
+    let data = await response.json();
+    console.log(data);
+    setHomepageBanners(data);
+  };
 
   let getCategory = async () => {
     let response = await fetch(`${baseURL}/getFeaturedCategory/`);
@@ -83,6 +98,7 @@ export default function Home() {
       setZip(location.zip);
     }
     getCategory();
+    getHomepageBanners();
   }, []);
   return (
     <div>
@@ -198,13 +214,40 @@ export default function Home() {
       </div>
       <div>
         <div className="lg:w-3/5 w-full">
-          <AspectRatio ratio={8 / 5} className="bg-gray-400">
-            {/* <Image src="..." alt="Image" className="rounded-md object-cover" /> */}
-          </AspectRatio>
+          <Carousel
+            className="w-full"
+            plugins={[
+              Autoplay({
+                delay: 2000,
+              }),
+            ]}
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+          >
+            <CarouselContent className="">
+              {homepageBanners &&
+                homepageBanners.map((e: any) => (
+                  <CarouselItem className="w-full">
+                    <AspectRatio ratio={16 / 6} className="w-full">
+                      <Image
+                        alt="Banner"
+                        src={`${baseURL}${e.image}`}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        className="object-cover w-full h-full"
+                      />
+                    </AspectRatio>
+                  </CarouselItem>
+                ))}
+            </CarouselContent>
+          </Carousel>
         </div>
       </div>
 
-      <Separator />
+      <Separator className="my-5" />
 
       {/* <div className="browse flex justify-center gap-20 text-center my-20">
         <div className="text-3xl bg-red-500 text-white p-10 w-1/4 rounded-full">
@@ -214,8 +257,6 @@ export default function Home() {
           Browse Service
         </div>
       </div> */}
-
-      <Separator />
 
       <section className="mb-12 px-4 md:px-6 lg:px-8">
         <div className="mb-6 md:mb-8">

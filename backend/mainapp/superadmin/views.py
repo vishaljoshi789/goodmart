@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer, LevelPointsSerializer, SubOrderWithOrderAddressSerializer, UserDetailsSerializer, AddressSerializer
-from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address
+from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer, LevelPointsSerializer, SubOrderWithOrderAddressSerializer, UserDetailsSerializer, AddressSerializer, HomepageBannerSerializer
+from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address, HomepageBanner
 import json
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
@@ -508,6 +508,34 @@ def updateLevelPoints(request):
         data = request.data
         for level_point in data:
             serializer = LevelPointsSerializer(data=level_point)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response(serializer.errors, status=400)
+        return Response(status=201)
+    else:
+        return Response(status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getHomepageBanners(request):
+    if request.method == 'GET':
+        banners = HomepageBanner.objects.all()
+        serializer = HomepageBannerSerializer(banners, many=True)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def createMultipleHomepageBanner(request):
+    if request.method == 'POST':
+        banners = []
+        HomepageBanner.objects.all().delete()
+        for i in range(len(request.FILES)):
+            banners.append({"image": request.FILES[f"banner-{i}"], "link": request.data[f"link-{i}"]})
+        for banner in banners:
+            serializer = HomepageBannerSerializer(data=banner)
             if serializer.is_valid():
                 serializer.save()
             else:

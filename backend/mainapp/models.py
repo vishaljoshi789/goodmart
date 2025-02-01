@@ -13,6 +13,9 @@ def user_detail_directory_path(instance, filename):
 def vendor_directory_path(instance, filename):
     return 'vendor_{0}/{1}'.format(instance.user, filename)
 
+def web_direcory_path(instance, filename):
+    return 'web/{0}'.format(filename)
+
 class User(AbstractUser):
     user_id = models.CharField(max_length=50, blank=True, null=True)
     email = models.EmailField(unique=True, blank=True, null=True)
@@ -388,3 +391,8 @@ class Setting(models.Model):
     registration_points = models.PositiveIntegerField(null=True, blank=True, default=0)
     platform_fee = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
 
+class HomepageBanner(models.Model):
+    image = models.ImageField(upload_to=web_direcory_path, blank=True, null=True)
+    link = models.CharField(max_length=500, blank=True, null=True)
+    added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail, Setting, Order, LevelPoints, OrderItem, SubOrder, Product_Variant, Address, User_Detail
+from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail, Setting, Order, LevelPoints, OrderItem, SubOrder, Product_Variant, Address, User_Detail, HomepageBanner
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -134,3 +134,8 @@ class SubOrderWithOrderAddressSerializer(serializers.ModelSerializer):
         model = SubOrder
         fields = '__all__'  # Include all SubOrder fields or specify required fields
         extra_fields = ['address', 'added_on']
+
+class HomepageBannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HomepageBanner
+        fields = '__all__'

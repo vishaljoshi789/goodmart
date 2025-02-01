@@ -45,4 +45,6 @@ urlpatterns = [
     path('updateOrderStatus/<int:order_id>/', views.updateOrderStatus),
     path('getLevels/', views.getLevelPoints),
     path('updateLevels/', views.updateLevelPoints),
+    path('getHomepageBanners/', views.getHomepageBanners),
+    path('createMultipleHomepageBanner/', views.createMultipleHomepageBanner),
 ]

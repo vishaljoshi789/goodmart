@@ -63,7 +63,7 @@ const formSchema = z.object({
   item_type: z.string().optional(),
   mrp: z.string(),
   offer_price: z.string(),
-  hsn: z.any().optional(),
+  hsn: z.string().optional(),
   stock: z.string().optional(),
 });
 
@@ -179,6 +179,8 @@ export default function ProductEditBasicDetails({
     values.image = image;
     values.video = video;
     formData.append("name", values.name);
+    formData.append("hsn", values.hsn ?? "");
+    formData.append("stock", values.stock ?? "");
     formData.append("description", values.description);
     formData.append("category", values.category);
     formData.append("brand", values.brand);

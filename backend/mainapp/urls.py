@@ -42,4 +42,5 @@ urlpatterns = [
     path('getShopProducts/<int:id>/', views.getShopProducts),
     path('addReferral/', views.addReferral),
     path('getMyReferral/', views.getMyReferral),
+    path('getHomepageBanners/', views.getHomepageBanners),
 ]
