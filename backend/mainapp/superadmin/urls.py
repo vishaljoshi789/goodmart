@@ -47,4 +47,8 @@ urlpatterns = [
     path('updateLevels/', views.updateLevelPoints),
     path('getHomepageBanners/', views.getHomepageBanners),
     path('createMultipleHomepageBanner/', views.createMultipleHomepageBanner),
+    path('getHomepageSections/', views.getHomepageSections),
+    path('createMultipleHomepageSection/', views.createMultipleHomepageSection),
+    path('getHomepageItems/', views.getHomepageItems),
+    path('createMultipleHomepageItem/', views.createMultipleHomepageItem),
 ]

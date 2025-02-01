@@ -60,6 +60,7 @@ export default function ProductCategory() {
         <TableHeader>
           <TableRow>
             <TableHead>S. No.</TableHead>
+            <TableHead>ID</TableHead>
             <TableHead className="w-[100px]">Name</TableHead>
             <TableHead>Description</TableHead>
             <TableHead>Image</TableHead>
@@ -72,6 +73,7 @@ export default function ProductCategory() {
           {category.map((cat, index) => (
             <TableRow key={index}>
               <TableCell className="font-medium">{index + 1}</TableCell>
+              <TableCell className="font-medium">{cat.id}</TableCell>
               <TableCell>{cat.name}</TableCell>
               <TableCell>{cat.description}</TableCell>
               <TableCell>

@@ -145,6 +145,7 @@ export default function Products() {
               <TableHeader>
                 <TableRow className="">
                   <TableHead className="text-center">S.No.</TableHead>
+                  <TableHead className="text-center">ID</TableHead>
                   <TableHead className="text-center">Image</TableHead>
                   <TableHead className="text-center">Product Name</TableHead>
                   <TableHead className="text-center">
@@ -165,6 +166,7 @@ export default function Products() {
                   .map((product, index) => (
                     <TableRow className="text-center" key={index}>
                       <TableCell>{index + 1}</TableCell>
+                      <TableCell>{product.id}</TableCell>
                       <TableCell className="">
                         {product.image ? (
                           <Image

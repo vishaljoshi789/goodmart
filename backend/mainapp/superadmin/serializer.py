@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail, Setting, Order, LevelPoints, OrderItem, SubOrder, Product_Variant, Address, User_Detail, HomepageBanner
+from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail, Setting, Order, LevelPoints, OrderItem, SubOrder, Product_Variant, Address, User_Detail, HomepageBanner, HomepageSection, HomepageItem
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -138,4 +138,14 @@ class SubOrderWithOrderAddressSerializer(serializers.ModelSerializer):
 class HomepageBannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = HomepageBanner
+        fields = '__all__'
+
+class HomepageSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HomepageSection
+        fields = '__all__'
+
+class HomepageItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HomepageItem
         fields = '__all__'

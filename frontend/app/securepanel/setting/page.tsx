@@ -20,9 +20,16 @@ import useAxios from "@/app/(utils)/hooks/useAxios";
 import { toast } from "sonner";
 import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { GrAdd } from "react-icons/gr";
-import { link } from "fs";
 import Link from "next/link";
 import { GMContext } from "@/app/(utils)/context/GMContext";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { content } from "html2canvas/dist/types/css/property-descriptors/content";
 
 const webSettingFormSchema = z.object({
   registration_points: z.string(),
@@ -33,6 +40,8 @@ export default function Setting() {
   let [setting, setSetting] = useState<any>(null);
   let [levels, setLevels] = useState<any>([]);
   let [homepageBanners, setHomepageBanners] = useState<any>([]);
+  let [homepageSections, setHomepageSections] = useState<any>([]);
+  let [sectionItems, setSectionItems] = useState<any>([]);
   let api = useAxios();
   let { baseURL } = useContext(GMContext);
 
@@ -68,6 +77,64 @@ export default function Setting() {
           e["file"] = blobToFile(blob, filename);
         });
       });
+    }
+  };
+
+  let getHomepageSections = async () => {
+    let response = await api.get("/admin/getHomepageSections/");
+    console.log(response);
+    if (response.status === 200) {
+      setHomepageSections(response.data);
+    }
+  };
+
+  let addHomePageSection = () => {
+    let newSection = { name: "", display_order: 0, content_type: "" };
+    setHomepageSections((section: any) => [...section, newSection]);
+  };
+
+  let createMultipleHomepageSection = async () => {
+    let response = await api.post(
+      "/admin/createMultipleHomepageSection/",
+      homepageSections
+    );
+    if (response.status === 201) {
+      getHomepageSections();
+      toast.success("Homepage Sections created successfully");
+    } else {
+      toast.error("Failed to create Homepage Sections");
+    }
+  };
+
+  let getSectionItems = async () => {
+    let response = await api.get("/admin/getHomepageItems/");
+    console.log(response);
+    if (response.status === 200) {
+      setSectionItems(response.data);
+    }
+  };
+
+  let addSectionItem = (section: number) => {
+    let newSectionItem = {
+      id: Date.now(),
+      section: section,
+      product: null,
+      category: null,
+    };
+    setSectionItems((prevItems: any) => [...prevItems, newSectionItem]);
+  };
+
+  let createMultipleSectionItems = async () => {
+    let cleanedSectionItems = sectionItems.map(({ id, ...rest }: any) => rest);
+    let response = await api.post(
+      "/admin/createMultipleHomepageItem/",
+      cleanedSectionItems
+    );
+    if (response.status === 201) {
+      getHomepageSections();
+      toast.success("Homepage Sections Items created successfully");
+    } else {
+      toast.error("Failed to create Homepage Sections Items");
     }
   };
 
@@ -156,6 +223,8 @@ export default function Setting() {
     getSetting();
     getLevels();
     getHomepageBanners();
+    getHomepageSections();
+    getSectionItems();
   }, []);
 
   const webSettingForm = useForm<z.infer<typeof webSettingFormSchema>>({
@@ -334,7 +403,196 @@ export default function Setting() {
           </div>
         </div>
       </div>
-      <div className="flex justify-center flex-col gap-5 p-5 bg-gray-100 rounded-lg"></div>
+      <div className="flex justify-center flex-col gap-5 p-5 bg-gray-100 rounded-lg">
+        <div className="flex items-center gap-2">
+          <span className="font-bold w-full text-red-500">
+            Homepage Sections
+          </span>
+          <Button onClick={createMultipleHomepageSection} variant={"outline"}>
+            <CheckIcon />
+          </Button>
+          <Button onClick={addHomePageSection} variant={"outline"}>
+            <GrAdd />
+          </Button>
+        </div>
+        <div>
+          <div className="flex flex-col gap-5 col-span-1 ">
+            {homepageSections.map((section: any, index: number) => (
+              <div key={index} className="flex flex-col items-center gap-5">
+                <div className="flex gap-5 w-full">
+                  <Select
+                    value={section.name}
+                    onValueChange={(e) =>
+                      setHomepageSections((sections: any) =>
+                        sections.map((s: any, i: number) =>
+                          i === index ? { ...s, name: e } : s
+                        )
+                      )
+                    }
+                  >
+                    <SelectTrigger className="w-full bg-white">
+                      <SelectValue placeholder="Section Name" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Top Deals">Top Deals</SelectItem>
+                      <SelectItem value="Recommended for You">
+                        Recommended for You
+                      </SelectItem>
+                      <SelectItem value="Featured Items">
+                        Featured Items
+                      </SelectItem>
+                      <SelectItem value="Shop by Category">
+                        Shop by Category
+                      </SelectItem>
+                      <SelectItem value="New Arrivals">New Arrivals</SelectItem>
+                      <SelectItem value="Trending Products">
+                        Trending Products
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select
+                    value={section.content_type?.toString()}
+                    onValueChange={(e) =>
+                      setHomepageSections((sections: any) =>
+                        sections.map((s: any, i: number) =>
+                          i === index ? { ...s, content_type: e } : s
+                        )
+                      )
+                    }
+                  >
+                    <SelectTrigger className="w-full bg-white">
+                      <SelectValue placeholder="Section Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Product">Product</SelectItem>
+                      <SelectItem value="Category">Category</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex gap-5 w-full">
+                  <Input
+                    type="number"
+                    className="bg-white w-full"
+                    value={section.display_order}
+                    placeholder="Order"
+                    onChange={(e) =>
+                      setHomepageSections((sections: any) =>
+                        sections.map((s: any, i: number) =>
+                          i === index
+                            ? { ...s, display_order: e.target.value }
+                            : s
+                        )
+                      )
+                    }
+                  />
+                  <Button
+                    onClick={() => {
+                      setHomepageSections((sections: any) =>
+                        sections.filter((_: any, i: number) => i !== index)
+                      );
+                    }}
+                    variant={"destructive"}
+                  >
+                    <Cross1Icon />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col gap-5 p-5 col-span-full rounded-md bg-gray-200">
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2 items-center">
+            <span className="font-bold w-full text-red-500">
+              Homepage Sections Items
+            </span>
+            <Button
+              onClick={createMultipleSectionItems}
+              variant={"outline"}
+              className="bg-green-500 text-white"
+            >
+              <CheckIcon />
+            </Button>
+          </div>
+
+          {homepageSections.map((section: any, index: number) => (
+            <div
+              key={index}
+              className="flex flex-col gap-5 bg-white p-1 rounded-md"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-sm whitespace-nowrap font-bold w-full text-violet-500">
+                  {section.name} ({section.content_type})
+                </span>
+
+                <Button
+                  onClick={() => addSectionItem(section.id)}
+                  variant={"outline"}
+                  className="bg-blue-500 text-white"
+                >
+                  <GrAdd />
+                </Button>
+              </div>
+              <div>
+                <div className="flex flex-col gap-5 col-span-1">
+                  {sectionItems
+                    .filter((item: any) => item.section === section.id)
+                    .map((item: any, index: number) => (
+                      <div key={item.id} className="flex items-center gap-5">
+                        <span className="text-sm whitespace-nowrap font-bold">
+                          Item {index + 1}
+                        </span>
+                        {section.content_type == "Product" && (
+                          <Input
+                            type="number"
+                            value={item.product}
+                            placeholder="Product ID"
+                            onChange={(e) =>
+                              setSectionItems((items: any) =>
+                                items.map((i: any) =>
+                                  i.id === item.id
+                                    ? { ...i, product: e.target.value }
+                                    : i
+                                )
+                              )
+                            }
+                          />
+                        )}
+                        {section.content_type == "Category" && (
+                          <Input
+                            type="number"
+                            value={item.category}
+                            placeholder="Category ID"
+                            onChange={(e) =>
+                              setSectionItems((items: any) =>
+                                items.map((i: any) =>
+                                  i.id === item.id
+                                    ? { ...i, category: e.target.value }
+                                    : i
+                                )
+                              )
+                            }
+                          />
+                        )}
+                        <Button
+                          onClick={() =>
+                            setSectionItems((items: any) =>
+                              items.filter((i: any) => i.id !== item.id)
+                            )
+                          }
+                          variant={"destructive"}
+                        >
+                          <Cross1Icon />
+                        </Button>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

@@ -231,14 +231,16 @@ export default function Home() {
                 homepageBanners.map((e: any, index) => (
                   <CarouselItem className="w-full" key={index}>
                     <AspectRatio ratio={16 / 6} className="w-full">
-                      <Image
-                        alt="Banner"
-                        src={`${baseURL}${e.image}`}
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        className="object-cover w-full h-full"
-                      />
+                      <Link href={e.link}>
+                        <Image
+                          alt="Banner"
+                          src={`${baseURL}${e.image}`}
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                          className="object-cover w-full h-full"
+                        />
+                      </Link>
                     </AspectRatio>
                   </CarouselItem>
                 ))}

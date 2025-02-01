@@ -396,3 +396,31 @@ class HomepageBanner(models.Model):
     link = models.CharField(max_length=500, blank=True, null=True)
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+
+class HomepageSection(models.Model):
+    SECTION_CHOICES = [
+        ('Top Deals', 'Top Deals'),
+        ('Recommended for You', 'Recommended for You'),
+        ('Featured Items', 'Featured Items'),
+        ('Shop by Category', 'Shop by Category'),
+        ('New Arrivals', 'New Arrivals'),
+        ('Trending Products', 'Trending Products'),
+    ]
+    CONTENT_TYPE_CHOICES = [
+        ('Product', 'Product'),
+        ('Category', 'Category'),
+    ]
+    name = models.CharField(max_length=100, choices=SECTION_CHOICES, unique=True)
+    display_order = models.PositiveIntegerField(help_text="Order in which the section appears")
+    content_type = models.CharField(max_length=10, choices=CONTENT_TYPE_CHOICES, null=True)
+
+    
+class HomepageItem(models.Model):
+    section = models.ForeignKey(HomepageSection, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
+    category = models.ForeignKey(Product_Category, on_delete=models.CASCADE, blank=True, null=True)
+    image = models.ImageField(upload_to=web_direcory_path, blank=True, null=True)
+    added_on = models.DateTimeField(auto_now_add=True)
+    modify_on = models.DateTimeField(auto_now=True)
+

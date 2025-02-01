@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer, LevelPointsSerializer, SubOrderWithOrderAddressSerializer, UserDetailsSerializer, AddressSerializer, HomepageBannerSerializer
-from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address, HomepageBanner
+from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer, LevelPointsSerializer, SubOrderWithOrderAddressSerializer, UserDetailsSerializer, AddressSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer
+from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address, HomepageBanner, HomepageItem, HomepageSection
 import json
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
@@ -543,3 +543,53 @@ def createMultipleHomepageBanner(request):
         return Response(status=201)
     else:
         return Response(status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getHomepageSections(request):
+    if request.method == 'GET':
+        sections = HomepageSection.objects.all().order_by('display_order')
+        serializer = HomepageSectionSerializer(sections, many=True)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def createMultipleHomepageSection(request):
+    if request.method == 'POST':
+        HomepageSection.objects.all().delete()
+        for section in request.data:
+            serializer = HomepageSectionSerializer(data=section)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response(serializer.errors, status=400)
+        return Response(status=201)
+    return Response(status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getHomepageItems(request):
+    if request.method == 'GET':
+        items = HomepageItem.objects.all()
+        serializer = HomepageItemSerializer(items, many=True)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def createMultipleHomepageItem(request):
+    if request.method == 'POST':
+        valid_items = []
+        for item in request.data:
+            serializer = HomepageItemSerializer(data=item)
+            if serializer.is_valid():
+                valid_items.append(serializer)
+            else:
+                return Response(serializer.errors, status=400)  # Stop and return error
+        HomepageItem.objects.all().delete()
+        for serializer in valid_items:
+            serializer.save()
+        return Response(status=201)
+    return Response(status=400)
