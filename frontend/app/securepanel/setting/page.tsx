@@ -334,6 +334,7 @@ export default function Setting() {
           </div>
         </div>
       </div>
+      <div className="flex justify-center flex-col gap-5 p-5 bg-gray-100 rounded-lg"></div>
     </div>
   );
 }

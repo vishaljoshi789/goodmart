@@ -228,8 +228,8 @@ export default function Home() {
           >
             <CarouselContent className="">
               {homepageBanners &&
-                homepageBanners.map((e: any) => (
-                  <CarouselItem className="w-full">
+                homepageBanners.map((e: any, index) => (
+                  <CarouselItem className="w-full" key={index}>
                     <AspectRatio ratio={16 / 6} className="w-full">
                       <Image
                         alt="Banner"
