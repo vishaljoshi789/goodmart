@@ -43,4 +43,5 @@ urlpatterns = [
     path('addReferral/', views.addReferral),
     path('getMyReferral/', views.getMyReferral),
     path('getHomepageBanners/', views.getHomepageBanners),
+    path('getHomepageSections/', views.getHomepageSections),
 ]

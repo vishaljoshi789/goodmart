@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder, Coupon, Setting, Wallet, OTP, User_Detail, HomepageBanner
-from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, SubOrderItemSerializer, CouponSerializer, WalletSerializer, VendorDetailCartSerializer, ReferralSerializer, UserDetailSerializer, HomepageBannerSerializer
+from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder, Coupon, Setting, Wallet, OTP, User_Detail, HomepageBanner, HomepageSection, HomepageItem
+from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, SubOrderItemSerializer, CouponSerializer, WalletSerializer, VendorDetailCartSerializer, ReferralSerializer, UserDetailSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -642,5 +642,13 @@ def getHomepageBanners(request):
     if request.method == "GET":
         banners = HomepageBanner.objects.all()
         serializer = HomepageBannerSerializer(banners, many=True)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+def getHomepageSections(request):
+    if request.method == "GET":
+        sections = HomepageSection.objects.all().order_by('display_order')
+        serializer = HomepageSectionSerializer(sections, many=True)
         return Response(serializer.data, status=200)
     return Response(status=400)

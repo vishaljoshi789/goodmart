@@ -5,8 +5,7 @@ from .serializer import UserSerializer, ProductCategorySerializer, ProductCatego
 from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address, HomepageBanner, HomepageItem, HomepageSection
 import json
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework import status
-
+from django.db import transaction
 
 @api_view(['GET'])
 def is_admin(request):
@@ -558,13 +557,32 @@ def getHomepageSections(request):
 @permission_classes([IsAdminUser])
 def createMultipleHomepageSection(request):
     if request.method == 'POST':
-        HomepageSection.objects.all().delete()
-        for section in request.data:
-            serializer = HomepageSectionSerializer(data=section)
-            if serializer.is_valid():
-                serializer.save()
-            else:
-                return Response(serializer.errors, status=400)
+        incoming_titles = {section['name'] for section in request.data}  # Extract incoming section titles
+
+        # Fetch existing sections
+        existing_sections = {section.name: section for section in HomepageSection.objects.all()}
+
+        with transaction.atomic():  # Ensures atomicity (all or nothing)
+            # DELETE sections that are not in the incoming data
+            for title, section in existing_sections.items():
+                if title not in incoming_titles:
+                    section.delete()  # This will also delete related items if cascade delete is enabled
+
+            for section_data in request.data:
+                title = section_data.get('name')  # Ensure the correct field is used
+                
+                if title in existing_sections:
+                    # UPDATE existing section
+                    serializer = HomepageSectionSerializer(existing_sections[title], data=section_data, partial=True)
+                else:
+                    # CREATE new section
+                    serializer = HomepageSectionSerializer(data=section_data)
+
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    return Response(serializer.errors, status=400)
+
         return Response(status=201)
     return Response(status=400)
     

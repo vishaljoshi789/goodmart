@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail, Product_Variant, Address, Order, OrderItem, SubOrder, Coupon, Wallet, Transaction, User_Detail, HomepageBanner
-
+from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail, Product_Variant, Address, Order, OrderItem, SubOrder, Coupon, Wallet, Transaction, User_Detail, HomepageBanner, HomepageItem, HomepageSection
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -193,5 +192,18 @@ class WalletSerializer(serializers.ModelSerializer):
 class HomepageBannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = HomepageBanner
+        fields = '__all__'
+
+class HomepageItemSerializer(serializers.ModelSerializer):
+    product = ProductDetailedSerializer()
+    category = ProductCategorySerializer()
+    class Meta:
+        model = HomepageItem
+        fields = '__all__'
+
+class HomepageSectionSerializer(serializers.ModelSerializer):
+    items = HomepageItemSerializer(many=True)
+    class Meta:
+        model = HomepageSection
         fields = '__all__'
 

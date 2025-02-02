@@ -45,12 +45,20 @@ export default function Home() {
   let { baseURL } = useContext(GMContext);
 
   let [homepageBanners, setHomepageBanners] = useState([]);
+  let [homepageSections, setHomepageSections] = useState([]);
 
   let getHomepageBanners = async () => {
     let response = await fetch(`${baseURL}/getHomepageBanners/`);
     let data = await response.json();
     console.log(data);
     setHomepageBanners(data);
+  };
+
+  let getHomepageSections = async () => {
+    let response = await fetch(`${baseURL}/getHomepageSections/`);
+    let data = await response.json();
+    console.log(data);
+    setHomepageSections(data);
   };
 
   let getCategory = async () => {
@@ -99,6 +107,7 @@ export default function Home() {
     }
     getCategory();
     getHomepageBanners();
+    getHomepageSections();
   }, []);
   return (
     <div>
@@ -251,105 +260,222 @@ export default function Home() {
 
       <Separator className="my-5" />
 
-      {/* <div className="browse flex justify-center gap-20 text-center my-20">
-        <div className="text-3xl bg-red-500 text-white p-10 w-1/4 rounded-full">
-          Browse Product
-        </div>
-        <div className="text-3xl bg-blue-500 text-white p-10 w-1/4 rounded-full">
-          Browse Service
-        </div>
-      </div> */}
-
-      <section className="mb-12 px-4 md:px-6 lg:px-8">
-        <div className="mb-6 md:mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold mb-2">
-            Shop by Category
-          </h2>
-          <p className="text-gray-600">Explore our wide range of collections</p>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-          {featuredCategory.map((category: any, index) => (
-            <div
-              key={index}
-              className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-white shadow-sm hover:shadow-xl transition-all duration-300"
-            >
-              <div className="p-4 md:p-6">
-                <div className="flex flex-col md:flex-row items-start justify-between">
-                  <div className="w-full">
-                    <div
-                      className={`inline-flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl bg-gradient-to-r ${category.color} text-white shadow-lg`}
-                    >
-                      {/* <category.icon className="h-5 w-5 md:h-6 md:w-6" /> */}
-                      <Image
-                        alt={category.name}
-                        src={baseURL + category.image}
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        className="w-6 h-6 md:w-8 md:h-8"
-                      />
-                    </div>
-                    <div className="flex justify-between items-center mt-3 md:mt-4">
-                      <h3 className="text-base md:text-lg font-semibold">
-                        {category.name}
-                      </h3>
-                      <span className="text-xs md:text-sm font-medium text-gray-400 md:hidden">
-                        {category.items}
-                      </span>
-                    </div>
-                    <p className="mt-1 text-xs md:text-sm text-gray-500 line-clamp-2">
-                      {category.description}
-                    </p>
-                  </div>
-                  <span className="hidden md:block text-sm font-medium text-gray-400">
-                    {category.items}
-                  </span>
-                </div>
-
-                <div className="mt-3 md:mt-4 flex items-center justify-between">
-                  <span className="text-xs md:text-sm font-medium text-gray-500 group-hover:text-gray-900 transition-colors">
-                    Explore Category
-                  </span>
-                  <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-all transform group-hover:translate-x-1" />
-                </div>
-              </div>
-
-              <div
-                className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r opacity-0 transition-opacity group-hover:opacity-100"
-                style={{
-                  backgroundImage: `linear-gradient(to right, var(--tw-gradient-from) 0%, var(--tw-gradient-to) 100%)`,
-                }}
-              />
+      {homepageSections.map((section: any, index) =>
+        section.name == "Shop by Category" ? (
+          <section className="mb-12 px-4 md:px-6 lg:px-8">
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                Shop by Category
+              </h2>
+              <p className="text-gray-600">
+                Explore our wide range of collections
+              </p>
             </div>
-          ))}
-        </div>
 
-        {/* Amazon-style Deal Cards */}
-        <div className="mt-8">
-          <h2 className="text-xl md:text-2xl font-bold mb-4">Today's Deals</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map((deal) => (
-              <div key={deal} className="bg-white rounded-lg shadow-sm p-4">
-                <div className="aspect-square bg-gray-100 rounded-lg mb-3" />
-                <div className="space-y-2">
-                  <span className="inline-block bg-red-100 text-red-600 text-xs font-medium px-2 py-1 rounded">
-                    Up to 40% off
-                  </span>
-                  <p className="text-sm font-medium line-clamp-2">
-                    Deal of the Day
-                  </p>
-                </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+              {section.items.map((category: any, index: number) => (
+                <Link
+                  href={`/products?category=${category.category.id}`}
+                  key={index}
+                  className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-white shadow-sm hover:shadow-xl transition-all duration-300"
+                >
+                  <div className="p-4 md:p-6">
+                    <div className="flex flex-col md:flex-row items-start justify-between">
+                      <div className="w-full">
+                        <div
+                          className={`inline-flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl bg-gradient-to-r ${category.color} text-white shadow-lg`}
+                        >
+                          {/* <category.icon className="h-5 w-5 md:h-6 md:w-6" /> */}
+                          <Image
+                            alt={category.category.name}
+                            src={baseURL + category.category.image}
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            className="w-6 h-6 md:w-8 md:h-8"
+                          />
+                        </div>
+                        <div className="flex justify-between items-center mt-3 md:mt-4">
+                          <h3 className="text-base md:text-lg font-semibold">
+                            {category.category.name}
+                          </h3>
+                        </div>
+                        <p className="mt-1 text-xs md:text-sm text-gray-500 line-clamp-2">
+                          {category.category.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 md:mt-4 flex items-center justify-between">
+                      <span className="text-xs md:text-sm font-medium text-gray-500 group-hover:text-gray-900 transition-colors">
+                        Explore Category
+                      </span>
+                      <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-all transform group-hover:translate-x-1" />
+                    </div>
+                  </div>
+
+                  <div
+                    className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r opacity-0 transition-opacity group-hover:opacity-100"
+                    style={{
+                      backgroundImage: `linear-gradient(to right, var(--tw-gradient-from) 0%, var(--tw-gradient-to) 100%)`,
+                    }}
+                  />
+                </Link>
+              ))}
+            </div>
+
+            {/* Amazon-style Deal Cards */}
+
+            {/* Personalized Recommendations */}
+          </section>
+        ) : section.name == "Top Deals" ? (
+          <section className="mb-12 px-4 md:px-6 lg:px-8">
+            <div className="mt-8">
+              <h2 className="text-xl md:text-2xl font-bold mb-4">
+                Today's Deals
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {section.items.map((deal: any) => (
+                  <Link
+                    href={`/product?id=${deal.product.id}`}
+                    key={deal.id}
+                    className="bg-white rounded-lg shadow-sm p-4"
+                  >
+                    <Image
+                      src={baseURL + deal.product.image}
+                      alt={deal.product.name}
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      className="object-cover w-full h-32"
+                    />
+                    <div className="space-y-2">
+                      <span className="inline-block bg-red-100 text-red-600 text-xs font-medium px-2 py-1 rounded">
+                        Up to{" "}
+                        {(
+                          ((deal.product.mrp - deal.product.offer_price) /
+                            deal.product.mrp) *
+                          100
+                        ).toFixed(2)}
+                        % off
+                      </span>
+                      <p className="text-sm font-medium line-clamp-2">
+                        {deal.product.name}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          </section>
+        ) : section.name == "Recommended for You" ? (
+          <section>
+            <div className="mt-8 bg-white rounded-xl p-4 md:p-6">
+              <h2 className="text-xl md:text-2xl font-bold mb-4">
+                Recommended for you
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+                {section.items.map((item: any) => (
+                  <Link
+                    href={
+                      section.content_type == "Category"
+                        ? `/products?category=${item.category.id}`
+                        : `/product?id=${item.product.id}`
+                    }
+                    key={item.id}
+                    className="space-y-2"
+                  >
+                    <Image
+                      src={
+                        baseURL +
+                        (section.content_type == "Category"
+                          ? item.category.image
+                          : item.product.image)
+                      }
+                      alt={
+                        section.content_type == "Category"
+                          ? item.category.name
+                          : item.product.name
+                      }
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      className="object-cover w-full h-32"
+                    />
+                    <p className="text-sm font-medium line-clamp-2">
+                      {section.content_type == "Category"
+                        ? item.category.name
+                        : item.product.name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {section.content_type == "Product" &&
+                        "₹" + item.product.offer_price}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : (
+          section.name == "Featured Items" && (
+            <section className="mb-8">
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold mb-2">Featured Items</h2>
+                <p className="text-gray-600">
+                  Explore our wide range of collections
+                </p>
+              </div>
 
-        {/* Personalized Recommendations */}
-      </section>
-
+              <div className="grid grid-cols-2 gap-3">
+                {section.items.map((item: any, index: number) => (
+                  <Link
+                    href={
+                      section.content_type == "Category"
+                        ? `/products?category=${item.category.id}`
+                        : `/product?id=${item.product.id}`
+                    }
+                    key={index}
+                    className="relative aspect-[4/3] overflow-hidden rounded-xl"
+                  >
+                    <div className="relative w-full h-full">
+                      <div className="absolute inset-0">
+                        <Image
+                          src={
+                            baseURL +
+                            (section.content_type == "Category"
+                              ? item.category.image
+                              : item.product.image)
+                          }
+                          alt={
+                            section.content_type == "Category"
+                              ? item.category.name
+                              : item.product.name
+                          }
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 50vw, 33vw"
+                          priority={index === 0}
+                        />
+                      </div>
+                      <div className="absolute inset-0 bg-black/30" />
+                    </div>
+                    <div className="absolute inset-0 flex flex-col justify-end p-4 text-white">
+                      <h3 className="text-lg font-bold">
+                        {section.content_type == "Category"
+                          ? item.category.name
+                          : item.product.name}
+                      </h3>
+                      <p className="text-sm opacity-90">Shop Now →</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )
+        )
+      )}
       {/* Categories & Products */}
-      <section className="mb-8">
+      {/* <section className="mb-8">
         <Tabs defaultValue="All Products" className="space-y-6">
           <ScrollArea className="w-full">
             <TabsList className="inline-flex w-full justify-start bg-transparent border-b border-rose-100">
@@ -368,69 +494,19 @@ export default function Home() {
           {featuredCategory.map((category: any) => (
             <TabsContent key={category.id} value={category.id}>
               <div className="grid grid-cols-2 gap-2  sm:gap-4 md:grid-cols-3 lg:grid-cols-5">
-                {/* {products.map((product) => (
+                {products.map((product) => (
                   <ProductCard key={product._id} item={product} />
-                ))} */}
+                ))}
               </div>
             </TabsContent>
           ))}
         </Tabs>
-      </section>
-
-      <section>
-        <div className="mt-8 bg-white rounded-xl p-4 md:p-6">
-          <h2 className="text-xl md:text-2xl font-bold mb-4">
-            Recommended for you
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div key={item} className="space-y-2">
-                <div className="aspect-square bg-gray-100 rounded-lg" />
-                <p className="text-sm font-medium line-clamp-2">Product Name</p>
-                <p className="text-xs text-gray-500">₹999</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      </section> */}
 
       {/* Featured Categories */}
-      <section className="mb-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-2">Featured Items</h2>
-          <p className="text-gray-600">Explore our wide range of collections</p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          {featuredCategory.map((category: any, index) => (
-            <div
-              key={index}
-              className="relative aspect-[4/3] overflow-hidden rounded-xl"
-            >
-              <div className="relative w-full h-full">
-                <div className="absolute inset-0">
-                  <Image
-                    src={category.imageUrl}
-                    alt={category.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                    priority={index === 0}
-                  />
-                </div>
-                <div className="absolute inset-0 bg-black/30" />
-              </div>
-              <div className="absolute inset-0 flex flex-col justify-end p-4 text-white">
-                <h3 className="text-lg font-bold">{category.title}</h3>
-                <p className="text-sm opacity-90">Shop Now →</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Newsletter Section */}
-      <section className="my-12 rounded-2xl bg-gradient-to-r from-rose-500 to-orange-500 p-6 text-white">
+      {/* <section className="my-12 rounded-2xl bg-gradient-to-r from-rose-500 to-orange-500 p-6 text-white">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-2">Join Our Newsletter</h2>
           <p className="mb-4 opacity-90">
@@ -446,20 +522,19 @@ export default function Home() {
             </Button>
           </div>
         </div>
-      </section>
+      </section> */}
       <footer className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
           <div className="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
             <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
               <Image
-                src="/images/logo.gif"
+                src="/images/logo2.png"
                 alt="Logo"
                 sizes="100vw"
                 width={0}
                 height={0}
-                className="bg-white rounded-full md:w-16 md:h-16 w-10 h-10"
+                className="bg-white rounded-full w-full"
               />
-              <span className="ml-3 text-xl">GOODMART</span>
             </a>
             <p className="mt-2 text-sm text-gray-500">
               All your daily needs at one place.
@@ -468,118 +543,24 @@ export default function Home() {
           <div className="flex-grow flex flex-wrap md:pl-20 -mb-10 md:mt-0 mt-10 md:text-left text-center">
             <div className="lg:w-1/4 md:w-1/2 w-full px-4">
               <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
-                CATEGORIES
+                Terms & Conditions
               </h2>
-              <nav className="list-none mb-10">
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    First Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    Second Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    Third Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    Fourth Link
-                  </a>
-                </li>
-              </nav>
-            </div>
-            <div className="lg:w-1/4 md:w-1/2 w-full px-4">
               <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
-                CATEGORIES
+                Return Policy
               </h2>
-              <nav className="list-none mb-10">
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    First Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    Second Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    Third Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    Fourth Link
-                  </a>
-                </li>
-              </nav>
-            </div>
-            <div className="lg:w-1/4 md:w-1/2 w-full px-4">
               <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
-                CATEGORIES
+                Product Warranty
               </h2>
-              <nav className="list-none mb-10">
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    First Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    Second Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    Third Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    Fourth Link
-                  </a>
-                </li>
-              </nav>
-            </div>
-            <div className="lg:w-1/4 md:w-1/2 w-full px-4">
               <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
-                CATEGORIES
+                Our Mission and Vision
               </h2>
-              <nav className="list-none mb-10">
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    First Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    Second Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    Third Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-600 hover:text-gray-800">
-                    Fourth Link
-                  </a>
-                </li>
-              </nav>
             </div>
           </div>
         </div>
         <div className="bg-gray-100">
           <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
             <p className="text-gray-500 text-sm text-center sm:text-left">
-              © 2025 Tailblocks
+              © 2025 GOODMART
             </p>
             <span className="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
               <a className="text-gray-500">

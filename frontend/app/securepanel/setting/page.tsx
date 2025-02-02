@@ -30,6 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { content } from "html2canvas/dist/types/css/property-descriptors/content";
+import { get } from "http";
 
 const webSettingFormSchema = z.object({
   registration_points: z.string(),
@@ -100,6 +101,7 @@ export default function Setting() {
     );
     if (response.status === 201) {
       getHomepageSections();
+      getSectionItems();
       toast.success("Homepage Sections created successfully");
     } else {
       toast.error("Failed to create Homepage Sections");
@@ -132,6 +134,7 @@ export default function Setting() {
     );
     if (response.status === 201) {
       getHomepageSections();
+      getSectionItems();
       toast.success("Homepage Sections Items created successfully");
     } else {
       toast.error("Failed to create Homepage Sections Items");
