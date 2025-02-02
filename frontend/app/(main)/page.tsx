@@ -262,7 +262,7 @@ export default function Home() {
 
       {homepageSections.map((section: any, index) =>
         section.name == "Shop by Category" ? (
-          <section className="mb-12 px-4 md:px-6 lg:px-8">
+          <section className="mb-12 px-4 md:px-6 lg:px-8" key={section.id}>
             <div className="mb-6 md:mb-8">
               <h2 className="text-2xl md:text-3xl font-bold mb-2">
                 Shop by Category
@@ -329,7 +329,7 @@ export default function Home() {
             {/* Personalized Recommendations */}
           </section>
         ) : section.name == "Top Deals" ? (
-          <section className="mb-12 px-4 md:px-6 lg:px-8">
+          <section className="mb-12 px-4 md:px-6 lg:px-8" key={section.id}>
             <div className="mt-8">
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 Today's Deals
@@ -369,7 +369,7 @@ export default function Home() {
             </div>
           </section>
         ) : section.name == "Recommended for You" ? (
-          <section>
+          <section key={section.id}>
             <div className="mt-8 bg-white rounded-xl p-4 md:p-6">
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 Recommended for you
@@ -418,7 +418,7 @@ export default function Home() {
           </section>
         ) : (
           section.name == "Featured Items" && (
-            <section className="mb-8">
+            <section className="mb-8" key={section.id}>
               <div className="mb-8">
                 <h2 className="text-2xl font-bold mb-2">Featured Items</h2>
                 <p className="text-gray-600">
