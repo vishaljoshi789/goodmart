@@ -3,6 +3,7 @@
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -138,14 +139,7 @@ CORS_ALLOWED_ORIGINS = [
 
 if LOGGING:
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('POSTGRES_DB_NAME'),
-        'USER': config('POSTGRES_DB_USER'),
-        'PASSWORD': config('POSTGRES_DB_PASSWORD'),
-        'HOST': config('POSTGRES_DB_HOST'),
-        'PORT': config('POSTGRES_DB_PORT'),
-    }
+    'default': dj_database_url.config(config("DATABASE_URL"))
 }
 else:
     DATABASES = {

@@ -86,9 +86,9 @@ jobs:
             npm run build  # Build the Next.js app for production
 
             # Restart the gunicorn service for Django
-            sudo systemctl restart gunicorn
+            sudo systemctl restart goodmart-backend  # Restart the Gunicorn service for Django
 
             # Restart the pm2 service for Next.js (ensure pm2 is installed and running)
-            pm2 restart next  # Restart PM2 process for Next.js
+            pm2 restart goodmart-frontend  # Restart PM2 process for Next.js
 
             sudo systemctl restart nginx
