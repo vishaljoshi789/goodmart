@@ -19,7 +19,7 @@ LOGGING = config('LOGGING', default=False, cast=bool)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'goodmart.in', 'www.goodmart.in', 'api.goodmart.in', '103.186.184.54']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'goodmart.in', 'www.goodmart.in', 'api.goodmart.in', '147.93.104.242']
 
 # FRONTEND_URL = "http://192.168.1.5:3000"
 FRONTEND_URL = "https://goodmart.in" if LOGGING else "http://localhost:3000"
@@ -129,7 +129,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://www.goodmart.in",
     "http://goodmart.in",
     "http://www.goodmart.in",
-    'http://103.186.184.54'
+    'http://147.93.104.242'
 ]
 
 

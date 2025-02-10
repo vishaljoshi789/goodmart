@@ -40,7 +40,7 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.name "Your CI/CD Bot"
+          git config --global user.name "CI/CD Bot"
           git config --global user.email "bot@gmail.com"
 
       - name: Deploy to server
@@ -50,7 +50,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }} # SSH username
           key: ${{ secrets.DEPLOY_KEY }} # SSH private key secret
           script: |
-            cd /home/goodmart
+            cd /home/goodmart/goodmart
 
             git pull origin master
             git fetch origin master
