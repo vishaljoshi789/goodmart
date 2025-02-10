@@ -43,6 +43,15 @@ jobs:
           git config --global user.name "CI/CD Bot"
           git config --global user.email "bot@gmail.com"
 
+      - name: Setup SSH for GitHub Access
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.GITHUB_DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+
       - name: Deploy to server
         uses: appleboy/ssh-action@v0.1.8
         with:
