@@ -235,7 +235,7 @@ if LOGGING:
             'file': {
                 'level': 'INFO',  # Minimum level of logs to capture
                 'class': 'logging.handlers.TimedRotatingFileHandler',
-                'filename': '/home/goodmart/logs/django.log',  # Path to log file
+                'filename': '/home/goodmart/goodmart/backend/logs/django.log',  # Path to log file
                 'when': 'D',  # Rotate logs daily
                 'interval': 1,  # Rotate every 1 day
                 'backupCount': 3,  # Keep logs for the last 3 days
