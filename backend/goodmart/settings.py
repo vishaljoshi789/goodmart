@@ -140,8 +140,15 @@ CORS_ALLOWED_ORIGINS = [
 
 if LOGGING:
     DATABASES = {
-    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
-}
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME', 'goodmart'),  # Database name
+        'USER': config('DB_USER', 'goodmart_user'),  # Database user
+        'PASSWORD': config('DB_PASSWORD'),  # Database password
+        'HOST': config('DB_HOST', 'localhost'),  # Database host (or IP address)
+        'PORT': config('DB_PORT', '5432'),  # Database port (default: 5432)
+        }
+    }
 else:
     DATABASES = {
         'default': {
