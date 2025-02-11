@@ -3,9 +3,6 @@
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
-import dj_database_url
-import os
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -142,11 +139,11 @@ if LOGGING:
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', 'goodmart'),  # Database name
-        'USER': config('DB_USER', 'goodmart_user'),  # Database user
+        'NAME': config('DB_NAME'),  # Database name
+        'USER': config('DB_USER'),  # Database user
         'PASSWORD': config('DB_PASSWORD'),  # Database password
-        'HOST': config('DB_HOST', 'localhost'),  # Database host (or IP address)
-        'PORT': config('DB_PORT', '5432'),  # Database port (default: 5432)
+        'HOST': config('DB_HOST'),  # Database host (or IP address)
+        'PORT': config('DB_PORT'),  # Database port (default: 5432)
         }
     }
 else:
@@ -217,8 +214,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'uploads'
 
 if LOGGING:
-    from logging.handlers import TimedRotatingFileHandler
-
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
