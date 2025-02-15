@@ -49,7 +49,7 @@ export default function EditProduct() {
       response.data.category =
         response.data.category && response.data.category.toString();
       response.data.brand =
-        response.data.category && response.data.brand.toString();
+        response.data.brand && response.data.brand.toString();
       setProduct(response.data);
     }
   };
