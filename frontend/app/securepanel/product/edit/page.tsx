@@ -46,8 +46,10 @@ export default function EditProduct() {
     let response = await api.get(`/admin/getProductToEdit/${id}/`);
     console.log(response.data);
     if (response.status == 200) {
-      response.data.category = response.data.category.toString();
-      response.data.brand = response.data.brand.toString();
+      response.data.category =
+        response.data.category && response.data.category.toString();
+      response.data.brand =
+        response.data.category && response.data.brand.toString();
       setProduct(response.data);
     }
   };
