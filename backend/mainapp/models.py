@@ -424,3 +424,22 @@ class HomepageItem(models.Model):
     added_on = models.DateTimeField(auto_now_add=True)
     modify_on = models.DateTimeField(auto_now=True)
 
+from django.db import models
+
+class Policy(models.Model):
+    POLICY_TYPES = [
+        ('Terms and Conditions', 'Terms and Conditions'),
+        ('Return Policy', 'Return Policy'),
+        ('Product Warranty', 'Product Warranty'),
+        ('Out Mission and Vision', 'Our Mission and Vision'),
+    ]
+
+    policy_type = models.CharField(max_length=25, choices=POLICY_TYPES, unique=True)
+    content = models.TextField()
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return dict(self.POLICY_TYPES).get(self.policy_type, "Policy")
+    
+
+

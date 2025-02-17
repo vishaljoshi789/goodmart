@@ -51,4 +51,9 @@ urlpatterns = [
     path('createMultipleHomepageSection/', views.createMultipleHomepageSection),
     path('getHomepageItems/', views.getHomepageItems),
     path('createMultipleHomepageItem/', views.createMultipleHomepageItem),
+    path('policies/', views.getPolicies),
+    path('policy/<str:policy_type>/', views.getPolicyByType),
+    path('policy/create/', views.createPolicy),
+    path('policy/update/<str:policy_type>/', views.updatePolicy),
+    path('policy/delete/<str:policy_type>/', views.deletePolicy),
 ]

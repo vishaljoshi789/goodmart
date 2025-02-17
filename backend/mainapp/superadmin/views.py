@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer, LevelPointsSerializer, SubOrderWithOrderAddressSerializer, UserDetailsSerializer, AddressSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer
-from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address, HomepageBanner, HomepageItem, HomepageSection
+from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer, LevelPointsSerializer, SubOrderWithOrderAddressSerializer, UserDetailsSerializer, AddressSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer, PolicySerializer
+from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address, HomepageBanner, HomepageItem, HomepageSection, Policy
 import json
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.db import transaction
@@ -611,3 +611,48 @@ def createMultipleHomepageItem(request):
             serializer.save()
         return Response(status=201)
     return Response(status=400)
+
+@api_view(['GET'])
+def getPolicies(request):
+    policies = Policy.objects.all()
+    serializer = PolicySerializer(policies, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getPolicyByType(request, policy_type):
+    try:
+        policy = Policy.objects.get(policy_type=policy_type)
+        serializer = PolicySerializer(policy)
+        return Response(serializer.data)
+    except Policy.DoesNotExist:
+        return Response({'error': 'Policy not found'}, status=404)
+
+@api_view(['POST'])
+def createPolicy(request):
+    serializer = PolicySerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=404)
+
+@api_view(['PUT'])
+def updatePolicy(request, policy_type):
+    try:
+        policy = Policy.objects.get(policy_type=policy_type)
+    except Policy.DoesNotExist:
+        return Response({'error': 'Policy not found'}, status=404)
+
+    serializer = PolicySerializer(policy, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+def deletePolicy(request, policy_type):
+    try:
+        policy = Policy.objects.get(policy_type=policy_type)
+        policy.delete()
+        return Response({'message': 'Policy deleted successfully'}, status=204)
+    except Policy.DoesNotExist:
+        return Response({'error': 'Policy not found'}, status=404)
