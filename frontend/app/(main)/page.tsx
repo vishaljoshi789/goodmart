@@ -541,19 +541,31 @@ export default function Home() {
             </p>
           </div>
           <div className="flex-grow flex flex-wrap md:pl-20 -mb-10 md:mt-0 mt-10 md:text-left text-center">
-            <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-              <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
+            <div className="lg:w-1/4 md:w-1/2 w-full px-4 flex flex-col">
+              <Link
+                href={"/policy/t&c"}
+                className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3"
+              >
                 Terms & Conditions
-              </h2>
-              <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
+              </Link>
+              <Link
+                href={"/policy/return"}
+                className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3"
+              >
                 Return Policy
-              </h2>
-              <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
+              </Link>
+              <Link
+                href={"/policy/product-warranty"}
+                className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3"
+              >
                 Product Warranty
-              </h2>
-              <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
+              </Link>
+              <Link
+                href={"/policy/mission-and-vision"}
+                className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3"
+              >
                 Our Mission and Vision
-              </h2>
+              </Link>
             </div>
           </div>
         </div>

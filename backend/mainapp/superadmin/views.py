@@ -613,12 +613,14 @@ def createMultipleHomepageItem(request):
     return Response(status=400)
 
 @api_view(['GET'])
+@permission_classes([IsAdminUser])
 def getPolicies(request):
     policies = Policy.objects.all()
     serializer = PolicySerializer(policies, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAdminUser])
 def getPolicyByType(request, policy_type):
     try:
         policy = Policy.objects.get(policy_type=policy_type)
@@ -628,6 +630,7 @@ def getPolicyByType(request, policy_type):
         return Response({'error': 'Policy not found'}, status=404)
 
 @api_view(['POST'])
+@permission_classes([IsAdminUser])
 def createPolicy(request):
     serializer = PolicySerializer(data=request.data)
     if serializer.is_valid():
@@ -636,19 +639,24 @@ def createPolicy(request):
     return Response(serializer.errors, status=404)
 
 @api_view(['PUT'])
+@permission_classes([IsAdminUser])
 def updatePolicy(request, policy_type):
     try:
         policy = Policy.objects.get(policy_type=policy_type)
     except Policy.DoesNotExist:
         return Response({'error': 'Policy not found'}, status=404)
-
-    serializer = PolicySerializer(policy, data=request.data)
+    data = {
+        'policy_type': policy_type,
+        'content': request.data['content'],
+    }
+    serializer = PolicySerializer(policy, data=data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=200)
     return Response(serializer.errors, status=400)
 
 @api_view(['DELETE'])
+@permission_classes([IsAdminUser])
 def deletePolicy(request, policy_type):
     try:
         policy = Policy.objects.get(policy_type=policy_type)
