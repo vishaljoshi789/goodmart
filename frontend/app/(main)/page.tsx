@@ -400,7 +400,7 @@ export default function Home() {
                       width={0}
                       height={0}
                       sizes="100vw"
-                      className="object-cover w-full h-32"
+                      className="object-contain w-full h-32"
                     />
                     <p className="text-sm font-medium line-clamp-2">
                       {section.content_type == "Category"
@@ -435,10 +435,10 @@ export default function Home() {
                         : `/product?id=${item.product.id}`
                     }
                     key={index}
-                    className="relative aspect-[4/3] overflow-hidden rounded-xl"
+                    className="relative aspect-[4/4] overflow-hidden rounded-xl"
                   >
                     <div className="relative w-full h-full">
-                      <div className="absolute inset-0">
+                      <div className="inset-0">
                         <Image
                           src={
                             baseURL +
@@ -457,9 +457,9 @@ export default function Home() {
                           priority={index === 0}
                         />
                       </div>
-                      <div className="absolute inset-0 bg-black/30" />
+                      <div className="absolute inset-0 " />
                     </div>
-                    <div className="absolute inset-0 flex flex-col justify-end p-4 text-white">
+                    <div className="absolute inset-0 flex flex-col h-fit justify-end px-4 py-1 mt-auto text-white bg-gradient-to-b from-gray-200 to-slate-900">
                       <h3 className="text-lg font-bold">
                         {section.content_type == "Category"
                           ? item.category.name

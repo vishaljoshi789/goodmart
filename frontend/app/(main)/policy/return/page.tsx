@@ -26,7 +26,7 @@ export default function ReturnPolicy() {
   return (
     <div className="py-5 px-2">
       <h1 className="text-2xl font-bold text-red-500">Return Policy</h1>
-      <p className="p-3">{returnPolicy}</p>
+      <p className="p-3 break-words whitespace-pre-wrap">{returnPolicy}</p>
     </div>
   );
 }

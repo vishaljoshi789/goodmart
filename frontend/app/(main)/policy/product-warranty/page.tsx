@@ -26,7 +26,7 @@ export default function ProductWarranty() {
   return (
     <div className="py-5 px-2">
       <h1 className="text-2xl font-bold text-red-500">Product Warranty</h1>
-      <p className="p-3">{ProductWarranty}</p>
+      <p className="p-3 break-words whitespace-pre-wrap">{ProductWarranty}</p>
     </div>
   );
 }

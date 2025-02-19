@@ -26,7 +26,7 @@ export default function TermsAndConditions() {
   return (
     <div className="py-5 px-2">
       <h1 className="text-2xl font-bold text-red-500">Terms and Conditions</h1>
-      <p className="p-3">{terms}</p>
+      <p className="p-3 break-words whitespace-pre-wrap">{terms}</p>
     </div>
   );
 }

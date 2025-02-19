@@ -28,7 +28,7 @@ export default function MissionAndVision() {
       <h1 className="text-2xl font-bold text-red-500">
         Our Mission and Vision
       </h1>
-      <p className="p-3">{MissionAndVision}</p>
+      <p className="p-3 break-words whitespace-pre-wrap">{MissionAndVision}</p>
     </div>
   );
 }
