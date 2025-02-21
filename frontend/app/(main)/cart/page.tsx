@@ -7,7 +7,7 @@ import React, { useContext, useEffect, useState } from "react";
 export default function Cart() {
   let [cart, setCart] = useState([]);
   let [totalAmt, setTotalAmt] = useState(0);
-  let { baseURL } = useContext(GMContext);
+  let { baseURL, getCartCount } = useContext(GMContext);
   let api = useAxios();
   let getCart = async () => {
     let response = await api.get("/getCart/");
@@ -32,6 +32,7 @@ export default function Cart() {
     if (response.status === 200) {
       console.log(response.data);
       getCart();
+      getCartCount();
     }
   };
 
@@ -44,6 +45,7 @@ export default function Cart() {
     if (response.status === 200) {
       console.log(response.data);
       getCart();
+      getCartCount();
     }
   };
 
@@ -53,6 +55,7 @@ export default function Cart() {
     if (response.status === 200) {
       console.log(response.data);
       getCart();
+      getCartCount();
     }
   };
 

@@ -23,7 +23,7 @@ export default function ProductsPage() {
   let router = useRouter();
   let category = path.get("category");
   let [products, setProducts] = useState([]);
-  let { baseURL } = useContext(GMContext);
+  let { baseURL, getCartCount } = useContext(GMContext);
   let api = useAxios();
   let addToCart = async (id: any, variant = null, quantity = 1) => {
     let response = await api.post("/addToCart/", {
@@ -33,6 +33,7 @@ export default function ProductsPage() {
     });
     if (response.status == 200) {
       toast.success("Product Added to Cart");
+      getCartCount();
     } else {
       toast.error("Something Went Wrong");
     }

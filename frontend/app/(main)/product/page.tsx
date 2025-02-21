@@ -27,7 +27,7 @@ export default function Product() {
   let variant = useSearchParams().get("variant");
   const [api, setApi] = useState<CarouselApi>();
   let axios = useAxios();
-  let { baseURL } = useContext(GMContext);
+  let { baseURL, getCartCount } = useContext(GMContext);
   let [cartQuantity, setCartQuantity] = useState(1);
   let [product, setProduct] = useState<any>({});
   let [activeImage, setActiveImage] = useState(0);
@@ -59,6 +59,7 @@ export default function Product() {
     });
     if (response.status == 200) {
       toast.success("Product Added to Cart");
+      getCartCount();
     } else {
       toast.error("Something Went Wrong");
     }
