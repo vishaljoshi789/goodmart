@@ -35,7 +35,7 @@ class ProductDetailedSerializer(serializers.ModelSerializer):
     brand = serializers.StringRelatedField()
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'tags', 'category', 'brand', 'image', 'video', 'barcode_number', 'item_type', 'tax', 'mrp', 'offer_price']
+        fields = ['id', 'name', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'tags', 'category', 'brand', 'image', 'video', 'barcode_number', 'item_type', 'tax', 'mrp', 'offer_price', 'stock', 'hsn', 'purchase_amount']
 
 
 class ProductEditSerializer(serializers.ModelSerializer):
@@ -44,7 +44,7 @@ class ProductEditSerializer(serializers.ModelSerializer):
     variants = ProductVariantSerializer(many=True)
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'variants', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'tags', 'category', 'brand', 'image', 'video', 'barcode_number', 'item_type', 'tax', 'mrp', 'offer_price', 'stock', 'hsn']
+        fields = ['id', 'name', 'description', 'variants', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'tags', 'category', 'brand', 'image', 'video', 'barcode_number', 'item_type', 'tax', 'mrp', 'offer_price', 'stock', 'hsn', 'purchase_amount']
 
 
 class AddressSerializer(serializers.ModelSerializer):

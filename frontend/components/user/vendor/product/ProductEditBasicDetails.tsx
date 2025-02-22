@@ -65,6 +65,7 @@ const formSchema = z.object({
   offer_price: z.string(),
   hsn: z.string().optional(),
   stock: z.string().optional(),
+  purchase_amount: z.string().optional(),
 });
 
 const Quagga = require("quagga");
@@ -189,6 +190,7 @@ export default function ProductEditBasicDetails({
     formData.append("mrp", values.mrp);
     formData.append("offer_price", values.offer_price);
     formData.append("item_type", values.item_type ?? "");
+    formData.append("purchase_amount", values.purchase_amount ?? "");
     values.image && formData.append("image", values.image);
     values.video && formData.append("video", values.video);
     formData.append("tags", values.tags ?? "");
@@ -257,7 +259,7 @@ export default function ProductEditBasicDetails({
               name="mrp"
               render={({ field }) => (
                 <FormItem className="w-1/2">
-                  <FormLabel>MRP</FormLabel>
+                  <FormLabel className="text-sm">MRP</FormLabel>
                   <FormControl>
                     <Input placeholder="" {...field} type="number" />
                   </FormControl>
@@ -270,7 +272,20 @@ export default function ProductEditBasicDetails({
               name="offer_price"
               render={({ field }) => (
                 <FormItem className="w-1/2">
-                  <FormLabel>Offer Price</FormLabel>
+                  <FormLabel className="text-sm">Offer Price</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} type="number" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="purchase_amount"
+              render={({ field }) => (
+                <FormItem className="w-1/2">
+                  <FormLabel className="text-sm">Purchase Price</FormLabel>
                   <FormControl>
                     <Input placeholder="" {...field} type="number" />
                   </FormControl>

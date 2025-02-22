@@ -61,6 +61,7 @@ const formSchema = z.object({
   item_type: z.string().optional(),
   mrp: z.string(),
   offer_price: z.string(),
+  purchase_amount: z.string().optional(),
   hsn: z.string().optional(),
   stock: z.string().optional(),
 });
@@ -160,6 +161,7 @@ export default function ProductAddBasicDetails({
       offer_price: "",
       hsn: "",
       stock: "",
+      purchase_amount: "",
     },
   });
 
@@ -201,6 +203,7 @@ export default function ProductAddBasicDetails({
     formData.append("hsn", values.hsn ?? "");
     formData.append("offer_price", values.offer_price);
     formData.append("image", values.image);
+    formData.append("purchase_amount", values.purchase_amount ?? "");
     values.video && formData.append("video", values.video);
     formData.append("tags", values.tags ?? "");
     let response = await api.post("/vendor/addProduct/", formData);
@@ -266,7 +269,7 @@ export default function ProductAddBasicDetails({
               control={form.control}
               name="mrp"
               render={({ field }) => (
-                <FormItem className="w-1/2">
+                <FormItem className="w-1/3">
                   <FormLabel>MRP</FormLabel>
                   <FormControl>
                     <Input placeholder="" {...field} type="number" />
@@ -279,8 +282,21 @@ export default function ProductAddBasicDetails({
               control={form.control}
               name="offer_price"
               render={({ field }) => (
-                <FormItem className="w-1/2">
+                <FormItem className="w-1/3">
                   <FormLabel>Offer Price</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} type="number" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="purchase_amount"
+              render={({ field }) => (
+                <FormItem className="w-1/3">
+                  <FormLabel>Purchase Price</FormLabel>
                   <FormControl>
                     <Input placeholder="" {...field} type="number" />
                   </FormControl>

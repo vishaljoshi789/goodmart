@@ -335,6 +335,7 @@ def clear_cart(request):
         Cart.objects.filter(user=request.user).delete()
         return Response(status=200)
     return Response(status=400)
+    
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

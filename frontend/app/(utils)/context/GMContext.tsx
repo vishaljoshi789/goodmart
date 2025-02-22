@@ -1,5 +1,5 @@
 "use client";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useState } from "react";
 
 import { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
@@ -81,6 +81,8 @@ const GMProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   let [progress, setProgress] = useState(0);
 
+  let [cartCount, setCartCount] = useState<number | null>(null);
+
   let userLogout = () => {
     setAuthToken(null);
     typeof window !== "undefined" && localStorage.removeItem("accessToken");
@@ -88,24 +90,20 @@ const GMProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     router.push("/auth/login");
   };
 
-  let [cartCount, setCartCount] = useState<number | null>(null);
   let getCartCount = async () => {
-    let response = await fetch(`${baseURL}/getCartCount/`, {
-      headers: {
-        Authorization: `Bearer ${authToken?.access}`,
-      },
-    });
-    if (response.status == 200) {
-      let data = await response.json();
-      setCartCount(data.cartCount);
+    if (authToken) {
+      let response = await fetch(`${baseURL}/getCartCount/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${authToken.access}`,
+        },
+      });
+      if (response.status == 200) {
+        let data = await response.json();
+        setCartCount(data.cartCount);
+      }
     }
   };
-  useEffect(() => {
-    if (authToken) {
-      getCartCount();
-      console.log("Cart Count Updated");
-    }
-  }, [authToken]);
 
   let ContextData: GMContextType = {
     authToken,

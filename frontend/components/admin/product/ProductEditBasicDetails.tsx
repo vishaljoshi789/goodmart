@@ -36,6 +36,7 @@ const formSchema = z.object({
   image: z.any(),
   video: z.any().optional(),
   tags: z.string().optional(),
+  purchase_amount: z.string().optional(),
 });
 
 export default function ProductEditBasicDetails({
@@ -68,6 +69,8 @@ export default function ProductEditBasicDetails({
     formData.append("brand", values.brand);
     formData.append("mrp", values.mrp);
     formData.append("offer_price", values.offer_price);
+    formData.append("purchase_amount", values.purchase_amount ?? "");
+
     values.image && formData.append("image", values.image);
     values.video && formData.append("video", values.video);
     formData.append("tags", values.tags ?? "");
@@ -138,6 +141,19 @@ export default function ProductEditBasicDetails({
               render={({ field }) => (
                 <FormItem className="w-1/2">
                   <FormLabel>Offer Price</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} type="number" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="purchase_amount"
+              render={({ field }) => (
+                <FormItem className="w-1/2">
+                  <FormLabel>Purchase Price</FormLabel>
                   <FormControl>
                     <Input placeholder="" {...field} type="number" />
                   </FormControl>

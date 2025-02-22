@@ -67,7 +67,7 @@ class ProductDetailedSerializer(serializers.ModelSerializer):
     brand = serializers.StringRelatedField()
     class Meta:
         model = Product
-        fields = ['id', 'user', 'name', 'mrp', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video']
+        fields = ['id', 'user', 'name', 'mrp', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video', 'purchase_amount']
 
 
 class ProductEditSerializer(serializers.ModelSerializer):
@@ -75,7 +75,7 @@ class ProductEditSerializer(serializers.ModelSerializer):
     specifications = ProductSpecificationsSerializer(many=True)
     class Meta:
         model = Product
-        fields = ['id', 'user',  'name', 'mrp', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video']
+        fields = ['id', 'user',  'name', 'mrp', 'description', 'images', 'specifications', 'status', 'added_on', 'modify_on', 'offer_price', 'tags', 'category', 'brand', 'image', 'video', 'purchase_amount']
 
 class VendorDetailSerializer(serializers.ModelSerializer):
     class Meta:

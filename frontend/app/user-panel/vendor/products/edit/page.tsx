@@ -47,8 +47,12 @@ export default function EditProduct() {
   let getProduct = async () => {
     let response = await api.get(`/vendor/getProductToEdit/${id}/`);
     if (response.status == 200) {
-      response.data.category = response.data.category.toString();
-      response.data.brand = response.data.brand.toString();
+      response.data.category =
+        response.data.category && response.data.category.toString();
+      response.data.brand =
+        response.data.brand && response.data.brand.toString();
+      response.data.stock =
+        response.data.stock && response.data.stock.toString();
       console.log(response.data);
       setProduct(response.data);
     }

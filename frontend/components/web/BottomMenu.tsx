@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { IoHomeOutline } from "react-icons/io5";
 import { FiUser } from "react-icons/fi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
@@ -11,7 +11,13 @@ import { GMContext } from "@/app/(utils)/context/GMContext";
 
 export default function BottomMenu() {
   let path = usePathname();
-  let { cartCount } = useContext(GMContext);
+  let { cartCount, authToken, getCartCount } = useContext(GMContext);
+
+  useEffect(() => {
+    if (authToken) {
+      getCartCount();
+    }
+  }, [authToken]);
   return (
     <div className="fixed bottom-0 w-full text-black z-50 flex items-center lg:hidden bg-red-200 border-y-2 border-gray-300 p-2">
       <ul className="flex justify-evenly w-full ">
@@ -54,9 +60,11 @@ export default function BottomMenu() {
             className="flex justify-center items-center flex-col"
           >
             <AiOutlineShoppingCart className="text-xl" />
-            <span className="absolute translate-x-3 text-xs rounded-full h-4 w-4 flex items-center justify-center bg-red-500 text-white">
-              {cartCount}
-            </span>
+            {cartCount !== null && cartCount > -1 && (
+              <span className="absolute translate-x-3 text-xs rounded-full h-4 w-4 flex items-center justify-center bg-red-500 text-white">
+                {cartCount}
+              </span>
+            )}
             <span className="text-xs">Cart</span>
           </Link>
         </li>

@@ -48,6 +48,7 @@ export default function VendorProducts() {
             <TableHead>S.No</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>MRP</TableHead>
+            <TableHead>Purchase</TableHead>
             <TableHead>Offer Price</TableHead>
             <TableHead>Points</TableHead>
           </TableRow>
@@ -58,6 +59,9 @@ export default function VendorProducts() {
               <TableCell className="text-sm">{index + 1}</TableCell>
               <TableCell className="text-sm">{product.name}</TableCell>
               <TableCell className="text-sm">{product.mrp}</TableCell>
+              <TableCell className="text-sm">
+                {product.purchase_amount}
+              </TableCell>
               <TableCell className="text-sm">{product.offer_price}</TableCell>
               <TableCell>
                 <Input
