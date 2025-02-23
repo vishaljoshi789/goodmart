@@ -222,7 +222,7 @@ export default function Home() {
         </ul>
       </div>
       <div>
-        <div className="lg:w-3/5 w-full">
+        <div className="w-full">
           <Carousel
             className="w-full"
             plugins={[
@@ -283,7 +283,7 @@ export default function Home() {
                     <div className="flex flex-col md:flex-row items-start justify-between">
                       <div className="w-full">
                         <div
-                          className={`inline-flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl bg-gradient-to-r ${category.color} text-white shadow-lg`}
+                          className={`inline-flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-xl bg-gradient-to-r ${category.color} text-white shadow-lg`}
                         >
                           {/* <category.icon className="h-5 w-5 md:h-6 md:w-6" /> */}
                           <Image
@@ -292,7 +292,7 @@ export default function Home() {
                             width={0}
                             height={0}
                             sizes="100vw"
-                            className="w-6 h-6 md:w-8 md:h-8"
+                            className="w-10 h-10 md:w-14 md:h-14"
                           />
                         </div>
                         <div className="flex justify-between items-center mt-3 md:mt-4">
@@ -347,7 +347,7 @@ export default function Home() {
                       width={0}
                       height={0}
                       sizes="100vw"
-                      className="object-cover w-full h-32"
+                      className="object-contain w-full h-32"
                     />
                     <div className="space-y-2">
                       <span className="inline-block bg-red-100 text-red-600 text-xs font-medium px-2 py-1 rounded">
@@ -416,17 +416,67 @@ export default function Home() {
               </div>
             </div>
           </section>
-        ) : (
-          section.name == "Featured Items" && (
-            <section className="mb-8" key={section.id}>
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-2">Featured Items</h2>
-                <p className="text-gray-600">
-                  Explore our wide range of collections
-                </p>
-              </div>
+        ) : section.name == "Featured Items" ? (
+          <section className="mb-8" key={section.id}>
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold mb-2">Featured Items</h2>
+              <p className="text-gray-600">
+                Explore our wide range of collections
+              </p>
+            </div>
 
-              <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {section.items.map((item: any, index: number) => (
+                <Link
+                  href={
+                    section.content_type == "Category"
+                      ? `/products?category=${item.category.id}`
+                      : `/product?id=${item.product.id}`
+                  }
+                  key={index}
+                  className="relative aspect-[4/4] overflow-hidden rounded-xl"
+                >
+                  <div className="relative w-full h-full">
+                    <div className="inset-0">
+                      <Image
+                        src={
+                          baseURL +
+                          (section.content_type == "Category"
+                            ? item.category.image
+                            : item.product.image)
+                        }
+                        alt={
+                          section.content_type == "Category"
+                            ? item.category.name
+                            : item.product.name
+                        }
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 50vw, 33vw"
+                        priority={index === 0}
+                      />
+                    </div>
+                    <div className="absolute inset-0 " />
+                  </div>
+                  <div className="absolute inset-0 flex flex-col h-fit justify-end px-4 py-1 mt-auto text-white bg-gradient-to-b from-gray-200 to-slate-900">
+                    <h3 className="text-lg font-bold">
+                      {section.content_type == "Category"
+                        ? item.category.name
+                        : item.product.name}
+                    </h3>
+                    <p className="text-sm opacity-90">Shop Now →</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : section.name == "New Arrivals" ? (
+          <section className="mb-12 px-4 md:px-6 lg:px-8" key={section.id}>
+            <div className="mt-8">
+              <h2 className="text-xl md:text-2xl font-bold mb-4">
+                New Arrivals
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {section.items.map((item: any, index: number) => (
                   <Link
                     href={
@@ -435,40 +485,83 @@ export default function Home() {
                         : `/product?id=${item.product.id}`
                     }
                     key={index}
-                    className="relative aspect-[4/4] overflow-hidden rounded-xl"
+                    className="bg-white rounded-lg shadow-sm p-4"
                   >
-                    <div className="relative w-full h-full">
-                      <div className="inset-0">
-                        <Image
-                          src={
-                            baseURL +
-                            (section.content_type == "Category"
-                              ? item.category.image
-                              : item.product.image)
-                          }
-                          alt={
-                            section.content_type == "Category"
-                              ? item.category.name
-                              : item.product.name
-                          }
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 50vw, 33vw"
-                          priority={index === 0}
-                        />
-                      </div>
-                      <div className="absolute inset-0 " />
-                    </div>
-                    <div className="absolute inset-0 flex flex-col h-fit justify-end px-4 py-1 mt-auto text-white bg-gradient-to-b from-gray-200 to-slate-900">
-                      <h3 className="text-lg font-bold">
+                    <Image
+                      src={
+                        baseURL +
+                        (section.content_type == "Category"
+                          ? item.category.image
+                          : item.product.image)
+                      }
+                      alt={
+                        section.content_type == "Category"
+                          ? item.category.name
+                          : item.product.name
+                      }
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      className="object-contain w-full h-32"
+                    />
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium line-clamp-2">
                         {section.content_type == "Category"
                           ? item.category.name
                           : item.product.name}
-                      </h3>
-                      <p className="text-sm opacity-90">Shop Now →</p>
+                      </p>
+                      {section.content_type == "Category" ? (
+                        <p className="text-sm opacity-90">Shop Now →</p>
+                      ) : (
+                        <div className="flex gap-2 text-sm">
+                          <s>₹{item.product.mrp}</s>
+                          <p className="text-red-500 font-bold">
+                            ₹{item.product.offer_price}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </Link>
                 ))}
+              </div>
+            </div>
+          </section>
+        ) : (
+          section.name == "Trending Products" && (
+            <section className="mb-12 px-4 md:px-6 lg:px-8" key={section.id}>
+              <div className="mt-8">
+                <h2 className="text-xl md:text-2xl font-bold mb-4">
+                  Trending Products
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {section.items.map((deal: any) => (
+                    <Link
+                      href={`/product?id=${deal.product.id}`}
+                      key={deal.id}
+                      className="bg-white rounded-lg shadow-sm p-4"
+                    >
+                      <Image
+                        src={baseURL + deal.product.image}
+                        alt={deal.product.name}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        className="object-contain w-full h-32"
+                      />
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium line-clamp-2">
+                          {deal.product.name}
+                        </p>
+                        <div className="flex gap-2 text-sm">
+                          <s>₹{deal.product.mrp}</s>
+                          <p className="text-red-500 font-bold">
+                            ₹{deal.product.offer_price}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </section>
           )
@@ -476,33 +569,34 @@ export default function Home() {
       )}
       {/* Categories & Products */}
       {/* <section className="mb-8">
-        <Tabs defaultValue="All Products" className="space-y-6">
-          <ScrollArea className="w-full">
-            <TabsList className="inline-flex w-full justify-start bg-transparent border-b border-rose-100">
-              {featuredCategory.map((category: any) => (
-                <TabsTrigger
-                  key={category.id}
-                  value={category.id}
-                  className="flex-1 min-w-[100px] text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-500 data-[state=active]:to-orange-500 data-[state=active]:text-white rounded-t-lg"
-                >
-                  {category.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </ScrollArea>
+              <Tabs defaultValue="All Products" className="space-y-6">
+                <ScrollArea className="w-full">
+                  <TabsList className="inline-flex w-full justify-start bg-transparent border-b border-rose-100">
+                    {section.items.map((item: any, index: number) => (
+                      <TabsTrigger
+                        key={index}
+                        value={index.toString()}
+                        className="flex-1 min-w-[100px] text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-500 data-[state=active]:to-orange-500 data-[state=active]:text-white rounded-t-lg"
+                      >
+                        {section.content_type == "Category"
+                          ? item.category.name
+                          : item.product.name}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                </ScrollArea>
 
-          {featuredCategory.map((category: any) => (
-            <TabsContent key={category.id} value={category.id}>
-              <div className="grid grid-cols-2 gap-2  sm:gap-4 md:grid-cols-3 lg:grid-cols-5">
-                {products.map((product) => (
-                  <ProductCard key={product._id} item={product} />
+                {section.items.map((item: any, index: number) => (
+                  <TabsContent key={index} value={index.toString()}>
+                    <div className="grid grid-cols-2 gap-2  sm:gap-4 md:grid-cols-3 lg:grid-cols-5">
+                      {products.map((product) => (
+                        <ProductCard key={product._id} item={product} />
+                      ))}
+                    </div>
+                  </TabsContent>
                 ))}
-              </div>
-            </TabsContent>
-          ))}
-        </Tabs>
-      </section> */}
-
+              </Tabs>
+            </section> */}
       {/* Featured Categories */}
 
       {/* Newsletter Section */}
