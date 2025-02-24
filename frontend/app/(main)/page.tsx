@@ -261,11 +261,11 @@ export default function Home() {
       <Separator className="my-5" />
 
       {homepageSections.map((section: any, index) =>
-        section.name == "Shop by Category" ? (
+        section.name == "Shop by Brand" ? (
           <section className="mb-12 px-4 md:px-6 lg:px-8" key={section.id}>
             <div className="mb-6 md:mb-8">
               <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                Shop by Category
+                Shop by Brand
               </h2>
               <p className="text-gray-600">
                 Explore our wide range of collections
@@ -273,9 +273,9 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-              {section.items.map((category: any, index: number) => (
+              {section.items.map((item: any, index: number) => (
                 <Link
-                  href={`/products?category=${category.category.id}`}
+                  href={`/products?brand=${item.brand.id}`}
                   key={index}
                   className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-white shadow-sm hover:shadow-xl transition-all duration-300"
                 >
@@ -283,32 +283,32 @@ export default function Home() {
                     <div className="flex flex-col md:flex-row items-start justify-between">
                       <div className="w-full">
                         <div
-                          className={`inline-flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-xl bg-gradient-to-r ${category.color} text-white shadow-lg`}
+                          className={`inline-flex h-32 w-32 md:h-32 md:w-32 items-center justify-center rounded-xl bg-gradient-to-r ${item.color} text-white shadow-lg`}
                         >
                           {/* <category.icon className="h-5 w-5 md:h-6 md:w-6" /> */}
                           <Image
-                            alt={category.category.name}
-                            src={baseURL + category.category.image}
+                            alt={item.brand.name}
+                            src={baseURL + item.brand.image}
                             width={0}
                             height={0}
                             sizes="100vw"
-                            className="w-10 h-10 md:w-14 md:h-14"
+                            className="w-28 h-28 md:w-28 md:h-28"
                           />
                         </div>
                         <div className="flex justify-between items-center mt-3 md:mt-4">
                           <h3 className="text-base md:text-lg font-semibold">
-                            {category.category.name}
+                            {item.brand.name}
                           </h3>
                         </div>
                         <p className="mt-1 text-xs md:text-sm text-gray-500 line-clamp-2">
-                          {category.category.description}
+                          {item.brand.description}
                         </p>
                       </div>
                     </div>
 
                     <div className="mt-3 md:mt-4 flex items-center justify-between">
                       <span className="text-xs md:text-sm font-medium text-gray-500 group-hover:text-gray-900 transition-colors">
-                        Explore Category
+                        Explore Brand
                       </span>
                       <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-all transform group-hover:translate-x-1" />
                     </div>

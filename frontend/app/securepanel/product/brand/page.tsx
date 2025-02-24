@@ -59,6 +59,7 @@ export default function ProductBrand() {
         <TableHeader>
           <TableRow>
             <TableHead>S. No.</TableHead>
+            <TableHead>ID</TableHead>
             <TableHead className="w-[100px]">Name</TableHead>
             <TableHead>Description</TableHead>
             <TableHead>Image</TableHead>
@@ -70,6 +71,7 @@ export default function ProductBrand() {
           {brands.map((brand, index) => (
             <TableRow key={index}>
               <TableCell className="font-medium">{index + 1}</TableCell>
+              <TableCell className="font-medium">{brand.id}</TableCell>
               <TableCell>{brand.name}</TableCell>
               <TableCell>{brand.description}</TableCell>
               <TableCell>

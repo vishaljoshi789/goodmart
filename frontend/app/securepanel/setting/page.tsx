@@ -137,6 +137,7 @@ export default function Setting() {
       getSectionItems();
       toast.success("Homepage Sections Items created successfully");
     } else {
+      console.log(response);
       toast.error("Failed to create Homepage Sections Items");
     }
   };
@@ -444,8 +445,8 @@ export default function Setting() {
                       <SelectItem value="Featured Items">
                         Featured Items
                       </SelectItem>
-                      <SelectItem value="Shop by Category">
-                        Shop by Category
+                      <SelectItem value="Shop by Brand">
+                        Shop by Brand
                       </SelectItem>
                       <SelectItem value="New Arrivals">New Arrivals</SelectItem>
                       <SelectItem value="Trending Products">
@@ -467,8 +468,16 @@ export default function Setting() {
                       <SelectValue placeholder="Section Type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Product">Product</SelectItem>
-                      <SelectItem value="Category">Category</SelectItem>
+                      {section.name != "Shop by Brand" ? (
+                        <>
+                          <SelectItem value="Product">Product</SelectItem>
+                          <SelectItem value="Category">Category</SelectItem>
+                        </>
+                      ) : (
+                        <SelectItem value="Brand" defaultChecked={true}>
+                          Brand
+                        </SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
@@ -572,6 +581,22 @@ export default function Setting() {
                                 items.map((i: any) =>
                                   i.id === item.id
                                     ? { ...i, category: e.target.value }
+                                    : i
+                                )
+                              )
+                            }
+                          />
+                        )}
+                        {section.content_type == "Brand" && (
+                          <Input
+                            type="number"
+                            value={item.brand}
+                            placeholder="Brand ID"
+                            onChange={(e) =>
+                              setSectionItems((items: any) =>
+                                items.map((i: any) =>
+                                  i.id === item.id
+                                    ? { ...i, brand: e.target.value }
                                     : i
                                 )
                               )

@@ -404,13 +404,14 @@ class HomepageSection(models.Model):
         ('Top Deals', 'Top Deals'),
         ('Recommended for You', 'Recommended for You'),
         ('Featured Items', 'Featured Items'),
-        ('Shop by Category', 'Shop by Category'),
+        ('Shop by Brand', 'Shop by Brand'),
         ('New Arrivals', 'New Arrivals'),
         ('Trending Products', 'Trending Products'),
     ]
     CONTENT_TYPE_CHOICES = [
         ('Product', 'Product'),
         ('Category', 'Category'),
+        ('Brand', 'Brand')
     ]
     name = models.CharField(max_length=100, choices=SECTION_CHOICES, unique=True)
     display_order = models.PositiveIntegerField(help_text="Order in which the section appears")
@@ -421,6 +422,7 @@ class HomepageItem(models.Model):
     section = models.ForeignKey(HomepageSection, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
     category = models.ForeignKey(Product_Category, on_delete=models.CASCADE, blank=True, null=True)
+    brand = models.ForeignKey(Product_Brand, on_delete=models.CASCADE, blank=True, null=True)
     image = models.ImageField(upload_to=web_direcory_path, blank=True, null=True)
     added_on = models.DateTimeField(auto_now_add=True)
     modify_on = models.DateTimeField(auto_now=True)

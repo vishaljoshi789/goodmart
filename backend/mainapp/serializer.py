@@ -197,6 +197,7 @@ class HomepageBannerSerializer(serializers.ModelSerializer):
 class HomepageItemSerializer(serializers.ModelSerializer):
     product = ProductDetailedSerializer()
     category = ProductCategorySerializer()
+    brand = ProductBrandSerializer()
     class Meta:
         model = HomepageItem
         fields = '__all__'
