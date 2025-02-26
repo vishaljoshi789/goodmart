@@ -274,10 +274,9 @@ export default function Home() {
             <Carousel>
               <CarouselContent>
                 {section.items.map((item: any, index: number) => (
-                  <CarouselItem className="basis-1/2 md:basis-1/5">
+                  <CarouselItem className="basis-1/2 md:basis-1/5" key={index}>
                     <Link
                       href={`/products?brand=${item.brand.id}`}
-                      key={index}
                       className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-white shadow-sm hover:shadow-xl transition-all duration-300"
                     >
                       <div className="p-4 md:p-6">
@@ -340,10 +339,12 @@ export default function Home() {
               <Carousel>
                 <CarouselContent>
                   {section.items.map((deal: any) => (
-                    <CarouselItem className="basis-1/2 md:basis-1/5">
+                    <CarouselItem
+                      className="basis-1/2 md:basis-1/5"
+                      key={deal.id}
+                    >
                       <Link
                         href={`/product?id=${deal.product.id}`}
-                        key={deal.id}
                         className="bg-white rounded-lg shadow-sm p-4"
                       >
                         <Image
@@ -384,14 +385,16 @@ export default function Home() {
               <Carousel>
                 <CarouselContent>
                   {section.items.map((item: any) => (
-                    <CarouselItem className="basis-1/2 md:basis-1/5">
+                    <CarouselItem
+                      className="basis-1/2 md:basis-1/5"
+                      key={item.id}
+                    >
                       <Link
                         href={
                           section.content_type == "Category"
                             ? `/products?category=${item.category.id}`
                             : `/product?id=${item.product.id}`
                         }
-                        key={item.id}
                         className="space-y-2"
                       >
                         <Image
@@ -439,14 +442,13 @@ export default function Home() {
             <Carousel>
               <CarouselContent>
                 {section.items.map((item: any, index: number) => (
-                  <CarouselItem className="basis-1/2 md:basis-1/5">
+                  <CarouselItem className="basis-1/2 md:basis-1/5" key={index}>
                     <Link
                       href={
                         section.content_type == "Category"
                           ? `/products?category=${item.category.id}`
                           : `/product?id=${item.product.id}`
                       }
-                      key={index}
                       className="relative aspect-[4/4] overflow-hidden rounded-xl"
                     >
                       <div className="relative w-full h-full">
@@ -494,14 +496,16 @@ export default function Home() {
               <Carousel>
                 <CarouselContent>
                   {section.items.map((item: any, index: number) => (
-                    <CarouselItem className="basis-1/2 md:basis-1/5">
+                    <CarouselItem
+                      className="basis-1/2 md:basis-1/5"
+                      key={index}
+                    >
                       <Link
                         href={
                           section.content_type == "Category"
                             ? `/products?category=${item.category.id}`
                             : `/product?id=${item.product.id}`
                         }
-                        key={index}
                         className="bg-white rounded-lg shadow-sm p-4"
                       >
                         <Image
@@ -555,10 +559,12 @@ export default function Home() {
                 <Carousel>
                   <CarouselContent>
                     {section.items.map((deal: any) => (
-                      <CarouselItem className="basis-1/2 md:basis-1/5">
+                      <CarouselItem
+                        className="basis-1/2 md:basis-1/5"
+                        key={deal.id}
+                      >
                         <Link
                           href={`/product?id=${deal.product.id}`}
-                          key={deal.id}
                           className="bg-white rounded-lg shadow-sm p-4"
                         >
                           <Image
