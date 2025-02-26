@@ -5,7 +5,6 @@ import { useContext, useEffect, useState } from "react";
 import { TbAlertTriangle } from "react-icons/tb";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { ArrowRight } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import {
@@ -18,12 +17,12 @@ import { IoIosArrowDown } from "react-icons/io";
 import { TbCategoryFilled } from "react-icons/tb";
 import Link from "next/link";
 import { GMContext } from "../(utils)/context/GMContext";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
@@ -272,57 +271,61 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-              {section.items.map((item: any, index: number) => (
-                <Link
-                  href={`/products?brand=${item.brand.id}`}
-                  key={index}
-                  className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-white shadow-sm hover:shadow-xl transition-all duration-300"
-                >
-                  <div className="p-4 md:p-6">
-                    <div className="flex flex-col md:flex-row items-start justify-between">
-                      <div className="w-full">
-                        <div
-                          className={`inline-flex h-32 w-32 md:h-32 md:w-32 items-center justify-center rounded-xl bg-gradient-to-r ${item.color} text-white shadow-lg`}
-                        >
-                          {/* <category.icon className="h-5 w-5 md:h-6 md:w-6" /> */}
-                          <Image
-                            alt={item.brand.name}
-                            src={baseURL + item.brand.image}
-                            width={0}
-                            height={0}
-                            sizes="100vw"
-                            className="w-28 h-28 md:w-28 md:h-28"
-                          />
+            <Carousel>
+              <CarouselContent>
+                {section.items.map((item: any, index: number) => (
+                  <CarouselItem className="basis-1/2 md:basis-1/5">
+                    <Link
+                      href={`/products?brand=${item.brand.id}`}
+                      key={index}
+                      className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-white shadow-sm hover:shadow-xl transition-all duration-300"
+                    >
+                      <div className="p-4 md:p-6">
+                        <div className="flex flex-col md:flex-row items-start justify-between">
+                          <div className="w-full">
+                            <div
+                              className={`inline-flex h-32 w-32 md:h-32 md:w-32 items-center justify-center rounded-xl bg-gradient-to-r ${item.color} text-white shadow-lg`}
+                            >
+                              {/* <category.icon className="h-5 w-5 md:h-6 md:w-6" /> */}
+                              <Image
+                                alt={item.brand.name}
+                                src={baseURL + item.brand.image}
+                                width={0}
+                                height={0}
+                                sizes="100vw"
+                                className="w-28 h-28 md:w-28 md:h-28"
+                              />
+                            </div>
+                            <div className="flex justify-between items-center mt-3 md:mt-4">
+                              <h3 className="text-base md:text-lg font-semibold">
+                                {item.brand.name}
+                              </h3>
+                            </div>
+                            <p className="mt-1 text-xs md:text-sm text-gray-500 line-clamp-2">
+                              {item.brand.description}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex justify-between items-center mt-3 md:mt-4">
-                          <h3 className="text-base md:text-lg font-semibold">
-                            {item.brand.name}
-                          </h3>
+
+                        <div className="mt-3 md:mt-4 flex items-center justify-between">
+                          <span className="text-xs md:text-sm font-medium text-gray-500 group-hover:text-gray-900 transition-colors">
+                            Explore Brand
+                          </span>
+                          <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-all transform group-hover:translate-x-1" />
                         </div>
-                        <p className="mt-1 text-xs md:text-sm text-gray-500 line-clamp-2">
-                          {item.brand.description}
-                        </p>
                       </div>
-                    </div>
 
-                    <div className="mt-3 md:mt-4 flex items-center justify-between">
-                      <span className="text-xs md:text-sm font-medium text-gray-500 group-hover:text-gray-900 transition-colors">
-                        Explore Brand
-                      </span>
-                      <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-all transform group-hover:translate-x-1" />
-                    </div>
-                  </div>
-
-                  <div
-                    className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r opacity-0 transition-opacity group-hover:opacity-100"
-                    style={{
-                      backgroundImage: `linear-gradient(to right, var(--tw-gradient-from) 0%, var(--tw-gradient-to) 100%)`,
-                    }}
-                  />
-                </Link>
-              ))}
-            </div>
+                      <div
+                        className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r opacity-0 transition-opacity group-hover:opacity-100"
+                        style={{
+                          backgroundImage: `linear-gradient(to right, var(--tw-gradient-from) 0%, var(--tw-gradient-to) 100%)`,
+                        }}
+                      />
+                    </Link>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
 
             {/* Amazon-style Deal Cards */}
 
@@ -334,38 +337,42 @@ export default function Home() {
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 Today's Deals
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {section.items.map((deal: any) => (
-                  <Link
-                    href={`/product?id=${deal.product.id}`}
-                    key={deal.id}
-                    className="bg-white rounded-lg shadow-sm p-4"
-                  >
-                    <Image
-                      src={baseURL + deal.product.image}
-                      alt={deal.product.name}
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      className="object-contain w-full h-32"
-                    />
-                    <div className="space-y-2">
-                      <span className="inline-block bg-red-100 text-red-600 text-xs font-medium px-2 py-1 rounded">
-                        Up to{" "}
-                        {(
-                          ((deal.product.mrp - deal.product.offer_price) /
-                            deal.product.mrp) *
-                          100
-                        ).toFixed(2)}
-                        % off
-                      </span>
-                      <p className="text-sm font-medium line-clamp-2">
-                        {deal.product.name}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+              <Carousel>
+                <CarouselContent>
+                  {section.items.map((deal: any) => (
+                    <CarouselItem className="basis-1/2 md:basis-1/5">
+                      <Link
+                        href={`/product?id=${deal.product.id}`}
+                        key={deal.id}
+                        className="bg-white rounded-lg shadow-sm p-4"
+                      >
+                        <Image
+                          src={baseURL + deal.product.image}
+                          alt={deal.product.name}
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                          className="object-contain w-full h-32"
+                        />
+                        <div className="space-y-2">
+                          <span className="inline-block bg-red-100 text-red-600 text-xs font-medium px-2 py-1 rounded">
+                            Up to{" "}
+                            {(
+                              ((deal.product.mrp - deal.product.offer_price) /
+                                deal.product.mrp) *
+                              100
+                            ).toFixed(2)}
+                            % off
+                          </span>
+                          <p className="text-sm font-medium line-clamp-2">
+                            {deal.product.name}
+                          </p>
+                        </div>
+                      </Link>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
             </div>
           </section>
         ) : section.name == "Recommended for You" ? (
@@ -374,46 +381,50 @@ export default function Home() {
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 Recommended for you
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-                {section.items.map((item: any) => (
-                  <Link
-                    href={
-                      section.content_type == "Category"
-                        ? `/products?category=${item.category.id}`
-                        : `/product?id=${item.product.id}`
-                    }
-                    key={item.id}
-                    className="space-y-2"
-                  >
-                    <Image
-                      src={
-                        baseURL +
-                        (section.content_type == "Category"
-                          ? item.category.image
-                          : item.product.image)
-                      }
-                      alt={
-                        section.content_type == "Category"
-                          ? item.category.name
-                          : item.product.name
-                      }
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      className="object-contain w-full h-32"
-                    />
-                    <p className="text-sm font-medium line-clamp-2">
-                      {section.content_type == "Category"
-                        ? item.category.name
-                        : item.product.name}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {section.content_type == "Product" &&
-                        "₹" + item.product.offer_price}
-                    </p>
-                  </Link>
-                ))}
-              </div>
+              <Carousel>
+                <CarouselContent>
+                  {section.items.map((item: any) => (
+                    <CarouselItem className="basis-1/2 md:basis-1/5">
+                      <Link
+                        href={
+                          section.content_type == "Category"
+                            ? `/products?category=${item.category.id}`
+                            : `/product?id=${item.product.id}`
+                        }
+                        key={item.id}
+                        className="space-y-2"
+                      >
+                        <Image
+                          src={
+                            baseURL +
+                            (section.content_type == "Category"
+                              ? item.category.image
+                              : item.product.image)
+                          }
+                          alt={
+                            section.content_type == "Category"
+                              ? item.category.name
+                              : item.product.name
+                          }
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                          className="object-contain w-full h-32"
+                        />
+                        <p className="text-sm font-medium line-clamp-2">
+                          {section.content_type == "Category"
+                            ? item.category.name
+                            : item.product.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {section.content_type == "Product" &&
+                            "₹" + item.product.offer_price}
+                        </p>
+                      </Link>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
             </div>
           </section>
         ) : section.name == "Featured Items" ? (
@@ -425,50 +436,54 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {section.items.map((item: any, index: number) => (
-                <Link
-                  href={
-                    section.content_type == "Category"
-                      ? `/products?category=${item.category.id}`
-                      : `/product?id=${item.product.id}`
-                  }
-                  key={index}
-                  className="relative aspect-[4/4] overflow-hidden rounded-xl"
-                >
-                  <div className="relative w-full h-full">
-                    <div className="inset-0">
-                      <Image
-                        src={
-                          baseURL +
-                          (section.content_type == "Category"
-                            ? item.category.image
-                            : item.product.image)
-                        }
-                        alt={
-                          section.content_type == "Category"
+            <Carousel>
+              <CarouselContent>
+                {section.items.map((item: any, index: number) => (
+                  <CarouselItem className="basis-1/2 md:basis-1/5">
+                    <Link
+                      href={
+                        section.content_type == "Category"
+                          ? `/products?category=${item.category.id}`
+                          : `/product?id=${item.product.id}`
+                      }
+                      key={index}
+                      className="relative aspect-[4/4] overflow-hidden rounded-xl"
+                    >
+                      <div className="relative w-full h-full">
+                        <div className="inset-0">
+                          <Image
+                            src={
+                              baseURL +
+                              (section.content_type == "Category"
+                                ? item.category.image
+                                : item.product.image)
+                            }
+                            alt={
+                              section.content_type == "Category"
+                                ? item.category.name
+                                : item.product.name
+                            }
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 50vw, 33vw"
+                            priority={index === 0}
+                          />
+                        </div>
+                        <div className="absolute inset-0 " />
+                      </div>
+                      <div className="absolute inset-0 flex flex-col h-fit justify-end px-4 py-1 mt-auto text-white bg-gradient-to-b from-gray-200 to-slate-900">
+                        <h3 className="text-lg font-bold">
+                          {section.content_type == "Category"
                             ? item.category.name
-                            : item.product.name
-                        }
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 50vw, 33vw"
-                        priority={index === 0}
-                      />
-                    </div>
-                    <div className="absolute inset-0 " />
-                  </div>
-                  <div className="absolute inset-0 flex flex-col h-fit justify-end px-4 py-1 mt-auto text-white bg-gradient-to-b from-gray-200 to-slate-900">
-                    <h3 className="text-lg font-bold">
-                      {section.content_type == "Category"
-                        ? item.category.name
-                        : item.product.name}
-                    </h3>
-                    <p className="text-sm opacity-90">Shop Now →</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                            : item.product.name}
+                        </h3>
+                        <p className="text-sm opacity-90">Shop Now →</p>
+                      </div>
+                    </Link>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
           </section>
         ) : section.name == "New Arrivals" ? (
           <section className="mb-12 px-4 md:px-6 lg:px-8" key={section.id}>
@@ -476,54 +491,58 @@ export default function Home() {
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 New Arrivals
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {section.items.map((item: any, index: number) => (
-                  <Link
-                    href={
-                      section.content_type == "Category"
-                        ? `/products?category=${item.category.id}`
-                        : `/product?id=${item.product.id}`
-                    }
-                    key={index}
-                    className="bg-white rounded-lg shadow-sm p-4"
-                  >
-                    <Image
-                      src={
-                        baseURL +
-                        (section.content_type == "Category"
-                          ? item.category.image
-                          : item.product.image)
-                      }
-                      alt={
-                        section.content_type == "Category"
-                          ? item.category.name
-                          : item.product.name
-                      }
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      className="object-contain w-full h-32"
-                    />
-                    <div className="space-y-2">
-                      <p className="text-sm font-medium line-clamp-2">
-                        {section.content_type == "Category"
-                          ? item.category.name
-                          : item.product.name}
-                      </p>
-                      {section.content_type == "Category" ? (
-                        <p className="text-sm opacity-90">Shop Now →</p>
-                      ) : (
-                        <div className="flex gap-2 text-sm">
-                          <s>₹{item.product.mrp}</s>
-                          <p className="text-red-500 font-bold">
-                            ₹{item.product.offer_price}
+              <Carousel>
+                <CarouselContent>
+                  {section.items.map((item: any, index: number) => (
+                    <CarouselItem className="basis-1/2 md:basis-1/5">
+                      <Link
+                        href={
+                          section.content_type == "Category"
+                            ? `/products?category=${item.category.id}`
+                            : `/product?id=${item.product.id}`
+                        }
+                        key={index}
+                        className="bg-white rounded-lg shadow-sm p-4"
+                      >
+                        <Image
+                          src={
+                            baseURL +
+                            (section.content_type == "Category"
+                              ? item.category.image
+                              : item.product.image)
+                          }
+                          alt={
+                            section.content_type == "Category"
+                              ? item.category.name
+                              : item.product.name
+                          }
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                          className="object-contain w-full h-32"
+                        />
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium line-clamp-2">
+                            {section.content_type == "Category"
+                              ? item.category.name
+                              : item.product.name}
                           </p>
+                          {section.content_type == "Category" ? (
+                            <p className="text-sm opacity-90">Shop Now →</p>
+                          ) : (
+                            <div className="flex gap-2 text-sm">
+                              <s>₹{item.product.mrp}</s>
+                              <p className="text-red-500 font-bold">
+                                ₹{item.product.offer_price}
+                              </p>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  </Link>
-                ))}
-              </div>
+                      </Link>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
             </div>
           </section>
         ) : (
@@ -533,35 +552,39 @@ export default function Home() {
                 <h2 className="text-xl md:text-2xl font-bold mb-4">
                   Trending Products
                 </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {section.items.map((deal: any) => (
-                    <Link
-                      href={`/product?id=${deal.product.id}`}
-                      key={deal.id}
-                      className="bg-white rounded-lg shadow-sm p-4"
-                    >
-                      <Image
-                        src={baseURL + deal.product.image}
-                        alt={deal.product.name}
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        className="object-contain w-full h-32"
-                      />
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium line-clamp-2">
-                          {deal.product.name}
-                        </p>
-                        <div className="flex gap-2 text-sm">
-                          <s>₹{deal.product.mrp}</s>
-                          <p className="text-red-500 font-bold">
-                            ₹{deal.product.offer_price}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+                <Carousel>
+                  <CarouselContent>
+                    {section.items.map((deal: any) => (
+                      <CarouselItem className="basis-1/2 md:basis-1/5">
+                        <Link
+                          href={`/product?id=${deal.product.id}`}
+                          key={deal.id}
+                          className="bg-white rounded-lg shadow-sm p-4"
+                        >
+                          <Image
+                            src={baseURL + deal.product.image}
+                            alt={deal.product.name}
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            className="object-contain w-full h-32"
+                          />
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium line-clamp-2">
+                              {deal.product.name}
+                            </p>
+                            <div className="flex gap-2 text-sm">
+                              <s>₹{deal.product.mrp}</s>
+                              <p className="text-red-500 font-bold">
+                                ₹{deal.product.offer_price}
+                              </p>
+                            </div>
+                          </div>
+                        </Link>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
               </div>
             </section>
           )
