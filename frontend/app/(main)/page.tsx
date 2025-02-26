@@ -277,7 +277,7 @@ export default function Home() {
                   <CarouselItem className="basis-1/2 md:basis-1/5" key={index}>
                     <Link
                       href={`/products?brand=${item.brand.id}`}
-                      className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-white shadow-sm hover:shadow-xl transition-all duration-300"
+                      className="group relative overflow-hidden rounded-xl md:rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300"
                     >
                       <div className="p-4 md:p-6">
                         <div className="flex flex-col md:flex-row items-start justify-between">
@@ -345,7 +345,7 @@ export default function Home() {
                     >
                       <Link
                         href={`/product?id=${deal.product.id}`}
-                        className="bg-white rounded-lg shadow-sm p-4"
+                        className="rounded-lg shadow-sm p-4"
                       >
                         <Image
                           src={baseURL + deal.product.image}
@@ -506,7 +506,7 @@ export default function Home() {
                             ? `/products?category=${item.category.id}`
                             : `/product?id=${item.product.id}`
                         }
-                        className="bg-white rounded-lg shadow-sm p-4"
+                        className="rounded-lg shadow-sm p-4"
                       >
                         <Image
                           src={
@@ -565,7 +565,7 @@ export default function Home() {
                       >
                         <Link
                           href={`/product?id=${deal.product.id}`}
-                          className="bg-white rounded-lg shadow-sm p-4"
+                          className="rounded-lg shadow-sm p-4"
                         >
                           <Image
                             src={baseURL + deal.product.image}

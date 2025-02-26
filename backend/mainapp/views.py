@@ -17,11 +17,15 @@ import random
 import string
 import time
 from datetime import datetime, timedelta
+from django.db.models import Prefetch
+from django.db.models.functions import Random
 
 def index(request):
     return HttpResponse("hello World")
 
 import random
+
+
 
 def generate_otp(user):
     otp_code = str(random.randint(100000, 999999))
@@ -649,9 +653,13 @@ def getHomepageBanners(request):
 @api_view(['GET'])
 def getHomepageSections(request):
     if request.method == "GET":
-        sections = HomepageSection.objects.all().order_by('display_order')
+        sections = HomepageSection.objects.prefetch_related(
+            Prefetch('items', queryset=HomepageItem.objects.order_by(Random()))
+        ).order_by('display_order')
+
         serializer = HomepageSectionSerializer(sections, many=True)
         return Response(serializer.data, status=200)
+
     return Response(status=400)
 
 @api_view(['GET'])

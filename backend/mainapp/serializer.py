@@ -208,10 +208,6 @@ class HomepageSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = HomepageSection
         fields = '__all__'
-    def get_items(self, obj):
-        items = list(obj.items.all())  # Convert queryset to a list
-        shuffle(items)  # Shuffle items randomly
-        return HomepageItemSerializer(items, many=True).data
 
 class PolicySerializer(serializers.ModelSerializer):
     class Meta:
