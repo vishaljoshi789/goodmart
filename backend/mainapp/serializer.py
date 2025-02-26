@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail, Product_Variant, Address, Order, OrderItem, SubOrder, Coupon, Wallet, Transaction, User_Detail, HomepageBanner, HomepageItem, HomepageSection, Policy
+from random import shuffle
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -207,7 +208,10 @@ class HomepageSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = HomepageSection
         fields = '__all__'
-
+    def get_items(self, obj):
+        items = list(obj.items.all())  # Convert queryset to a list
+        shuffle(items)  # Shuffle items randomly
+        return HomepageItemSerializer(items, many=True).data
 
 class PolicySerializer(serializers.ModelSerializer):
     class Meta:
