@@ -21,6 +21,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { BsFillCartPlusFill } from "react-icons/bs";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import { ProductPageSkeleton } from "@/components/user/skeleton/ProductSkeleton";
 
 export default function Product() {
   let id = useSearchParams().get("id");
@@ -29,7 +30,7 @@ export default function Product() {
   let axios = useAxios();
   let { baseURL, getCartCount } = useContext(GMContext);
   let [cartQuantity, setCartQuantity] = useState(1);
-  let [product, setProduct] = useState<any>({});
+  let [product, setProduct] = useState<any>(null);
   let [activeImage, setActiveImage] = useState(0);
 
   const validTypes = ["Size", "Color", "Weight", "Material", "Quantity"];
@@ -433,7 +434,7 @@ export default function Product() {
             </div>
           </section>
         ) : (
-          <NotFoundPage />
+          <ProductPageSkeleton />
         )}
       </div>
     </Suspense>
