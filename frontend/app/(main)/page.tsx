@@ -272,12 +272,12 @@ export default function Home() {
             </div>
 
             <div className="w-full overflow-x-auto">
-              <div className="grid grid-rows-2 auto-cols-max grid-flow-col gap-4">
+              <div className="grid grid-rows-2 md:grid-rows-1 auto-cols-max grid-flow-col gap-4">
                 {section.items.map((item: any, index: number) => (
                   <Link
                     href={`/products?brand=${item.brand.id}`}
                     key={index}
-                    className="row-span-1 rounded-xl md:rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300"
+                    className="row-span-1 rounded-xl md:rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border-2 w-full"
                   >
                     <div className="p-4 md:p-6">
                       <div className="flex flex-col md:flex-row items-start justify-between">
@@ -300,8 +300,10 @@ export default function Home() {
                               {item.brand.name}
                             </h3>
                           </div>
-                          <p className="mt-1 text-xs md:text-sm text-gray-500 line-clamp-2">
-                            {item.brand.description}
+                          <p className="mt-1 text-xs md:text-sm text-gray-500 w-36">
+                            {item.brand.description.length > 50
+                              ? item.brand.description.substring(0, 50) + "..."
+                              : item.brand.description}
                           </p>
                         </div>
                       </div>
@@ -336,12 +338,12 @@ export default function Home() {
                 Today's Deals
               </h2>
               <div className="w-full overflow-x-auto">
-                <div className="grid grid-rows-2 auto-cols-max grid-flow-col gap-4">
+                <div className="grid grid-rows-2 md:grid-rows-1 auto-cols-max grid-flow-col gap-4">
                   {section.items.map((deal: any) => (
                     <Link
                       href={`/product?id=${deal.product.id}`}
                       key={deal.id}
-                      className="rounded-lg shadow-sm p-4"
+                      className="rounded-lg shadow-sm p-4 border-2"
                     >
                       <Image
                         src={baseURL + deal.product.image}
@@ -378,7 +380,7 @@ export default function Home() {
                 Recommended for you
               </h2>
               <div className="w-full overflow-x-auto">
-                <div className="grid grid-rows-2 auto-cols-max grid-flow-col gap-4">
+                <div className="grid grid-rows-2 md:grid-rows-1 auto-cols-max grid-flow-col gap-4">
                   {section.items.map((item: any) => (
                     <Link
                       href={
@@ -387,7 +389,7 @@ export default function Home() {
                           : `/product?id=${item.product.id}`
                       }
                       key={item.id}
-                      className="space-y-2"
+                      className="space-y-2 border-2 rounded-lg shadow-sm p-4"
                     >
                       <Image
                         src={
@@ -434,7 +436,7 @@ export default function Home() {
             </div>
 
             <div className="w-full overflow-x-auto">
-              <div className="grid grid-rows-2 auto-cols-max grid-flow-col gap-4">
+              <div className="grid grid-rows-2 md:grid-rows-1 auto-cols-max grid-flow-col gap-4">
                 {section.items.map((item: any, index: number) => (
                   <Link
                     href={
@@ -443,7 +445,7 @@ export default function Home() {
                         : `/product?id=${item.product.id}`
                     }
                     key={item.id}
-                    className="space-y-2 rounded-lg shadow-sm"
+                    className="space-y-2 rounded-lg shadow-sm border-2"
                   >
                     <Image
                       src={
@@ -482,7 +484,7 @@ export default function Home() {
                 New Arrivals
               </h2>
               <div className="w-full overflow-x-auto">
-                <div className="grid grid-rows-2 auto-cols-max grid-flow-col gap-4">
+                <div className="grid grid-rows-2 md:grid-rows-1 auto-cols-max grid-flow-col gap-4">
                   {section.items.map((item: any, index: number) => (
                     <Link
                       href={
@@ -491,7 +493,7 @@ export default function Home() {
                           : `/product?id=${item.product.id}`
                       }
                       key={index}
-                      className="rounded-lg shadow-sm p-4"
+                      className="rounded-lg shadow-sm p-4 border-2"
                     >
                       <Image
                         src={
@@ -541,11 +543,11 @@ export default function Home() {
                   Trending Products
                 </h2>
                 <div className="w-full overflow-x-auto">
-                  <div className="grid grid-rows-2 auto-cols-max grid-flow-col gap-4">
+                  <div className="grid grid-rows-2 md:grid-rows-1 auto-cols-max grid-flow-col gap-4">
                     {section.items.map((deal: any) => (
                       <Link
                         href={`/product?id=${deal.product.id}`}
-                        className="rounded-lg shadow-sm p-4"
+                        className="rounded-lg shadow-sm p-4 border-2"
                         key={deal.id}
                       >
                         <Image
