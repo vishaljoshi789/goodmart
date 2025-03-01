@@ -151,6 +151,43 @@ export default function Billing() {
                               {vnd.shipping}
                             </span>
                           </li>
+                          {vnd.coupons.length > 0 && (
+                            <li className="flex flex-wrap gap-4 py-4">
+                              <span className="text-md font-bold">Coupons</span>
+
+                              {vnd.coupons.map((coupon: any) => (
+                                <div className="flex justify-between w-full">
+                                  <label htmlFor="" className="text-green-500">
+                                    {coupon.code} ₹{coupon.amount}
+                                  </label>
+                                  <input
+                                    type="checkbox"
+                                    key={coupon.id}
+                                    className="bg-gray-200 text-gray-500 p-1 rounded-md"
+                                    value={coupon.code}
+                                    // onChange={(e) => {
+                                    //   if (e.target.checked) {
+                                    //     setBilling({
+                                    //       ...billing,
+                                    //       total: billing.total - coupon.amount,
+                                    //     });
+                                    //   } else {
+                                    //     setBilling({
+                                    //       ...billing,
+                                    //       total: billing.total + coupon.amount,
+                                    //     });
+                                    //   }
+                                    //   vnd.coupons.map((c: any) => {
+                                    //     if (c.code == coupon.code) {
+                                    //       c.checked = e.target.checked;
+                                    //     }
+                                    //   });
+                                    // }}
+                                  />
+                                </div>
+                              ))}
+                            </li>
+                          )}
                           <li className="flex flex-wrap gap-4 text-md py-4">
                             Total{" "}
                             <span className="ml-auto font-bold">
@@ -198,7 +235,9 @@ export default function Billing() {
             <ul className="text-[#333] divide-y mt-6">
               <li className="flex flex-wrap gap-4 text-md py-4">
                 Subtotal{" "}
-                <span className="ml-auto font-bold">₹{billing.total}</span>
+                <span className="ml-auto font-bold">
+                  ₹{parseInt(billing.total)?.toFixed(2)}
+                </span>
               </li>
               <li className="flex flex-wrap gap-4 text-md py-4">
                 Shipping{" "}

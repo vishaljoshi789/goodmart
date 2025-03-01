@@ -83,9 +83,12 @@ def getUserInfo(request, id):
 @permission_classes([IsAdminUser])
 def getUserDetails(request, id):
     if request.method == 'GET':
-        user = User.objects.get(id=id)
-        serializer = UserDetailsSerializer(user.user_detail)
-        return Response(serializer.data, status=200)
+        try:
+            user = User.objects.get(id=id)
+            serializer = UserDetailsSerializer(user.user_detail)
+            return Response(serializer.data, status=200)
+        except:
+            return Response(status=404)
     else:
         return Response(status=400)
     

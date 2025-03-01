@@ -1,4 +1,4 @@
-from ..models import Product, Vendor_Detail, ShippingCharges, Order, SubOrder, OrderItem, User_Detail
+from ..models import Product, Vendor_Detail, ShippingCharges, Order, SubOrder, OrderItem, User_Detail, LevelPoints, Coupon
 from .serializer import ProductSerializer, ProductImageSerializer, ProductSpecificationsSerializer, ProductVariantSerializer, ProductDetailedSerializer, ProductEditSerializer, VendorDetailSerializer, AddressSerializer, KYCDetailSerializer, GetVendorDetailSerializer, ShippingChargesSerializer, OrderAddressSerializer, SubOrderWithOrderAddressSerializer, ProductBrandSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -8,7 +8,33 @@ import qrcode
 from io import BytesIO
 from django.core.files import File
 from django.conf import settings 
+import time
+import string
+import random
 
+
+def base36_encode(number):
+    if not isinstance(number, int):
+        raise TypeError("Number must be an integer")
+    if number < 0:
+        raise ValueError("Number must be non-negative")
+    
+    digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    result = ""
+    while number:
+        number, remainder = divmod(number, 36)
+        result = digits[remainder] + result
+    return result or "0"
+
+def generate_time_based_alphanumeric_code(length=16):
+    timestamp = int(time.time())
+    base36_timestamp = base36_encode(timestamp)
+    
+    random_part_length = length - len(base36_timestamp)
+    characters = string.ascii_uppercase + string.digits
+    random_part = ''.join(random.choices(characters, k=random_part_length))
+    
+    return base36_timestamp + random_part
 
 @api_view(['POST'])
 @permission_classes([isVendor])
@@ -320,6 +346,24 @@ def updateOrderStatus(request, order_id):
     if request.method == 'POST':
         sub_order = SubOrder.objects.get(id=order_id)
         sub_order.status = request.data['status']
+        if(sub_order.status == 'Delivered'):
+            levels = LevelPoints.objects.all()
+            items = sub_order.items.all()
+            for item in items:
+                user = sub_order.order.user
+                for level in levels:
+                    if user:
+                        coupon = Coupon.objects.create(
+                            user = user,
+                            code = generate_time_based_alphanumeric_code(),
+                            vendor = sub_order.vendor,
+                            amount = level.points*item.product.point/100,
+                            type = 'DIRECT_USE',
+                            title = f"Coupon from {sub_order.order.user.name}",
+                            description = f"Get ₹{level.points*item.product.point/100} off on your next purchase from {sub_order.vendor.firm}",
+                        )
+                        coupon.save()
+                        user = user.referral
         sub_order.save()
         return Response(status=200)
     return Response(status=400)

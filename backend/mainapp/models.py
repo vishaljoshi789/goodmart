@@ -280,6 +280,26 @@ class ShippingCharges(models.Model):
     added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
 
+class Coupon(models.Model):
+    COUPON_TYPE_CHOICES = [
+        ('REDEEMABLE', 'REDEEMABLE'),
+        ('DIRECT_USE', 'DIRECT_USE'),
+    ]
+    code = models.CharField(max_length=50, unique=True, default='000000')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="coupons", null=True, blank=True)
+    vendor = models.ForeignKey(Vendor_Detail, on_delete=models.CASCADE, blank=True, null=True)
+    description = models.TextField(null=True)
+    title = models.CharField(max_length=1000, null=True)
+    type = models.CharField(max_length=20, choices=COUPON_TYPE_CHOICES, default='REDEEMABLE')
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    is_used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expiry_date = models.DateTimeField(blank=True, null=True) 
+
+    def __str__(self):
+        return f"Coupon {self.code} - {self.type}"
+    
+
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='orders')
     address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
@@ -298,6 +318,7 @@ class SubOrder(models.Model):
     payment_mode = models.CharField(max_length=20, null=True, blank=True, choices=(("COD", "COD"), ("Online", "Online")))
     payment_status = models.CharField(max_length=20, null=True, blank=True, choices=(("Pending", "Pending"), ("Approved", "Approved"), ("Rejected", "Rejected")), default="Pending")
     payment_id = models.CharField(max_length=100, null=True, blank=True)
+    coupons = models.ManyToManyField(Coupon, blank=True)
 
 class OrderItem(models.Model):
     order = models.ForeignKey(SubOrder, on_delete=models.CASCADE, null=True, blank=True, related_name='items')
@@ -352,25 +373,7 @@ class Wallet(models.Model):
         else:
             raise ValueError("Amount to deduct must be positive.")
         
-class Coupon(models.Model):
-    COUPON_TYPE_CHOICES = [
-        ('REDEEMABLE', 'REDEEMABLE'),
-        ('DIRECT_USE', 'DIRECT_USE'),
-    ]
-    code = models.CharField(max_length=50, unique=True, default='000000')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="coupons", null=True, blank=True)
-    vendor = models.ForeignKey(Vendor_Detail, on_delete=models.CASCADE, blank=True, null=True)
-    description = models.TextField(null=True)
-    title = models.CharField(max_length=1000, null=True)
-    type = models.CharField(max_length=20, choices=COUPON_TYPE_CHOICES, default='REDEEMABLE')
-    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    is_used = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    expiry_date = models.DateTimeField(blank=True, null=True) 
 
-    def __str__(self):
-        return f"Coupon {self.code} - {self.type}"
-    
 class Transaction(models.Model):
     TRANSACTION_TYPE_CHOICES = [
         ('CREDIT', 'Credit'),  # Adding balance to the wallet

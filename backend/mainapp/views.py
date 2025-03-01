@@ -416,6 +416,8 @@ def getBillingDetails(request):
             temp['shipping'] = getShippingCharges(request.GET.get('address_id'), i.id) if i.free_shipping_above and total < i.free_shipping_above else 0
             temp['cash_on_delivery'] = i.cash_on_delivery
             temp['payment_mode'] = ""
+            temp['coupons'] = CouponSerializer(request.user.coupons.all().filter(vendor=i), many=True).data
+            print(temp['coupons'])
             billing['vendor'].append(temp)
             billing['total'] += total
             billing['shipping'] += temp['shipping']
