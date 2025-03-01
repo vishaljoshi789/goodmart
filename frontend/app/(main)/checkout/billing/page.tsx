@@ -156,13 +156,15 @@ export default function Billing() {
                               <span className="text-md font-bold">Coupons</span>
 
                               {vnd.coupons.map((coupon: any) => (
-                                <div className="flex justify-between w-full">
+                                <div
+                                  className="flex justify-between w-full"
+                                  key={coupon.id}
+                                >
                                   <label htmlFor="" className="text-green-500">
                                     {coupon.code} ₹{coupon.amount}
                                   </label>
                                   <input
                                     type="checkbox"
-                                    key={coupon.id}
                                     className="bg-gray-200 text-gray-500 p-1 rounded-md"
                                     value={coupon.code}
                                     // onChange={(e) => {
