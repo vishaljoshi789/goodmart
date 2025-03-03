@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { Ticket } from "lucide-react";
 
 export default function Billing() {
   let { baseURL } = useContext(GMContext);
@@ -160,31 +161,69 @@ export default function Billing() {
                                   className="flex justify-between w-full"
                                   key={coupon.id}
                                 >
-                                  <label htmlFor="" className="text-green-500">
-                                    {coupon.code} ₹{coupon.amount}
-                                  </label>
+                                  <div className="flex gap-5">
+                                    <Ticket className="text-green-500" />
+                                    <label
+                                      htmlFor=""
+                                      className="text-green-500"
+                                    >
+                                      {coupon.code}{" "}
+                                      <b className="text-red-500">
+                                        ₹{coupon.amount}
+                                      </b>
+                                    </label>
+                                  </div>
+
                                   <input
                                     type="checkbox"
                                     className="bg-gray-200 text-gray-500 p-1 rounded-md"
                                     value={coupon.code}
-                                    // onChange={(e) => {
-                                    //   if (e.target.checked) {
-                                    //     setBilling({
-                                    //       ...billing,
-                                    //       total: billing.total - coupon.amount,
-                                    //     });
-                                    //   } else {
-                                    //     setBilling({
-                                    //       ...billing,
-                                    //       total: billing.total + coupon.amount,
-                                    //     });
-                                    //   }
-                                    //   vnd.coupons.map((c: any) => {
-                                    //     if (c.code == coupon.code) {
-                                    //       c.checked = e.target.checked;
-                                    //     }
-                                    //   });
-                                    // }}
+                                    checked={coupon.is_used}
+                                    onChange={(e) => {
+                                      let vndtotal, total;
+                                      if (e.target.checked) {
+                                        vndtotal = (
+                                          parseFloat(vnd.total) -
+                                          parseFloat(coupon.amount)
+                                        ).toFixed(2);
+                                        total = (
+                                          parseFloat(billing.total) -
+                                          parseFloat(coupon.amount)
+                                        )?.toFixed(2);
+                                      } else {
+                                        vndtotal = (
+                                          parseFloat(vnd.total) +
+                                          parseFloat(coupon.amount)
+                                        ).toFixed(2);
+                                        total = (
+                                          parseFloat(billing.total) +
+                                          parseFloat(coupon.amount)
+                                        )?.toFixed(2);
+                                      }
+                                      setBilling((prevBilling: any) => ({
+                                        ...prevBilling,
+                                        total: total,
+                                        vendor: prevBilling.vendor.map(
+                                          (v: any) =>
+                                            v.id === vnd.id
+                                              ? {
+                                                  ...v,
+                                                  total: vndtotal,
+                                                  coupons: v.coupons.map(
+                                                    (c: any) =>
+                                                      c.id === coupon.id
+                                                        ? {
+                                                            ...c,
+                                                            is_used:
+                                                              e.target.checked,
+                                                          }
+                                                        : c
+                                                  ),
+                                                }
+                                              : v
+                                        ),
+                                      }));
+                                    }}
                                   />
                                 </div>
                               ))}
@@ -193,7 +232,10 @@ export default function Billing() {
                           <li className="flex flex-wrap gap-4 text-md py-4">
                             Total{" "}
                             <span className="ml-auto font-bold">
-                              ₹{vnd.total + vnd.shipping}
+                              ₹
+                              {(
+                                parseFloat(vnd.total) + parseFloat(vnd.shipping)
+                              ).toFixed(2)}
                             </span>
                           </li>
 
@@ -254,7 +296,10 @@ export default function Billing() {
               <li className="flex flex-wrap gap-4 text-md py-4 font-bold">
                 Total{" "}
                 <span className="ml-auto">
-                  ₹{(billing.total + billing.shipping).toFixed(2)}
+                  ₹
+                  {(
+                    parseFloat(billing.total) + parseFloat(billing.shipping)
+                  ).toFixed(2)}
                 </span>
               </li>
             </ul>

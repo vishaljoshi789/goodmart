@@ -417,7 +417,6 @@ def getBillingDetails(request):
             temp['cash_on_delivery'] = i.cash_on_delivery
             temp['payment_mode'] = ""
             temp['coupons'] = CouponSerializer(request.user.coupons.all().filter(vendor=i), many=True).data
-            print(temp['coupons'])
             billing['vendor'].append(temp)
             billing['total'] += total
             billing['shipping'] += temp['shipping']
@@ -429,14 +428,20 @@ def getBillingDetails(request):
 def createOrder(request):
     if request.method == 'POST':
         cart = request.user.cart.all()
-        print(request.data)
+        # print(request.data)
         address = Address.objects.get(id=request.data["address_id"])
         vendor = request.data["vendor"]
         order = Order.objects.create(user=request.user, address=address, order_confirmed=False, subtotal=request.data["total"], shipping=request.data["shipping"])
         order.save()
         for i in vendor:
             suborder = SubOrder.objects.create(order=order, vendor=Vendor_Detail.objects.get(id=i['id']), subtotal=i['total'], shipping=i['shipping'], payment_mode=i['payment_mode'], status="Pending")
-            suborder.save()
+            for coupon in i['coupons']:
+                if coupon['is_used']:
+                    cp = Coupon.objects.get(id=coupon['id'])
+                    cp.is_used = True
+                    cp.save()
+                    suborder.coupons.add(cp)
+            suborder.save()       
             for item in cart:
                 if item.product.company_id.id == i['id']:
                     orderItem = OrderItem.objects.create(order=suborder, product=item.product, quantity=item.quantity, variant=item.variant, total=item.variant.offer_price * item.quantity if item.variant else item.product.offer_price * item.quantity)
