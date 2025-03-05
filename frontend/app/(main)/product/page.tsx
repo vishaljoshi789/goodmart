@@ -407,19 +407,29 @@ export default function Product() {
                                       <Link
                                         href={`/product?id=${id}&variant=${item.id}`}
                                         key={item.id}
-                                        className="border rounded-lg p-4 shadow-md hover:shadow-lg transition-all ease-in"
+                                        className="flex gap-3 border rounded-lg p-4 shadow-md hover:shadow-lg transition-all ease-in col-span-full"
                                       >
-                                        <h3 className="text-lg font-semibold mb-2">
-                                          {item.name}
-                                        </h3>
-                                        <div className="flex gap-3">
-                                          {" "}
-                                          <s className="text-sm text-red-500">
-                                            ₹{item.mrp}
-                                          </s>
-                                          <p className="text-sm text-gray-600 mb-2">
-                                            ₹{item.offer_price}
-                                          </p>
+                                        <Image
+                                          src={baseURL + product.image}
+                                          alt={item.name}
+                                          width={0}
+                                          height={0}
+                                          sizes="100vw"
+                                          className="w-16 h-16 object-contain object-center"
+                                        />
+                                        <div>
+                                          <h3 className="text-lg font-semibold mb-2">
+                                            {item.name}
+                                          </h3>
+                                          <div className="flex gap-3">
+                                            {" "}
+                                            <s className="text-sm text-red-500">
+                                              ₹{item.mrp}
+                                            </s>
+                                            <p className="text-sm text-gray-600 mb-2">
+                                              ₹{item.offer_price}
+                                            </p>
+                                          </div>
                                         </div>
                                       </Link>
                                     )

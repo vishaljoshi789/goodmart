@@ -201,7 +201,7 @@ export default function Home() {
           {featuredCategory.map((item: any) => (
             <li className={`rounded-md hover:bg-gray-200`} key={item.id}>
               <Link
-                href={`/products?category=${item.id}`}
+                href={`/categories?id=${item.id}`}
                 className="flex justify-center items-center flex-col"
               >
                 {item.image && (

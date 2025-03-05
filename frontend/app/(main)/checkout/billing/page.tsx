@@ -36,6 +36,7 @@ export default function Billing() {
     let data = billing;
     data["address_id"] = address_id;
     let response = await api.post("/placeOrder/", data);
+
     if (response.status == 201) {
       toast.success("Order Placed Successfully");
       // console.log(response.data);
