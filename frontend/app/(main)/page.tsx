@@ -660,6 +660,24 @@ export default function Home() {
                 Return Policy
               </Link>
               <Link
+                href={"/policy/refund"}
+                className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3"
+              >
+                Refund Policy
+              </Link>
+              <Link
+                href={"/policy/privacy"}
+                className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href={"/policy/shipping"}
+                className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3"
+              >
+                Shipping Policy
+              </Link>
+              <Link
                 href={"/policy/product-warranty"}
                 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3"
               >

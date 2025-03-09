@@ -10,6 +10,9 @@ export default function Policy() {
   const [policies, setPolicies] = React.useState<any>([]);
   const [terms, setTerms] = React.useState<any>("");
   const [returnPolicy, setReturnPolicy] = React.useState<any>("");
+  const [refundPolicy, setRefundPolicy] = React.useState<any>("");
+  const [privacyPolicy, setPrivacyPolicy] = React.useState<any>("");
+  const [shippingPolicy, setShippingPolicy] = React.useState<any>("");
   const [warranty, setWarranty] = React.useState<any>("");
   const [mission, setMission] = React.useState<any>("");
   const getPolicies = async () => {
@@ -22,6 +25,15 @@ export default function Policy() {
           setTerms(policy.content);
         }
         if (policy.policy_type == "Return Policy") {
+          setReturnPolicy(policy.content);
+        }
+        if (policy.policy_type == "Refund Policy") {
+          setReturnPolicy(policy.content);
+        }
+        if (policy.policy_type == "Privacy Policy") {
+          setReturnPolicy(policy.content);
+        }
+        if (policy.policy_type == "Shipping Policy") {
           setReturnPolicy(policy.content);
         }
         if (policy.policy_type == "Product Warranty") {
@@ -111,6 +123,78 @@ export default function Policy() {
         ) : (
           <>
             <Button onClick={() => addPolicy("Return Policy", returnPolicy)}>
+              Add
+            </Button>
+          </>
+        )}
+      </div>
+      <div className="return p-2 space-y-2">
+        <span className="text-lg font-extrabold">Refund Policy</span>
+        <Textarea
+          value={refundPolicy}
+          onChange={(e) => setRefundPolicy(e.target.value)}
+        />
+        {policies.some(
+          (policy: any) => policy.policy_type == "Refund Policy"
+        ) ? (
+          <>
+            <Button onClick={() => updatePolicy("Refund Policy", refundPolicy)}>
+              Update
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button onClick={() => addPolicy("Refund Policy", refundPolicy)}>
+              Add
+            </Button>
+          </>
+        )}
+      </div>
+      <div className="return p-2 space-y-2">
+        <span className="text-lg font-extrabold">Privacy Policy</span>
+        <Textarea
+          value={privacyPolicy}
+          onChange={(e) => setPrivacyPolicy(e.target.value)}
+        />
+        {policies.some(
+          (policy: any) => policy.policy_type == "Privacy Policy"
+        ) ? (
+          <>
+            <Button
+              onClick={() => updatePolicy("Privacy Policy", privacyPolicy)}
+            >
+              Update
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button onClick={() => addPolicy("Privacy Policy", privacyPolicy)}>
+              Add
+            </Button>
+          </>
+        )}
+      </div>
+      <div className="return p-2 space-y-2">
+        <span className="text-lg font-extrabold">Shipping Policy</span>
+        <Textarea
+          value={shippingPolicy}
+          onChange={(e) => setShippingPolicy(e.target.value)}
+        />
+        {policies.some(
+          (policy: any) => policy.policy_type == "Shipping Policy"
+        ) ? (
+          <>
+            <Button
+              onClick={() => updatePolicy("Shipping Policy", shippingPolicy)}
+            >
+              Update
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              onClick={() => addPolicy("Shipping Policy", shippingPolicy)}
+            >
               Add
             </Button>
           </>

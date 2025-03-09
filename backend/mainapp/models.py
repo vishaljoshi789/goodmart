@@ -434,6 +434,9 @@ class Policy(models.Model):
     POLICY_TYPES = [
         ('Terms and Conditions', 'Terms and Conditions'),
         ('Return Policy', 'Return Policy'),
+        ('Refund Policy', 'Refund Policy'),
+        ('Privacy Policy', 'Privacy Policy'),
+        ('Shipping Policy', 'Shipping Policy'),
         ('Product Warranty', 'Product Warranty'),
         ('Our Mission and Vision', 'Our Mission and Vision'),
     ]

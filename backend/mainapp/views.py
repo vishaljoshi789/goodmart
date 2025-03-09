@@ -19,6 +19,7 @@ import time
 from datetime import datetime, timedelta
 from django.db.models import Prefetch
 from django.db.models.functions import Random
+from django.db.models import Q
 
 def index(request):
     return HttpResponse("hello World")
@@ -111,6 +112,38 @@ def registerUser(request):
         else:
             return Response(serializer.errors, status=400)  
     return Response(serializer.errors, status=400)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def forgetPassword(request):
+    if request.method == 'POST':
+        user = User.objects.filter(Q(email=request.data['email']) | Q(phone_no=request.data['email']) | Q(user_id=request.data['email']))
+        if user.count() == 0:
+            return Response(status=404)
+        user = user[0]
+        otp = generate_otp(user)
+        try:
+            subject = 'Change Your Goodmart Password'
+            frontend_end = settings.FRONTEND_URL
+            link = frontend_end + '/forget-password/set-new-password?id=' + user.user_id
+            html_message = render_to_string('forgetPass.html', {'otp': otp, 'name': user.name, 'email': user.email, 'phone': user.phone_no, 'user_id': user.user_id, 'link': link})
+            email_from = settings.DEFAULT_FROM_EMAIL
+            recipient_list = [user.email]
+
+            email = EmailMessage(subject, html_message, email_from, recipient_list)
+            email.content_subtype = 'html'  # Set the email content type to HTML
+            email.send()
+            return Response({id: user.id}, status=200)
+        except BadHeaderError:
+            # print(BadHeaderError)
+            return Response(status=400)
+        except SMTPException as e:
+            # print(e)
+            return Response(status=400)
+        except Exception as e:
+            # print(e)
+            return Response(status=400)
+    return Response(status=400)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
