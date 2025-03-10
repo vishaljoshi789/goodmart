@@ -39,7 +39,7 @@ export default function Policy() {
         if (policy.policy_type == "Product Warranty") {
           setWarranty(policy.content);
         }
-        if (policy.policy_type == "Our Missions and Visions") {
+        if (policy.policy_type == "Our Mission and Vision") {
           setMission(policy.content);
         }
       });
