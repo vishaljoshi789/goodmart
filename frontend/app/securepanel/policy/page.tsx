@@ -28,13 +28,13 @@ export default function Policy() {
           setReturnPolicy(policy.content);
         }
         if (policy.policy_type == "Refund Policy") {
-          setReturnPolicy(policy.content);
+          setRefundPolicy(policy.content);
         }
         if (policy.policy_type == "Privacy Policy") {
-          setReturnPolicy(policy.content);
+          setPrivacyPolicy(policy.content);
         }
         if (policy.policy_type == "Shipping Policy") {
-          setReturnPolicy(policy.content);
+          setShippingPolicy(policy.content);
         }
         if (policy.policy_type == "Product Warranty") {
           setWarranty(policy.content);
@@ -89,7 +89,11 @@ export default function Policy() {
 
       <div className="terms p-2 space-y-2">
         <span className="text-lg font-extrabold">Terms and Conditions</span>
-        <Textarea value={terms} onChange={(e) => setTerms(e.target.value)} />
+        <Textarea
+          value={terms}
+          onChange={(e) => setTerms(e.target.value)}
+          className="text-xl"
+        />
         {policies.some(
           (policy: any) => policy.policy_type == "Terms and Conditions"
         ) ? (
