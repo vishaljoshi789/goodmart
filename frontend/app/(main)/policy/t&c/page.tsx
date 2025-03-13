@@ -1,16 +1,16 @@
 "use client";
 
-import useAxios from "@/app/(utils)/hooks/useAxios";
-import { useEffect, useState } from "react";
+import { GMContext } from "@/app/(utils)/context/GMContext";
+import { useContext, useEffect, useState } from "react";
 
 export default function TermsAndConditions() {
-  const api = useAxios();
+  const { baseURL } = useContext(GMContext);
   const [terms, setTerms] = useState<any>("");
   const getTerms = async () => {
     try {
-      const res = await api.get("/policies/");
-      console.log(res.data);
-      res.data.forEach((policy: any) => {
+      const res = await fetch(baseURL + "/policies/");
+      const data = await res.json();
+      data.forEach((policy: any) => {
         if (policy.policy_type == "Terms and Conditions") {
           setTerms(policy.content);
         }
