@@ -322,6 +322,12 @@ export default function Register() {
                   </Button>
                 </Link>
               </div>
+              <Link
+                href="/auth/forget-password"
+                className="w-full flex justify-center"
+              >
+                <Button variant={"link"}>Forget Password</Button>
+              </Link>
             </form>
           </Form>
         ) : !vendorType ? (
@@ -465,6 +471,12 @@ export default function Register() {
                     </Button>
                   </Link>
                 </div>
+                <Link
+                  href="/auth/forget-password"
+                  className="w-full flex justify-center"
+                >
+                  <Button variant={"link"}>Forget Password</Button>
+                </Link>
               </form>
             </Form>
           </div>

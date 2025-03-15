@@ -20,6 +20,7 @@ from datetime import datetime, timedelta
 from django.db.models import Prefetch
 from django.db.models.functions import Random
 from django.db.models import Q
+from rest_framework_simplejwt.tokens import RefreshToken
 
 def index(request):
     return HttpResponse("hello World")
@@ -125,7 +126,7 @@ def forgetPassword(request):
         try:
             subject = 'Change Your Goodmart Password'
             frontend_end = settings.FRONTEND_URL
-            link = frontend_end + '/forget-password/set-new-password?id=' + user.user_id
+            link = frontend_end + '/auth/forget-password/verify-otp?id=' + user.user_id
             html_message = render_to_string('forgetPass.html', {'otp': otp, 'name': user.name, 'email': user.email, 'phone': user.phone_no, 'user_id': user.user_id, 'link': link})
             email_from = settings.DEFAULT_FROM_EMAIL
             recipient_list = [user.email]
@@ -133,7 +134,7 @@ def forgetPassword(request):
             email = EmailMessage(subject, html_message, email_from, recipient_list)
             email.content_subtype = 'html'  # Set the email content type to HTML
             email.send()
-            return Response({id: user.id}, status=200)
+            return Response({"id": user.user_id}, status=200)
         except BadHeaderError:
             # print(BadHeaderError)
             return Response(status=400)
@@ -178,6 +179,44 @@ def verify_email(request, user_id, otp_code):
     except Exception as e:
         print(e)
         return Response({'status': 'Invalid token'}, status=400)
+    
+@api_view(['GET'])
+def verify_forget_password(request, user_id, otp_code):
+    user = User.objects.get(user_id=user_id)
+    try:
+        otp = OTP.objects.filter(user=user, code=otp_code).latest('created_at')
+        if otp.is_valid():
+            refresh = RefreshToken.for_user(user)
+            otp.delete()
+            return Response({"refresh": str(refresh), "access": str(refresh.access_token)}, status=200)
+        else:
+            return Response({'status': 'Invalid token'}, status=400)
+    except Exception as e:
+        return Response({'status': 'Invalid token'}, status=400)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updatePassword(request):
+    if request.method == 'POST':
+        user = request.user
+        user.set_password(request.data['password'])
+        user.save()
+        return Response(status=200)
+    return Response(status=400)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updatePassword(request):
+    if request.method == 'POST':
+        user = request.user
+        user.set_password(request.data['password'])
+        user.save()
+        return Response(status=200)
+    return Response(status=400)
+
+
+
+
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -243,7 +282,7 @@ def getProductBrand(request):
         return Response(status=400)
     
 @api_view(['GET'])
-def getSearchProducts(request, search, category):
+def getSearchProducts(request, search, category, brand):
     if request.method == 'GET':
         products = set()
         byName = Product.objects.filter(name__contains=search)
@@ -259,6 +298,11 @@ def getSearchProducts(request, search, category):
             byCategory = Product.objects.filter(category=category)
             for i in byCategory:
                 products.add(i)
+        if brand != "null":
+            byBrand = Product.objects.filter(brand=brand)
+            for i in byBrand:
+                products.add(i)
+
         serializer = ProductDetailedSerializer(products, many=True)
         return Response(serializer.data, status=200)
     else:

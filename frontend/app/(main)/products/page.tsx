@@ -22,6 +22,7 @@ export default function ProductsPage() {
   let q = path.get("q");
   let router = useRouter();
   let category = path.get("category");
+  let brand = path.get("brand");
   let [products, setProducts] = useState([]);
   let { baseURL, getCartCount } = useContext(GMContext);
   let api = useAxios();
@@ -40,7 +41,9 @@ export default function ProductsPage() {
   };
 
   let getProucts = async () => {
-    let res = await fetch(`${baseURL}/getSearchProducts/${q}/${category}`);
+    let res = await fetch(
+      `${baseURL}/getSearchProducts/${q}/${category}/${brand}`
+    );
     let data = await res.json();
     console.log(data);
     setProducts(data);

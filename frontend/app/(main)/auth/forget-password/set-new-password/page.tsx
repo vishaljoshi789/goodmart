@@ -1,53 +1,34 @@
 "use client";
-import { Suspense, useContext } from "react";
+import { Suspense, useContext, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+
 import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
-import { GMContext, GMContextType } from "@/app/(utils)/context/GMContext";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import useAxios from "@/app/(utils)/hooks/useAxios";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { GMContext } from "@/app/(utils)/context/GMContext";
 
 export default function ForgetPassword() {
   let router = useRouter();
-  let { baseURL } = useContext<GMContextType>(GMContext);
-  const formSchema = z.object({
-    email: z.string(),
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-    },
-  });
+  const api = useAxios();
+  const [password, setPassword] = useState("");
+  const { authToken } = useContext(GMContext);
+  console.log(authToken);
 
   // 2. Define a submit handler.
-  let onSubmit = async (values: z.infer<typeof formSchema>) => {
+  let onSubmit = async () => {
     toast.loading("Please wait...");
     console.log("values");
-    let response = await fetch(`${baseURL}/forget-password/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
+    let response = await api.post(`/update-password/`, { password: password });
+
     if (response.status == 200) {
-      toast.success("Password reset link sent to your email.");
-      let data = await response.json();
-      router.push(`/forget-password/set-new-password?id=${data.id}`);
+      toast.dismiss();
+      toast.success("Password changed successfully.");
+      router.push(`/auth/login`);
     } else {
+      toast.dismiss();
       toast.error("Something went wrong. Please try again.");
     }
   };
@@ -59,41 +40,15 @@ export default function ForgetPassword() {
           <span className="font-bold text-red-500 text-2xl underline">
             Forget Password
           </span>
-
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-8 bg-white rounded-md shadow-md m-auto p-5"
-            >
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email, Phone or User ID</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Your Emain, Phone or UserId"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button type="submit">Reset Password</Button>
-              <hr />
-              <div className="flex justify-center items-center gap-2">
-                <span>Create a account. </span>
-                <Link href="/auth/register">
-                  <Button className="bg-blue-500 hover:bg-blue-600">
-                    Register
-                  </Button>
-                </Link>
-              </div>
-            </form>
-          </Form>
+          <div className="flex gap-5 my-10">
+            <Input
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="New Password"
+              type="password"
+            />
+            <Button onClick={onSubmit}>Submit</Button>
+          </div>
         </div>
       </div>
     </Suspense>

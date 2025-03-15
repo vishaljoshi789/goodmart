@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useContext } from "react";
+import { Suspense, useContext, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -47,7 +47,7 @@ export default function ForgetPassword() {
       toast.dismiss();
       toast.success("Password reset link sent to your email.");
       let data = await response.json();
-      router.push(`/forget-password/set-new-password?id=${data.id}`);
+      router.push(`/auth/forget-password/verify-otp?id=${data.id}`);
     } else {
       toast.dismiss();
       toast.error("Something went wrong. Please try again.");

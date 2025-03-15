@@ -445,7 +445,7 @@ export default function Home() {
                         : `/product?id=${item.product.id}`
                     }
                     key={item.id}
-                    className="space-y-2 rounded-lg shadow-sm border-2"
+                    className="space-y-2 rounded-lg shadow-sm border-2 w-full"
                   >
                     <Image
                       src={
@@ -465,7 +465,7 @@ export default function Home() {
                       className="object-contain w-full h-32"
                     />
                     <div className="flex flex-col h-fit justify-end px-4 py-1 mt-auto text-white bg-gradient-to-b from-gray-200 to-slate-900">
-                      <h3 className="text-lg font-bold">
+                      <h3 className="text-lg font-bold w-36">
                         {section.content_type == "Category"
                           ? item.category.name
                           : item.product.name}
