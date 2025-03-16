@@ -465,7 +465,7 @@ export default function Home() {
                       className="object-contain w-full h-32"
                     />
                     <div className="flex flex-col h-fit justify-end px-4 py-1 mt-auto text-white bg-gradient-to-b from-gray-200 to-slate-900">
-                      <h3 className="text-lg font-bold w-36">
+                      <h3 className="text-lg font-bold">
                         {section.content_type == "Category"
                           ? item.category.name
                           : item.product.name}
