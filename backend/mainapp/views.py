@@ -78,13 +78,13 @@ def sendVerificationEmail(user):
         email.send()
         return True
     except BadHeaderError:
-        # print(BadHeaderError)
+        print(BadHeaderError)
         return False
     except SMTPException as e:
-        # print(e)
+        print(e)
         return False
     except Exception as e:
-        # print(e)
+        print(e)
         return False
 
 @api_view(['GET'])
@@ -325,8 +325,9 @@ def getProduct(request, id):
 def addToCart(request):
     if request.method == 'POST':
         product = Product.objects.get(id=request.data["id"])
+        variant = request.data.get("variant", None)
         user = request.user
-        if Cart.objects.filter(user=user, product=product).exists():
+        if Cart.objects.filter(user=user, product=product, variant=variant).exists():
             cart = Cart.objects.get(user=user, product=product, variant=request.data["variant"]) if request.data["variant"] else Cart.objects.get(user=user, product=product, variant=None)
             cart.quantity = cart.quantity+request.data["quantity"]
             cart.save()

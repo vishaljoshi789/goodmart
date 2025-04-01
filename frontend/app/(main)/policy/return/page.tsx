@@ -1,7 +1,6 @@
 "use client";
 
 import { GMContext } from "@/app/(utils)/context/GMContext";
-import useAxios from "@/app/(utils)/hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
 
 export default function ReturnPolicy() {

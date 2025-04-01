@@ -22,6 +22,7 @@ import { BsFillCartPlusFill } from "react-icons/bs";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { ProductPageSkeleton } from "@/components/user/skeleton/ProductSkeleton";
+import { CiWarning } from "react-icons/ci";
 
 export default function Product() {
   let id = useSearchParams().get("id");
@@ -53,10 +54,32 @@ export default function Product() {
   };
 
   let addToCart = async () => {
+    if (product.stock < cartQuantity) {
+      toast.error("Product Out of Stock");
+      return;
+    }
     let response = await axios.post("/addToCart/", {
       id: id,
       variant: variant,
       quantity: cartQuantity,
+    });
+    if (response.status == 200) {
+      toast.success("Product Added to Cart");
+      getCartCount();
+    } else {
+      toast.error("Something Went Wrong");
+    }
+  };
+
+  let addVariantToCart = async (variant: any, stock: number) => {
+    if (stock < 1) {
+      toast.error("Product Out of Stock");
+      return;
+    }
+    let response = await axios.post("/addToCart/", {
+      id: id,
+      variant: variant,
+      quantity: 1,
     });
     if (response.status == 200) {
       toast.success("Product Added to Cart");
@@ -244,6 +267,12 @@ export default function Product() {
                       </span>
                     )}
                   </h1>
+                  {product.stock < 1 && (
+                    <p className="text-red-500 w-full flex gap-3 font-bold items-center">
+                      <CiWarning className="text-4xl font-bold" /> Product is
+                      not available at this time. But will be available soon.
+                    </p>
+                  )}
                   <div className="flex mb-4">
                     <span className="flex items-center">
                       <div
@@ -290,7 +319,7 @@ export default function Product() {
                   </div>
                   <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5"></div>
                   <div className="flex gap-5 flex-col">
-                    {variant && (
+                    {/* {variant && (
                       <span className="title-font font-medium text-2xl text-gray-900">
                         (
                         {product.variants &&
@@ -299,7 +328,7 @@ export default function Product() {
                           )[0].name}
                         )
                       </span>
-                    )}
+                    )} */}
                     <div className="flex gap-5">
                       <s className="title-font font-medium text-2xl text-red-500">
                         {variant
@@ -372,23 +401,46 @@ export default function Product() {
                       <section className="mt-6">
                         <h2 className="text-2xl font-bold mb-4">Base</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                          <Link
-                            href={`/product?id=${id}`}
-                            className="border rounded-lg p-4 shadow-md hover:shadow-lg transition-all ease-in"
-                          >
-                            <h3 className="text-lg font-semibold mb-2">
-                              Base Variant
-                            </h3>
-                            <div className="flex gap-3">
-                              {" "}
-                              <s className="text-sm text-red-500">
-                                ₹{product.mrp}
-                              </s>
-                              <p className="text-sm text-gray-600 mb-2">
-                                ₹{product.offer_price}
-                              </p>
+                          <div className="flex flex-col md:flex-row gap-5 bg-gray-200 col-span-full justify-evenly rounded-lg border p-4 shadow-md ">
+                            <Link
+                              href={`/product?id=${id}`}
+                              className="flex gap-3 border rounded-lg p-4 shadow-md hover:shadow-lg transition-all ease-in w-full"
+                            >
+                              <Image
+                                src={baseURL + product.image}
+                                alt={product.name}
+                                width={0}
+                                height={0}
+                                sizes="100vw"
+                                className="w-16 h-16 object-contain object-center"
+                              />
+                              <div>
+                                <h3 className="text-lg font-semibold mb-2">
+                                  Base Variant
+                                </h3>
+                                <div className="flex gap-3">
+                                  {" "}
+                                  <s className="text-sm text-red-500">
+                                    ₹{product.mrp}
+                                  </s>
+                                  <p className="text-sm text-gray-600 mb-2">
+                                    ₹{product.offer_price}
+                                  </p>
+                                </div>
+                              </div>
+                            </Link>
+                            <div className="flex items-center justify-end w-full gap-2">
+                              <div className="ml-5 flex gap-2 items-ceter">
+                                <Button
+                                  className="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                                  onClick={() => addToCart()}
+                                >
+                                  <BsFillCartPlusFill />
+                                  Add to Cart
+                                </Button>
+                              </div>
                             </div>
-                          </Link>
+                          </div>
                         </div>
                       </section>
                     )}
@@ -404,34 +456,52 @@ export default function Product() {
                                 {getVariantsByType(type).map(
                                   (item: any) =>
                                     item.id.toString() != variant && (
-                                      <Link
-                                        href={`/product?id=${id}&variant=${item.id}`}
-                                        key={item.id}
-                                        className="flex gap-3 border rounded-lg p-4 shadow-md hover:shadow-lg transition-all ease-in col-span-full"
-                                      >
-                                        <Image
-                                          src={baseURL + product.image}
-                                          alt={item.name}
-                                          width={0}
-                                          height={0}
-                                          sizes="100vw"
-                                          className="w-16 h-16 object-contain object-center"
-                                        />
-                                        <div>
-                                          <h3 className="text-lg font-semibold mb-2">
-                                            {item.name}
-                                          </h3>
-                                          <div className="flex gap-3">
-                                            {" "}
-                                            <s className="text-sm text-red-500">
-                                              ₹{item.mrp}
-                                            </s>
-                                            <p className="text-sm text-gray-600 mb-2">
-                                              ₹{item.offer_price}
-                                            </p>
+                                      <div className="flex flex-col md:flex-row gap-5 bg-gray-200 col-span-full justify-evenly rounded-lg border p-4 shadow-md ">
+                                        <Link
+                                          href={`/product?id=${id}&variant=${item.id}`}
+                                          key={item.id}
+                                          className="flex gap-3 border rounded-lg p-4 shadow-md hover:shadow-lg transition-all ease-in w-full"
+                                        >
+                                          <Image
+                                            src={baseURL + product.image}
+                                            alt={item.name}
+                                            width={0}
+                                            height={0}
+                                            sizes="100vw"
+                                            className="w-16 h-16 object-contain object-center"
+                                          />
+                                          <div>
+                                            <h3 className="text-lg font-semibold mb-2">
+                                              {item.name}
+                                            </h3>
+                                            <div className="flex gap-3">
+                                              {" "}
+                                              <s className="text-sm text-red-500">
+                                                ₹{item.mrp}
+                                              </s>
+                                              <p className="text-sm text-gray-600 mb-2">
+                                                ₹{item.offer_price}
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </Link>
+                                        <div className="flex items-center justify-end w-full gap-2">
+                                          <div className="ml-5 flex gap-2 items-ceter">
+                                            <Button
+                                              className="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                                              onClick={() =>
+                                                addVariantToCart(
+                                                  item.id,
+                                                  item.stock
+                                                )
+                                              }
+                                            >
+                                              <BsFillCartPlusFill />
+                                              Add to Cart
+                                            </Button>
                                           </div>
                                         </div>
-                                      </Link>
+                                      </div>
                                     )
                                 )}
                               </div>
