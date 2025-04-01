@@ -20,6 +20,18 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { GMContext } from "@/app/(utils)/context/GMContext";
+import { CgPassword } from "react-icons/cg";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface User {
   id: number;
@@ -101,6 +113,7 @@ interface User {
 const AdminPage: NextPage = () => {
   let api = useAxios();
   const [users, setUsers] = useState<User[]>([]);
+  const [password, setPassword] = useState("");
   let { setAuthToken } = useContext(GMContext);
   let getUsers = async () => {
     let response = await api.get("/admin/users/");
@@ -120,6 +133,19 @@ const AdminPage: NextPage = () => {
     } else {
       toast.error("Failed to login");
     }
+  };
+
+  const changePassword = async (userId: number) => {
+    let response = await api.post(`/admin/changePassword/${userId}/`, {
+      password: password,
+    });
+    if (response.status === 200) {
+      toast.success("Password changed successfully");
+      getUsers();
+    } else {
+      toast.error("Failed to change password");
+    }
+    setPassword("");
   };
   useEffect(() => {
     getUsers();
@@ -191,6 +217,37 @@ const AdminPage: NextPage = () => {
                 />
               </td>
               <td className="py-2 px-4 border-b flex justify-evenly">
+                <Dialog>
+                  <DialogTrigger>
+                    <div
+                      className="bg-gray-500 text-white px-4 py-2"
+                      title="Change Password"
+                    >
+                      <CgPassword className="text-xl" />
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Change Password for {user.name}</DialogTitle>
+                      <DialogDescription></DialogDescription>
+                    </DialogHeader>
+                    <div>
+                      <Label>New Password</Label>
+                      <Input
+                        type="text"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                      <Button
+                        className="mt-5"
+                        onClick={() => changePassword(user.id)}
+                      >
+                        Change Password
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
                 <Link
                   href={`/securepanel/users/edit?id=${user.id}`}
                   className="px-4 py-2 bg-blue-500 text-white"

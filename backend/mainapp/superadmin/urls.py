@@ -8,6 +8,7 @@ urlpatterns = [
     path('toggleUserStatus/<int:id>/', views.toggle_user_status),
     path('deleteUser/<int:id>/', views.delete_user),
     path('getUser/<int:id>/', views.getUserInfo),
+    path('changePassword/<int:id>/', views.change_password),
     path('getUserDetail/<int:id>/', views.getUserDetails),
     path('getAddress/<int:id>/', views.getAddress),
     path('updateUser/<int:id>/', views.updateUserInfo),

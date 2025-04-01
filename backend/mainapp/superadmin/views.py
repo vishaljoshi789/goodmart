@@ -68,6 +68,17 @@ def delete_user(request, id):
     else:
         return Response(status=400)
     
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def change_password(request, id):
+    if request.method == "POST":
+        user = User.objects.get(id=id)
+        user.set_password(request.data['password'])
+        user.save()
+        return Response({"status": "Password changed."}, status=200)
+    else:
+        return Response(status=400)
+    
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def getUserInfo(request, id):
