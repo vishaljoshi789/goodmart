@@ -57,4 +57,8 @@ urlpatterns = [
     path('addPolicy/', views.createPolicy),
     path('policy/update/<str:policy_type>/', views.updatePolicy),
     path('policy/delete/<str:policy_type>/', views.deletePolicy),
+    path('getPopups/', views.getPopUps),    
+    path('updatePopUp/<int:id>/', views.updatePopUp),
+    path('createPopUp/', views.createPopUp),
+    path('deletePopUp/<int:id>/', views.deletePopUp),
 ]

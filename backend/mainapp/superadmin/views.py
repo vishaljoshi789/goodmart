@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer, LevelPointsSerializer, SubOrderWithOrderAddressSerializer, UserDetailsSerializer, AddressSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer, PolicySerializer
-from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address, HomepageBanner, HomepageItem, HomepageSection, Policy
+from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer, LevelPointsSerializer, SubOrderWithOrderAddressSerializer, UserDetailsSerializer, AddressSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer, PolicySerializer, PopUpSerializer
+from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address, HomepageBanner, HomepageItem, HomepageSection, Policy, PopUp
 import json
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.db import transaction
@@ -678,3 +678,43 @@ def deletePolicy(request, policy_type):
         return Response({'message': 'Policy deleted successfully'}, status=204)
     except Policy.DoesNotExist:
         return Response({'error': 'Policy not found'}, status=404)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getPopUps(request):
+    popups = PopUp.objects.all()
+    serializer = PopUpSerializer(popups, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def createPopUp(request):
+    serializer = PopUpSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updatePopUp(request, id):
+    try:
+        popup = PopUp.objects.get(id=id)
+    except PopUp.DoesNotExist:
+        return Response({'error': 'PopUp not found'}, status=404)
+    serializer = PopUpSerializer(popup, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=200)
+    return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def deletePopUp(request, id):
+    try:
+        popup = PopUp.objects.get(id=id)
+        popup.delete()
+        return Response({'message': 'PopUp deleted successfully'}, status=204)
+    except PopUp.DoesNotExist:
+        return Response({'error': 'PopUp not found'}, status=404)

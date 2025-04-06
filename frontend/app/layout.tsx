@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { GMProvider } from "./(utils)/context/GMContext";
 import { NextUIProvider } from "@nextui-org/system";
+import PopupManager from "@/components/web/popup";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -38,7 +39,10 @@ export default function RootLayout({
         )}
       >
         <NextUIProvider>
-          <GMProvider>{children}</GMProvider>
+          <GMProvider>
+            {children}
+            <PopupManager />
+          </GMProvider>
           <Toaster richColors expand={true} />
         </NextUIProvider>
       </body>

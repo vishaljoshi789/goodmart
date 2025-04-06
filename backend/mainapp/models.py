@@ -448,5 +448,21 @@ class Policy(models.Model):
     def __str__(self):
         return dict(self.POLICY_TYPES).get(self.policy_type, "Policy")
     
-
+class PopUp(models.Model):
+    POPUP_TYPE = [
+        ('Home Page', 'Home Page'),
+        ('Category', 'Category'),
+        ('Brand', 'Brand'),
+        ('Vendor', 'Vendor'),
+        ('Customer', 'Customer'),
+        ('Wallet', 'Wallet'),
+        ('Login', 'Login')
+    ]
+    title = models.CharField(max_length=255, blank=True, null=True)
+    type = models.CharField(max_length=15, choices=POPUP_TYPE, null=True)
+    status = models.BooleanField(default=True)
+    image = models.ImageField(upload_to=web_direcory_path, blank=True, null=True)
+    content = models.TextField()
+    button_text = models.CharField(max_length=100, blank=True, null=True)
+    button_url = models.TextField(blank=True, null=True)
 
