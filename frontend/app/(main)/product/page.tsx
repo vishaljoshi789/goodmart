@@ -456,7 +456,10 @@ export default function Product() {
                                 {getVariantsByType(type).map(
                                   (item: any) =>
                                     item.id.toString() != variant && (
-                                      <div className="flex flex-col md:flex-row gap-5 bg-gray-200 col-span-full justify-evenly rounded-lg border p-4 shadow-md ">
+                                      <div
+                                        key={item.id}
+                                        className="flex flex-col md:flex-row gap-5 bg-gray-200 col-span-full justify-evenly rounded-lg border p-4 shadow-md "
+                                      >
                                         <Link
                                           href={`/product?id=${id}&variant=${item.id}`}
                                           key={item.id}
