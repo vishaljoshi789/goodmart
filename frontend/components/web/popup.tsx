@@ -43,7 +43,9 @@ export async function getPopupByType(
 ): Promise<PopupData | null> {
   if (!baseURL) return null;
   const response = await fetch(`${baseURL}/popups/${type}/`);
-  if (!response.ok) throw new Error("Failed to fetch popup");
+  if (!(response.status == 200)) {
+    return null;
+  }
   const data = await response.json();
   return data;
 }
@@ -76,13 +78,7 @@ const PopupManager = () => {
         setLoading(true);
         const popup = await getPopupByType(popupType, baseURL);
         if (popup) {
-          const dismissed = JSON.parse(
-            sessionStorage.getItem("dismissedPopupTypes") || "[]"
-          );
-          if (!dismissed.includes(popup.type)) {
-            setCurrentPopup(popup);
-            setOpen(true);
-          }
+          setOpen(true);
         }
       } catch (error) {
         console.error("Error fetching popup:", error);
