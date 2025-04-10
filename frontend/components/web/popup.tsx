@@ -131,7 +131,7 @@ const PopupManager = () => {
         {currentPopup.image && (
           <div className="relative w-full h-48 mb-4">
             <img
-              src={currentPopup.image}
+              src={baseURL + currentPopup.image}
               alt={currentPopup.title || "Popup image"}
               className="object-cover w-full h-full rounded-md"
             />
