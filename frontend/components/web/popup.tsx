@@ -36,8 +36,8 @@ interface PopupData {
   button_url: string | null;
 }
 
-// --- Move getPopupByType outside so it's reusable ---
-export async function getPopupByType(
+// --- Move GetPopupByType outside so it's reusable ---
+export async function GetPopupByType(
   type: string,
   baseURL?: string
 ): Promise<PopupData | null> {
@@ -59,7 +59,7 @@ const PopupManager = () => {
 
   const getPopupTypeForPath = (path: string): string | null => {
     for (const [urlPath, popupType] of Object.entries(PATH_TO_POPUP_TYPE)) {
-      if (path.split("/").at(-1) === urlPath) {
+      if (path.split("/").at(-1) == urlPath) {
         return popupType;
       }
     }
@@ -76,8 +76,10 @@ const PopupManager = () => {
 
       try {
         setLoading(true);
-        const popup = await getPopupByType(popupType, baseURL);
+        const popup = await GetPopupByType(popupType, baseURL);
         if (popup) {
+          if (popup.status == false) return;
+          setCurrentPopup(popup);
           setOpen(true);
         }
       } catch (error) {
@@ -157,8 +159,8 @@ const PopupManager = () => {
 };
 
 // Optional manual usage of popup fetch
-export async function showPopup(type: string, baseURL: string) {
-  return getPopupByType(type, baseURL);
+export async function ShowPopup(type: string, baseURL: string) {
+  return GetPopupByType(type, baseURL);
 }
 
 export default PopupManager;
