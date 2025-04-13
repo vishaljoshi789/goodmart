@@ -119,40 +119,44 @@ const PopupManager = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md">
-        {currentPopup.title && (
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold">
-              {currentPopup.title}
-            </DialogTitle>
-          </DialogHeader>
-        )}
-
-        {currentPopup.image && (
-          <div className="relative w-full h-48 mb-4">
+      <DialogContent className="p-0 overflow-hidden border-0 shadow-xl max-w-none w-auto bg-transparent">
+        <div className="relative">
+          <div className="relative">
             <img
               src={baseURL + currentPopup.image}
-              alt={currentPopup.title || "Popup image"}
-              className="object-fill w-full h-full rounded-md"
+              alt="Border"
+              className="w-full object-contain"
             />
+
+            <div className="absolute inset-0 flex flex-col p-6">
+              {currentPopup.title && (
+                <DialogHeader>
+                  <DialogTitle className="text-xl font-bold">
+                    {currentPopup.title}
+                  </DialogTitle>
+                </DialogHeader>
+              )}
+
+              <DialogDescription className="text-base flex-1 overflow-y-auto my-4">
+                <div
+                  dangerouslySetInnerHTML={{ __html: currentPopup.content }}
+                />
+              </DialogDescription>
+
+              <DialogFooter className="sm:justify-between flex-col sm:flex-row gap-2 mt-auto">
+                <Button variant="outline" onClick={handleClose}>
+                  Close
+                </Button>
+
+                {currentPopup.button_text && (
+                  <Button onClick={handleButtonClick}>
+                    {currentPopup.button_text}
+                  </Button>
+                )}
+              </DialogFooter>
+            </div>
           </div>
-        )}
-
-        <DialogDescription className="text-base">
-          <div dangerouslySetInnerHTML={{ __html: currentPopup.content }} />
-        </DialogDescription>
-
-        <DialogFooter className="sm:justify-between flex-col sm:flex-row gap-2 mt-4">
-          <Button variant="outline" onClick={handleClose}>
-            Close
-          </Button>
-
-          {currentPopup.button_text && (
-            <Button onClick={handleButtonClick}>
-              {currentPopup.button_text}
-            </Button>
-          )}
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
