@@ -133,7 +133,7 @@ const PopupManager = () => {
             <img
               src={baseURL + currentPopup.image}
               alt={currentPopup.title || "Popup image"}
-              className="object-contain w-full h-full rounded-md"
+              className="object-fillß w-full h-full rounded-md"
             />
           </div>
         )}
