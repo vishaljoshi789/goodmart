@@ -119,45 +119,46 @@ const PopupManager = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="p-0 overflow-hidden border-0 shadow-xl bg-transparent mx-4 sm:mx-auto">
-        <div className="relative w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto">
-          {/* Image as border with responsive constraints */}
-          <div className="relative">
+      <DialogContent className="p-0 border-0 bg-transparent w-auto max-h-screen overflow-hidden">
+        <div className="relative w-full h-full max-w-full sm:max-w-lg md:max-w-2xl lg:max-w-4xl mx-auto">
+          {/* Container that maintains aspect ratio of the image */}
+          <div className="relative w-full h-auto">
+            {/* The border image */}
             <img
               src={baseURL + currentPopup.image}
-              alt="Border"
+              alt="Dialog Border"
               className="w-full h-auto object-contain"
             />
 
-            {/* Content overlay */}
-            <div className="absolute inset-0 flex flex-col p-3 sm:p-4 md:p-6">
+            {/* Content overlay - positioned absolutely within the image */}
+            <div className="absolute inset-0 flex flex-col p-3 sm:p-5">
               {currentPopup.title && (
-                <DialogHeader>
-                  <DialogTitle className="text-base sm:text-lg md:text-xl font-bold">
+                <DialogHeader className="pb-1 sm:pb-2">
+                  <DialogTitle className="text-sm sm:text-base md:text-lg lg:text-xl font-bold">
                     {currentPopup.title}
                   </DialogTitle>
                 </DialogHeader>
               )}
 
-              <DialogDescription className="text-xs sm:text-sm md:text-base flex-1 overflow-y-auto my-2 sm:my-3 md:my-4">
+              <DialogDescription className="text-xs sm:text-sm md:text-base flex-1 overflow-y-auto my-1 sm:my-2">
                 <div
                   dangerouslySetInnerHTML={{ __html: currentPopup.content }}
                 />
               </DialogDescription>
 
-              <DialogFooter className="justify-between flex-row gap-2 mt-auto">
-                {/* <Button
-                  variant="outline"
-                  onClick={handleClose}
-                  className="text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-3 h-auto"
-                >
-                  Close
-                </Button> */}
+              <DialogFooter className="flex flex-row justify-between gap-2 pt-1 sm:pt-2">
+                {/* <Button 
+                    variant="outline" 
+                    onClick={handleClose}
+                    className="text-xs sm:text-sm h-6 sm:h-8 px-2 py-0"
+                  >
+                    Close
+                  </Button> */}
 
                 {currentPopup.button_text && (
                   <Button
                     onClick={handleButtonClick}
-                    className="text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-3 h-auto"
+                    className="text-xs sm:text-sm h-6 sm:h-8 px-2 py-0"
                   >
                     {currentPopup.button_text}
                   </Button>
