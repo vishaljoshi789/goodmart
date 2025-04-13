@@ -119,37 +119,46 @@ const PopupManager = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="p-0 overflow-hidden border-0 shadow-xl max-w-none w-auto bg-transparent">
-        <div className="relative">
+      <DialogContent className="p-0 overflow-hidden border-0 shadow-xl bg-transparent mx-4 sm:mx-auto">
+        <div className="relative w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto">
+          {/* Image as border with responsive constraints */}
           <div className="relative">
             <img
               src={baseURL + currentPopup.image}
               alt="Border"
-              className="w-full object-contain"
+              className="w-full h-auto object-contain"
             />
 
-            <div className="absolute inset-0 flex flex-col p-6">
+            {/* Content overlay */}
+            <div className="absolute inset-0 flex flex-col p-3 sm:p-4 md:p-6">
               {currentPopup.title && (
                 <DialogHeader>
-                  <DialogTitle className="text-xl font-bold">
+                  <DialogTitle className="text-base sm:text-lg md:text-xl font-bold">
                     {currentPopup.title}
                   </DialogTitle>
                 </DialogHeader>
               )}
 
-              <DialogDescription className="text-base flex-1 overflow-y-auto my-4">
+              <DialogDescription className="text-xs sm:text-sm md:text-base flex-1 overflow-y-auto my-2 sm:my-3 md:my-4">
                 <div
                   dangerouslySetInnerHTML={{ __html: currentPopup.content }}
                 />
               </DialogDescription>
 
-              <DialogFooter className="sm:justify-between flex-col sm:flex-row gap-2 mt-auto">
-                <Button variant="outline" onClick={handleClose}>
+              <DialogFooter className="justify-between flex-row gap-2 mt-auto">
+                <Button
+                  variant="outline"
+                  onClick={handleClose}
+                  className="text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-3 h-auto"
+                >
                   Close
                 </Button>
 
                 {currentPopup.button_text && (
-                  <Button onClick={handleButtonClick}>
+                  <Button
+                    onClick={handleButtonClick}
+                    className="text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-3 h-auto"
+                  >
                     {currentPopup.button_text}
                   </Button>
                 )}
