@@ -146,13 +146,13 @@ const PopupManager = () => {
               </DialogDescription>
 
               <DialogFooter className="justify-between flex-row gap-2 mt-auto">
-                <Button
+                {/* <Button
                   variant="outline"
                   onClick={handleClose}
                   className="text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-3 h-auto"
                 >
                   Close
-                </Button>
+                </Button> */}
 
                 {currentPopup.button_text && (
                   <Button
