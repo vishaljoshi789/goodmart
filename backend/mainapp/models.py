@@ -462,7 +462,7 @@ class PopUp(models.Model):
     type = models.CharField(max_length=15, choices=POPUP_TYPE, null=True)
     status = models.BooleanField(default=True)
     image = models.ImageField(upload_to=web_direcory_path, blank=True, null=True)
-    content = models.TextField()
+    content = models.TextField(blank=True, null=True)
     button_text = models.CharField(max_length=100, blank=True, null=True)
     button_url = models.TextField(blank=True, null=True)
 
