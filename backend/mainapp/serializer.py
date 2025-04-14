@@ -218,3 +218,4 @@ class PopUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = PopUp
         fields = '__all__'
+

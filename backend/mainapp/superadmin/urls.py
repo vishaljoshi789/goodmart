@@ -61,4 +61,8 @@ urlpatterns = [
     path('updatePopUp/<int:id>/', views.updatePopUp),
     path('createPopUp/', views.createPopUp),
     path('deletePopUp/<int:id>/', views.deletePopUp),
+    path('getAdvertisements/', views.getAdvertisements),
+    path('createAdvertisement/', views.createAdvertisement),
+    path('updateAdvertisement/<int:id>/', views.updateAdvertisement),   
+    path('deleteAdvertisement/<int:id>/', views.deleteAdvertisement),
 ]

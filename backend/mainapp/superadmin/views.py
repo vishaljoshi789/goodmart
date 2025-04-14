@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer, LevelPointsSerializer, SubOrderWithOrderAddressSerializer, UserDetailsSerializer, AddressSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer, PolicySerializer, PopUpSerializer
-from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address, HomepageBanner, HomepageItem, HomepageSection, Policy, PopUp
+from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer, LevelPointsSerializer, SubOrderWithOrderAddressSerializer, UserDetailsSerializer, AddressSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer, PolicySerializer, PopUpSerializer, AdvertisementSerializer
+from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address, HomepageBanner, HomepageItem, HomepageSection, Policy, PopUp, Advertisement
 import json
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.db import transaction
@@ -718,3 +718,42 @@ def deletePopUp(request, id):
         return Response({'message': 'PopUp deleted successfully'}, status=204)
     except PopUp.DoesNotExist:
         return Response({'error': 'PopUp not found'}, status=404)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getAdvertisements(request):
+    advertisements = Advertisement.objects.all()
+    serializer = AdvertisementSerializer(advertisements, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def createAdvertisement(request):
+    serializer = AdvertisementSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateAdvertisement(request, id):
+    try:
+        advertisement = Advertisement.objects.get(id=id)
+    except Advertisement.DoesNotExist:
+        return Response({'error': 'Advertisement not found'}, status=404)
+    serializer = AdvertisementSerializer(advertisement, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=200)
+    return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def deleteAdvertisement(request, id):
+    try:
+        advertisement = Advertisement.objects.get(id=id)
+        advertisement.delete()
+        return Response({'message': 'Advertisement deleted successfully'}, status=204)
+    except Advertisement.DoesNotExist:
+        return Response({'error': 'Advertisement not found'}, status=404)

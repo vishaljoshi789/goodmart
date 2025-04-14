@@ -122,6 +122,12 @@ const Sidebar: React.FC = () => {
                 <span>POPUPS</span>
               </Link>
               <Link
+                href={"/securepanel/popup"}
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer font-bold"
+              >
+                <span>ADs</span>
+              </Link>
+              <Link
                 href={"/securepanel/policy"}
                 className="px-4 py-2 hover:bg-gray-700 cursor-pointer font-bold"
               >

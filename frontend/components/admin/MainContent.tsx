@@ -4,7 +4,7 @@ import { FaUsers } from "react-icons/fa";
 import { AiFillProduct, AiOutlineSafety } from "react-icons/ai";
 import { GoGear } from "react-icons/go";
 import { CiDeliveryTruck } from "react-icons/ci";
-import { Coins, Settings } from "lucide-react";
+import { Coins, Settings, Settings2 } from "lucide-react";
 import { MdPolicy } from "react-icons/md";
 
 const MainContent: React.FC = () => {
@@ -63,6 +63,13 @@ const MainContent: React.FC = () => {
           >
             <Settings className="text-4xl" />
             <span className="text-xl font-bold">POPUPS</span>
+          </Link>
+          <Link
+            href={"/securepanel/ads"}
+            className="card flex flex-col hover:underline bg-white hover:text-gray-700 items-center justify-center p-5 rounded-md shadow-lg hover:shadow-sm transition duration-150 ease-in-out"
+          >
+            <Settings2 className="text-4xl" />
+            <span className="text-xl font-bold">ADs</span>
           </Link>
           <Link
             href={"/securepanel/policy"}

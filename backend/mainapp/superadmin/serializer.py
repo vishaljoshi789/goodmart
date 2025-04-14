@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail, Setting, Order, LevelPoints, OrderItem, SubOrder, Product_Variant, Address, User_Detail, HomepageBanner, HomepageSection, HomepageItem, Policy, PopUp
+from ..models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Vendor_Detail, Setting, Order, LevelPoints, OrderItem, SubOrder, Product_Variant, Address, User_Detail, HomepageBanner, HomepageSection, HomepageItem, Policy, PopUp, Advertisement
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -158,4 +158,9 @@ class PolicySerializer(serializers.ModelSerializer):
 class PopUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = PopUp
+        fields = '__all__'
+
+class AdvertisementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Advertisement
         fields = '__all__'

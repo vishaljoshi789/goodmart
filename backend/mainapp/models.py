@@ -466,3 +466,18 @@ class PopUp(models.Model):
     button_text = models.CharField(max_length=100, blank=True, null=True)
     button_url = models.TextField(blank=True, null=True)
 
+class Advertisement(models.Model):
+    ADVERTISEMENT_TYPE = [
+        ('Home Page', 'Home Page'),
+        ('Category', 'Category'),
+        ('Brand', 'Brand'),
+        ('Vendor', 'Vendor'),
+        ('Customer', 'Customer'),
+        ('Wallet', 'Wallet'),
+        ('Login', 'Login')
+    ]
+    page = models.CharField(max_length=100, blank=True, null=True, choices=ADVERTISEMENT_TYPE)
+    image = models.ImageField(upload_to=web_direcory_path, blank=True, null=True)
+    link = models.CharField(max_length=500, blank=True, null=True)
+    added_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    modify_on = models.DateTimeField(auto_now=True, null=True, blank=True)
