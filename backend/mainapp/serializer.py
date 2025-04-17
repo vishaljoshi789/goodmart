@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail, Product_Variant, Address, Order, OrderItem, SubOrder, Coupon, Wallet, Transaction, User_Detail, HomepageBanner, HomepageItem, HomepageSection, Policy, PopUp
+from .models import User, Product_Category, Product_Brand, Product, Product_Image, Product_Specifications, Cart, Vendor_Detail, Product_Variant, Address, Order, OrderItem, SubOrder, Coupon, Wallet, Transaction, User_Detail, HomepageBanner, HomepageItem, HomepageSection, Policy, PopUp, Advertisement
 from random import shuffle
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -219,3 +219,8 @@ class PopUpSerializer(serializers.ModelSerializer):
         model = PopUp
         fields = '__all__'
 
+class AdvertisementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Advertisement
+        fields = '__all__'
+        

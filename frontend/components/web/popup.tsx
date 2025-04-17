@@ -120,7 +120,7 @@ const PopupManager = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="p-0 border-0 bg-transparent w-auto max-h-screen overflow-hidden">
-        <div className="relative w-full h-full max-w-full sm:max-w-lg md:max-w-2xl lg:max-w-4xl mx-auto">
+        <div className="relative w-full h-full max-w-full sm:max-w-lg md:max-w-md lg:max-w-sm mx-auto">
           {/* Container that maintains aspect ratio of the image */}
           <div className="relative w-full h-auto">
             {/* The border image */}

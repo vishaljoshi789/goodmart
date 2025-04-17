@@ -25,6 +25,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import Advertisement from "@/components/web/Ad";
 
 interface Location {
   lat: number | null;
@@ -42,6 +43,8 @@ export default function Home() {
   let [zip, setZip] = useState<any>(null);
   let [editZip, setEditZip] = useState(false);
   let { baseURL } = useContext(GMContext);
+
+  const [ad, setAd] = useState<any>(null);
 
   let [homepageBanners, setHomepageBanners] = useState([]);
   let [homepageSections, setHomepageSections] = useState([]);
@@ -90,6 +93,13 @@ export default function Home() {
     }
   };
 
+  const getAds = async () => {
+    let response = await fetch(`${baseURL}/getAdsByPage/Home Page/`);
+    let data = await response.json();
+    setAd(data);
+    console.log(data);
+  };
+
   let getLocation = () => {
     console.log("Getting location");
     if (navigator.geolocation) {
@@ -107,6 +117,7 @@ export default function Home() {
     getCategory();
     getHomepageBanners();
     getHomepageSections();
+    getAds();
   }, []);
   return (
     <div>
@@ -258,6 +269,14 @@ export default function Home() {
       </div>
 
       <Separator className="my-5" />
+
+      {ad && (
+        <Advertisement
+          imageUrl={baseURL + ad?.image}
+          linkUrl={ad?.link}
+          imageAlt={ad?.page}
+        />
+      )}
 
       {homepageSections.map((section: any, index) =>
         section.name == "Shop by Brand" ? (

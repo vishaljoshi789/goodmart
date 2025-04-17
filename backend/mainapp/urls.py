@@ -49,4 +49,6 @@ urlpatterns = [
     path('getHomepageSections/', views.getHomepageSections),
     path('policies/', views.getPolicies),
     path('popups/<str:type>/', views.getPopUpsByType),
+    path('getAds/', views.getAdvertisement),
+    path('getAdsByPage/<str:type>/', views.getAdvertisementByPage),
 ]

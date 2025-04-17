@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useContext } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,6 +17,7 @@ import { GMContext, GMContextType } from "@/app/(utils)/context/GMContext";
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Advertisement from "@/components/web/Ad";
 
 export default function Login() {
   let path = useSearchParams();
@@ -37,6 +38,14 @@ export default function Login() {
       password: "",
     },
   });
+
+  const [ad, setAd] = useState<any>(null);
+
+  const getAd = async () => {
+    const response = await fetch(`${baseURL}/getAdsByPage/Login/`);
+    const data = await response.json();
+    setAd(data);
+  };
 
   // 2. Define a submit handler.
   let onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -74,8 +83,19 @@ export default function Login() {
     }
   };
 
+  useEffect(() => {
+    getAd();
+  });
+
   return (
     <Suspense>
+      {ad && ad.image && (
+        <Advertisement
+          imageUrl={baseURL + ad?.image}
+          linkUrl={ad?.link}
+          imageAlt={ad?.page}
+        />
+      )}
       <div className="flex items-center justify-center">
         <div className="md:w-96 m-auto mt-10">
           <span className="font-bold text-red-500 text-2xl underline">

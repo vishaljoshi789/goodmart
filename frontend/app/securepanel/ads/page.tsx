@@ -56,7 +56,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import Image from "next/image";
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import { GMContext } from "@/app/(utils)/context/GMContext";
-import { form } from "@nextui-org/theme";
 
 // Define the type for advertisements
 interface Advertisement {
@@ -68,22 +67,13 @@ interface Advertisement {
   modify_on: string;
 }
 
-type AdvertisementType =
-  | "Home Page"
-  | "Category"
-  | "Brand"
-  | "Vendor"
-  | "Customer"
-  | "Wallet"
-  | "Login";
+type AdvertisementType = "Home Page" | "Category" | "User" | "Wallet" | "Login";
 
 // Advertisement type options based on your model choices
 const ADVERTISEMENT_TYPES: AdvertisementType[] = [
   "Home Page",
   "Category",
-  "Brand",
-  "Vendor",
-  "Customer",
+  "User",
   "Wallet",
   "Login",
 ];

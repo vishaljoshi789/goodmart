@@ -1,4 +1,5 @@
 "use client";
+import { GMContext } from "@/app/(utils)/context/GMContext";
 import useAxios from "@/app/(utils)/hooks/useAxios";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,8 +16,9 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import Advertisement from "@/components/web/Ad";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { toast } from "sonner";
 
 export default function Wallet() {
@@ -26,6 +28,14 @@ export default function Wallet() {
   const [transactions, setTransactions] = React.useState([]);
   const [passcode, setPasscode] = React.useState("");
   const [passcodeVerified, setPasscodeVerified] = React.useState(false);
+  const [ad, setAd] = React.useState<any>(null);
+  const { baseURL } = useContext(GMContext);
+
+  const getAd = async () => {
+    const response = await fetch(`${baseURL}/getAdsByPage/Wallet/`);
+    const data = await response.json();
+    setAd(data);
+  };
 
   const getWallet = async () => {
     let response = await api.get("/getWallet/");
@@ -55,10 +65,18 @@ export default function Wallet() {
 
   useEffect(() => {
     getWallet();
+    getAd();
   }, []);
 
   return (
     <div className="min-h-screen w-full bg-gray-200 p-5">
+      {ad && ad.image && (
+        <Advertisement
+          imageUrl={baseURL + ad?.image}
+          linkUrl={ad?.link}
+          imageAlt={ad?.page}
+        />
+      )}
       <h1 className="text-4xl font-bold mb-6 text-gray-800">My Wallet</h1>
       {passcodeVerified ? (
         <div className="text-center w-full flex flex-col items-center gap-5 my-5">

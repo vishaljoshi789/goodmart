@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder, Coupon, Setting, Wallet, OTP, User_Detail, HomepageBanner, HomepageSection, HomepageItem, Policy, PopUp
-from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, SubOrderItemSerializer, CouponSerializer, WalletSerializer, VendorDetailCartSerializer, ReferralSerializer, UserDetailSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer, PolicySerializer, PopUpSerializer
+from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder, Coupon, Setting, Wallet, OTP, User_Detail, HomepageBanner, HomepageSection, HomepageItem, Policy, PopUp, Advertisement
+from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, SubOrderItemSerializer, CouponSerializer, WalletSerializer, VendorDetailCartSerializer, ReferralSerializer, UserDetailSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer, PolicySerializer, PopUpSerializer, AdvertisementSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -758,5 +758,21 @@ def getPopUpsByType(request, type):
     if request.method == "GET":
         popups = PopUp.objects.filter(type=type)
         serializer = PopUpSerializer(popups.first())
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+def getAdvertisement(request):
+    if request.method == "GET":
+        advertisement = Advertisement.objects.all()
+        serializer = AdvertisementSerializer(advertisement, many=True)
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+def getAdvertisementByPage(request, type):
+    if request.method == "GET":
+        advertisement = Advertisement.objects.filter(page=type)
+        serializer = AdvertisementSerializer(advertisement.first())
         return Response(serializer.data, status=200)
     return Response(status=400)

@@ -470,9 +470,7 @@ class Advertisement(models.Model):
     ADVERTISEMENT_TYPE = [
         ('Home Page', 'Home Page'),
         ('Category', 'Category'),
-        ('Brand', 'Brand'),
-        ('Vendor', 'Vendor'),
-        ('Customer', 'Customer'),
+        ('User', 'User'),
         ('Wallet', 'Wallet'),
         ('Login', 'Login')
     ]

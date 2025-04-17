@@ -12,8 +12,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import DashboardContent from "@/components/user/DashboardContent";
 import Image from "next/image";
-import { set } from "react-hook-form";
-import { userInfo } from "os";
+import Advertisement from "@/components/web/Ad";
 
 interface User {
   name: string;
@@ -36,6 +35,15 @@ const Home: NextPage = () => {
   let [user, setUser] = useState<User | null>(null);
   let [loading, setLoading] = useState(true);
   let [profileFound, setProfileFound] = useState(true);
+
+  const [ad, setAd] = useState<any>(null);
+
+  const getAd = async () => {
+    const response = await fetch(`${baseURL}/getAdsByPage/User/`);
+    const data = await response.json();
+    setAd(data);
+  };
+
   let getUserInfo = async () => {
     let response = await api.get("/getUserInfo/");
     if (response.status === 200) {
@@ -82,6 +90,7 @@ const Home: NextPage = () => {
 
       (e as HTMLElement).innerText = readableDate;
     });
+    getAd();
   }, [loading]);
 
   return user === null ? (
@@ -156,6 +165,13 @@ const Home: NextPage = () => {
             </Link>
           </AlertDescription>
         </Alert>
+      )}
+      {ad && ad.image && (
+        <Advertisement
+          imageUrl={baseURL + ad?.image}
+          linkUrl={ad?.link}
+          imageAlt={ad?.page}
+        />
       )}
       <div className="flex-1 p-6 bg-gray-100">
         <h1 className="lg:text-3xl text-xl font-bold mb-6">User Profile</h1>
