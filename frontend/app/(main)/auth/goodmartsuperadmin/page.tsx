@@ -34,6 +34,22 @@ export default function AdminLogin() {
     },
   });
 
+  const forgetPassword = async () => {
+    toast.loading("Sending email...");
+    const res = await fetch(`${baseURL}/admin/forgetPassword/`, {
+      method: "POST",
+    });
+    if (res.status === 200) {
+      toast.dismiss();
+      const data = await res.json();
+      toast.success("Email sent successfully");
+      router.push(`/auth/forget-password/verify-otp?id=${data.id}`);
+    } else {
+      toast.dismiss();
+      toast.error("Error sending email");
+    }
+  };
+
   // 2. Define a submit handler.
   let onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
@@ -102,7 +118,12 @@ export default function AdminLogin() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <div className="flex justify-between">
+              <Button type="submit">Submit</Button>
+              <Button variant={"link"} className="" onClick={forgetPassword}>
+                Forget Password
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

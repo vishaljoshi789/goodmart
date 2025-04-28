@@ -65,4 +65,6 @@ urlpatterns = [
     path('createAdvertisement/', views.createAdvertisement),
     path('updateAdvertisement/<int:id>/', views.updateAdvertisement),   
     path('deleteAdvertisement/<int:id>/', views.deleteAdvertisement),
+    path('forgetPassword/', views.forgetPassword),
+    path('verifyForgetPassword/<str:user_id>/<str:otp_code>/', views.verify_forget_password, name='verify-forget-passowrd'),
 ]

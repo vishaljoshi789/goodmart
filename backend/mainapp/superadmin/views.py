@@ -2,10 +2,23 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from .serializer import UserSerializer, ProductCategorySerializer, ProductCategoryUploadSerializer, ProductBrandSerializer, ProductSerializer, ProductDetailedSerializer, ProductEditSerializer, ProductImageSerializer, ProductSpecificationsSerializer, VendorDetailSerializer, VendorDetailSerializerForDetailedView, SettingSerializer, OrderSerializer, LevelPointsSerializer, SubOrderWithOrderAddressSerializer, UserDetailsSerializer, AddressSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer, PolicySerializer, PopUpSerializer, AdvertisementSerializer
-from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address, HomepageBanner, HomepageItem, HomepageSection, Policy, PopUp, Advertisement
+from ..models import User, Product_Category, Product_Brand, Product, Vendor_Detail, Setting, Order, LevelPoints, SubOrder, Address, HomepageBanner, HomepageItem, HomepageSection, Policy, PopUp, Advertisement, OTP
 import json
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.db import transaction
+import random
+from django.conf import settings
+from smtplib import SMTPException
+from django.core.mail import BadHeaderError
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.db.models import Q
+
+
+def generate_otp(user):
+    otp_code = str(random.randint(100000, 999999))
+    OTP.objects.create(user=user, code=otp_code).save()
+    return otp_code
 
 @api_view(['GET'])
 def is_admin(request):
@@ -13,6 +26,53 @@ def is_admin(request):
         return Response({"is_admin": True}, status=200)
     else:
         return Response(status=404)
+    
+@api_view(['POST'])
+def forgetPassword(request):
+    if request.method == 'POST':
+        user = User.objects.filter(user_id="admin")
+        if user.count() == 0:
+            return Response(status=404)
+        user = user.first()
+        otp = generate_otp(user)
+        try:
+            subject = 'Change Your Goodmart Password'
+            frontend_end = settings.FRONTEND_URL
+            link = frontend_end + '/auth/forget-password/verify-otp?id=' + user.user_id
+            html_message = render_to_string('forgetPass.html', {'otp': otp, 'name': user.name, 'email': user.email, 'phone': user.phone_no, 'user_id': user.user_id, 'link': link})
+            email_from = settings.DEFAULT_FROM_EMAIL
+            recipient_list = [user.email]
+
+            email = EmailMessage(subject, html_message, email_from, recipient_list)
+            email.content_subtype = 'html'  # Set the email content type to HTML
+            email.send()
+            return Response({"id": user.user_id}, status=200)
+        except BadHeaderError:
+            # print(BadHeaderError)
+            return Response(status=400)
+        except SMTPException as e:
+            # print(e)
+            return Response(status=400)
+        except Exception as e:
+            # print(e)
+            return Response(status=400)
+    return Response(status=400)
+
+@api_view(['GET'])
+def verify_forget_password(request, user_id, otp_code):
+    user = User.objects.get(user_id=user_id)
+    try:
+        otp = OTP.objects.filter(user=user, code=otp_code).latest('created_at')
+        if otp.is_valid():
+            refresh = RefreshToken.for_user(user)
+            otp.delete()
+            return Response({"refresh": str(refresh), "access": str(refresh.access_token)}, status=200)
+        else:
+            return Response({'status': 'Invalid token'}, status=400)
+    except Exception as e:
+        return Response({'status': 'Invalid token'}, status=400)
+    
+
 
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
