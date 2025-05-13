@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder, Coupon, Setting, Wallet, OTP, User_Detail, HomepageBanner, HomepageSection, HomepageItem, Policy, PopUp, Advertisement
-from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, SubOrderItemSerializer, CouponSerializer, WalletSerializer, VendorDetailCartSerializer, ReferralSerializer, UserDetailSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer, PolicySerializer, PopUpSerializer, AdvertisementSerializer
+from .models import User, Product_Category, Product_Brand, Product, Cart, Product_Variant, Address, Vendor_Detail, ShippingCharges, Order, OrderItem, SubOrder, Coupon, Setting, Wallet, OTP, User_Detail, HomepageBanner, HomepageSection, HomepageItem, Policy, PopUp, Advertisement, Notification
+from .serializer import UserRegisterSerializer, UserInfoSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductDetailedSerializer, CartSerializer, CartDetailedSerializer, VendorDetailSerializer, AddressSerializer, OrderSerializer, SubOrderItemSerializer, CouponSerializer, WalletSerializer, VendorDetailCartSerializer, ReferralSerializer, UserDetailSerializer, HomepageBannerSerializer, HomepageItemSerializer, HomepageSectionSerializer, PolicySerializer, PopUpSerializer, AdvertisementSerializer, NotificationsSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -21,6 +21,7 @@ from django.db.models import Prefetch
 from django.db.models.functions import Random
 from django.db.models import Q
 from rest_framework_simplejwt.tokens import RefreshToken
+from .utils import addNotification
 
 def index(request):
     return HttpResponse("hello World")
@@ -547,6 +548,9 @@ def placeOrder(request, id):
         order = Order.objects.get(id=id)
         order.order_confirmed = True
         order.save()
+        _ = addNotification("Order Placed", "Your order has been placed successfully", request.user.user_id)
+        for suborder in order.sub_orders.all():
+            _ = addNotification("Order Recieved", "An order has been received", suborder.vendor.user.user_id)
         return Response(status=200)
     return Response(status=400)
 
@@ -774,5 +778,13 @@ def getAdvertisementByPage(request, type):
     if request.method == "GET":
         advertisement = Advertisement.objects.filter(page=type)
         serializer = AdvertisementSerializer(advertisement.first())
+        return Response(serializer.data, status=200)
+    return Response(status=400)
+
+@api_view(['GET'])
+def getNotification(request):
+    if request.method == "GET":
+        notification = Notification.objects.filter(user=request.user).order_by('-created_at')
+        serializer = NotificationsSerializer(notification, many=True)
         return Response(serializer.data, status=200)
     return Response(status=400)
