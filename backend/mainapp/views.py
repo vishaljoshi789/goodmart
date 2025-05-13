@@ -548,9 +548,11 @@ def placeOrder(request, id):
         order = Order.objects.get(id=id)
         order.order_confirmed = True
         order.save()
-        _ = addNotification("Order Placed", "Your order has been placed successfully", request.user.user_id)
+        if not addNotification("Order Placed", "Your order has been placed successfully", request.user.id):
+            print("Notification not sent")
         for suborder in order.sub_orders.all():
-            _ = addNotification("Order Recieved", "An order has been received", suborder.vendor.user.user_id)
+            if not addNotification("Order Recieved", "An order has been received", suborder.vendor.user.id):
+                print("Notification not sent")
         return Response(status=200)
     return Response(status=400)
 
@@ -784,7 +786,7 @@ def getAdvertisementByPage(request, type):
 @api_view(['GET'])
 def getNotification(request):
     if request.method == "GET":
-        notification = Notification.objects.filter(user=request.user).order_by('-created_at')
+        notification = Notification.objects.filter(user=request.user).order_by('-added_on')
         serializer = NotificationsSerializer(notification, many=True)
         return Response(serializer.data, status=200)
     return Response(status=400)

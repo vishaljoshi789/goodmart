@@ -20,12 +20,16 @@ const OrderSummary = () => {
     setBill(response.data);
   };
 
-  let placeOrder = async () => {
+  let placeOrder = async (button: any) => {
+    button.target.disabled = true;
+    toast.loading("Placing Order...");
     let response = await api.post(`/placeOrder/${order}/`);
     if (response.status == 200) {
+      toast.dismiss();
       toast.success("Order Placed Successfully");
       router.push(`/user-panel/orders`);
     } else {
+      toast.dismiss();
       toast.error("Something went wrong, Please try again");
     }
   };
@@ -182,7 +186,7 @@ const OrderSummary = () => {
                         </div>
                       )}
 
-                      <Button className="" onClick={placeOrder}>
+                      <Button className="" onClick={(e) => placeOrder(e)}>
                         Place Order
                       </Button>
                     </div>
